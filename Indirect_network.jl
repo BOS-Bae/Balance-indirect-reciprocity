@@ -154,3 +154,27 @@ function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)
         
     return true_self && true_edge && true_triad
 end
+
+function Imbalance(O_matrix, triad_arr, N_triad)
+    ϕ = 0.0
+    num_triad = 0.0
+    for triad_idx = 1:N_triad
+        first_idx = triad_arr[triad_idx][1]
+        second_idx = triad_arr[triad_idx][2]
+        third_idx = triad_arr[triad_idx][3]
+        
+        ϕ += convert(AbstractFloat, O_matrix[first_idx,second_idx] * O_matrix[first_idx,third_idx] * O_matrix[second_idx,third_idx])
+        ϕ += convert(AbstractFloat, O_matrix[first_idx,third_idx] * O_matrix[first_idx,second_idx] * O_matrix[third_idx,second_idx])
+        ϕ += convert(AbstractFloat, O_matrix[second_idx,first_idx] * O_matrix[second_idx,third_idx] * O_matrix[first_idx,third_idx])
+        ϕ += convert(AbstractFloat, O_matrix[second_idx,third_idx] * O_matrix[second_idx,first_idx] * O_matrix[third_idx,first_idx])
+        ϕ += convert(AbstractFloat, O_matrix[third_idx,first_idx] * O_matrix[third_idx,second_idx] * O_matrix[first_idx,second_idx])
+        ϕ += convert(AbstractFloat, O_matrix[third_idx,second_idx] * O_matrix[third_idx,first_idx] * O_matrix[second_idx,first_idx])  
+    end
+    Imbalance_val = 0.0
+    if N_triad == 0
+        Imbalance_val = 0.0
+    else
+        Imbalance_val = ( 1.0 - ϕ/(6.0*convert(AbstractFloat, N_triad)) )
+    end
+    return Imbalance_val
+end
