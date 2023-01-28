@@ -22,7 +22,8 @@ for n_idx in 1:n_sample
         
         e_matrix = zeros(N, N)
         σ_matrix = zeros(N, N)
-        
+        U_matrix = zeros(N, N) # Additional matrix for update by new method, 'New_matrix' of 'L6_rule_dr_all'.
+
         Edge_list = Any[]
         Triad_list = Any[]
 

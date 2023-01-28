@@ -67,6 +67,22 @@ function NeighborList(Network_mat,N,d,r)
     return α_arr
 end
 
+function L6_rule_dr_all(O_matrix, New_matrix, neigh_arr, d, r)
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        New_matrix[α,d] = O_matrix[α,r] * O_matrix[d,r]
+    end     
+end
+# New_matrix is additional matrix for updated opinions.
+
+# The code below haas to be applied after all opinions are updated.
+#=
+for d in 1:N
+    for r in 1:N
+        σ_matrix[d,r] = U_matrix[d,r]
+    end
+end
+=#
 
 function L6_rule(O_matrix, neigh_arr, d, r)
     for k in 1:length(neigh_arr)
