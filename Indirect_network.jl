@@ -157,20 +157,20 @@ end
 
 function Imbalance(O_matrix, triad_arr, N_triad)
     ϕ = 0
-    ϕ = convert(Float64, ϕ)
-    num_triad = 0.0
+
     for triad_idx = 1:N_triad
         first_idx = triad_arr[triad_idx][1]
         second_idx = triad_arr[triad_idx][2]
         third_idx = triad_arr[triad_idx][3]
         
-        ϕ += convert(Float64, O_matrix[first_idx,second_idx] * O_matrix[first_idx,third_idx] * O_matrix[second_idx,third_idx])
-        ϕ += convert(Float64, O_matrix[first_idx,third_idx] * O_matrix[first_idx,second_idx] * O_matrix[third_idx,second_idx])
-        ϕ += convert(Float64, O_matrix[second_idx,first_idx] * O_matrix[second_idx,third_idx] * O_matrix[first_idx,third_idx])
-        ϕ += convert(Float64, O_matrix[second_idx,third_idx] * O_matrix[second_idx,first_idx] * O_matrix[third_idx,first_idx])
-        ϕ += convert(Float64, O_matrix[third_idx,first_idx] * O_matrix[third_idx,second_idx] * O_matrix[first_idx,second_idx])
-        ϕ += convert(Float64, O_matrix[third_idx,second_idx] * O_matrix[third_idx,first_idx] * O_matrix[second_idx,first_idx])  
+        ϕ += O_matrix[first_idx,second_idx] * O_matrix[first_idx,third_idx] * O_matrix[second_idx,third_idx]
+        ϕ += O_matrix[first_idx,third_idx] * O_matrix[first_idx,second_idx] * O_matrix[third_idx,second_idx]
+        ϕ += O_matrix[second_idx,first_idx] * O_matrix[second_idx,third_idx] * O_matrix[first_idx,third_idx]
+        ϕ += O_matrix[second_idx,third_idx] * O_matrix[second_idx,first_idx] * O_matrix[third_idx,first_idx]
+        ϕ += O_matrix[third_idx,first_idx] * O_matrix[third_idx,second_idx] * O_matrix[first_idx,second_idx]
+        ϕ += O_matrix[third_idx,second_idx] * O_matrix[third_idx,first_idx] * O_matrix[second_idx,first_idx] 
     end
+    ϕ = convert(Float64, ϕ)
     
     Imbalance_val = 0
     Imbalance_val = convert(Float64, Imbalance_val)
