@@ -171,12 +171,13 @@ function Imbalance(O_matrix, triad_arr, N_triad)
         ϕ += convert(Float64, O_matrix[third_idx,first_idx] * O_matrix[third_idx,second_idx] * O_matrix[first_idx,second_idx])
         ϕ += convert(Float64, O_matrix[third_idx,second_idx] * O_matrix[third_idx,first_idx] * O_matrix[second_idx,first_idx])  
     end
+    
     Imbalance_val = 0
     Imbalance_val = convert(Float64, Imbalance_val)
     if N_triad == 0
-        Imbalance_val = 0.0
+        Imbalance_val = 0
     else
-        Imbalance_val = ( 1.0 - ( ϕ / ( 6.0 * convert(Float64, N_triad) ) ))
+        Imbalance_val = ( 1 - ( ϕ / ( convert(Float64, 6*N_triad) ) ))
     end
     return Imbalance_val
 end
