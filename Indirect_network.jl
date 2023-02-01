@@ -1,4 +1,5 @@
 # Functions for siumulation
+using Random
 function Opinion_Initialize(O_zero, ρ, N)
     for x in 1:N
         for y in 1:N
@@ -95,19 +96,21 @@ function L4_rule(O_matrix, neigh_arr, d, r)
     end
 end
 
-function original_update(rule, O_matrix, e_matrix, N, τ)
-
+function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
+    
     d = rand(1:N)
     r = rand(1:N)
+    
     if (e_matrix[d,r] == 1)
-        τ += 1
+        τ_tmp += 1
         NList = NeighborList(e_matrix,N,d,r)
         rule(O_matrix, NList, d, r)
     end
+    return τ_tmp
 end
 
-function random_sequential_update(rule, O_matrix, e_matrix, N, τ)
-
+function random_sequential_update(rule, O_matrix, e_matrix, N, τ_tmp)
+    
     Random_i_list = 1:N
     d_arr = shuffle(Random_i_list)
     r_arr = shuffle(Random_i_list)
@@ -120,7 +123,8 @@ function random_sequential_update(rule, O_matrix, e_matrix, N, τ)
             end
         end
     end
-    τ += 1
+    τ_tmp += 1
+    return τ_tmp
 end
 
 function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)
