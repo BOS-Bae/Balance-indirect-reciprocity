@@ -1,5 +1,5 @@
 # Simulation code with functions which are defined above.
-include("../Indirect_network.jl")
+include("Indirect_network.jl")
 using Random
 
 N = 30

@@ -67,22 +67,13 @@ function NeighborList(Network_mat,N,d,r)
     return α_arr
 end
 
+# 'L6_rule_dr_all' is a function for parallel update.
 function L6_rule_dr_all(O_matrix, New_matrix, neigh_arr, d, r)
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
         New_matrix[α,d] = O_matrix[α,r] * O_matrix[d,r]
     end     
 end
-# New_matrix is additional matrix for updated opinions.
-
-# The code below haas to be applied after all opinions are updated.
-#=
-for d in 1:N
-    for r in 1:N
-        σ_matrix[d,r] = U_matrix[d,r]
-    end
-end
-=#
 
 function L6_rule(O_matrix, neigh_arr, d, r)
     for k in 1:length(neigh_arr)
@@ -102,6 +93,34 @@ function L4_rule(O_matrix, neigh_arr, d, r)
             O_matrix[α,d] = -O_matrix[α,r]
         end
     end
+end
+
+function original_update(rule, O_matrix, e_matrix, N, τ)
+
+    d = rand(1:N)
+    r = rand(1:N)
+    if (e_matrix[d,r] == 1)
+        τ += 1
+        NList = NeighborList(e_matrix,N,d,r)
+        rule(O_matrix, NList, d, r)
+    end
+end
+
+function random_sequential_update(rule, O_matrix, e_matrix, N, τ)
+
+    Random_i_list = 1:N
+    d_arr = shuffle(Random_i_list)
+    r_arr = shuffle(Random_i_list)
+    
+    for d in d_arr
+        for r in r_arr
+            if (e_matrix[d,r] == 1)
+                NList = NeighborList(e_matrix,N,d,r)
+                rule(O_matrix, NList, d, r)
+            end
+        end
+    end
+    τ += 1
 end
 
 function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)

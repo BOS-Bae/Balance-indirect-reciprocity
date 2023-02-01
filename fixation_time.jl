@@ -1,4 +1,4 @@
-include("../Indirect_network.jl")
+include("Indirect_network.jl")
 
 # Simulation code with functions which are defined above.
 using Random
@@ -38,14 +38,10 @@ for n_idx in 1:n_sample
         #end
         τ = 0
         while true
-            d = rand(1:N)
-            r = rand(1:N)
-            if (e_matrix[d,r] == 1)
-                τ += 1
-                NList = NeighborList(e_matrix,N,d,r)
-                L6_rule(σ_matrix, NList, d, r)
-            end
-        
+            original_update(L6_rule, σ_matrix, e_matrix, N, τ)
+            # For random sequential update, use the function below :
+            # random_sequential_update(L6_rule, σ_matrix, e_matrix, N, τ)
+            
             if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
                 break
             end
