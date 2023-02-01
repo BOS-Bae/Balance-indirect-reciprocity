@@ -53,6 +53,7 @@ for n_idx in 1:n_sample
                 if (τ >= τ_init_check)
                     Im_val += Imbalance(σ_matrix, Triad_list, num_triad)
                 end
+                # imbalance should be calculated when (e_matrix[d,r] == 1), not otherwise.
             end
             
             if (τ == (τ_init_check + τ_length))
