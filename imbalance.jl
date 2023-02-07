@@ -14,7 +14,7 @@ leng = 50
 τ_init_check = 5*N*N
 τ_length = 5*N*N
 
-P1 =  collect(range(start=0.1, stop=1.0, length=leng)) # p_idx = 1:leng, so prob = P1[p_idx]
+P1 =  collect(range(start=0.02, stop=1.0, length=leng)) # p_idx = 1:leng, so prob = P1[p_idx]
 Im_2d_arr = zeros(n_sample, leng)
 Im_avg = zeros(leng)
 Im_std = zeros(leng)
