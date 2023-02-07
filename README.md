@@ -1,4 +1,4 @@
-### Codes for numerical results (by Minwoo Bae) 👋
+### Codes for numerical results (by Minwoo Bae)
 
 <!--
 **BOS-Bae/BOS-Bae** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
