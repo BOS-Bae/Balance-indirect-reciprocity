@@ -96,19 +96,6 @@ function L4_rule(O_matrix, neigh_arr, d, r)
     end
 end
 
-function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
-    
-    d = rand(1:N)
-    r = rand(1:N)
-    
-    if (e_matrix[d,r] == 1)
-        τ_tmp += 1
-        NList = NeighborList(e_matrix,N,d,r)
-        rule(O_matrix, NList, d, r)
-    end
-    return τ_tmp
-end
-
 function Opinions_average(O_matrix, e_matrix, N)
     connect_count = 0
     o_averaged = 0
@@ -123,6 +110,19 @@ function Opinions_average(O_matrix, e_matrix, N)
     end
     o_averaged = o_averaged/connect_count
     return o_averaged
+end
+
+function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
+    
+    d = rand(1:N)
+    r = rand(1:N)
+    
+    if (e_matrix[d,r] == 1)
+        τ_tmp += 1
+        NList = NeighborList(e_matrix,N,d,r)
+        rule(O_matrix, NList, d, r)
+    end
+    return τ_tmp
 end
 
 function random_sequential_update(rule, O_matrix, e_matrix, N, τ_tmp)
