@@ -1,6 +1,5 @@
+# Simulation code for plotting fixation time
 include("Indirect_network.jl")
-
-# Simulation code with functions which are defined above.
 using Random
 
 N = 17

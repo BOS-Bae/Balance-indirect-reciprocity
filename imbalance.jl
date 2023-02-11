@@ -1,4 +1,4 @@
-# Simulation code with functions which are defined above.
+# Simulation code for calculating imbalance values for different connection probabilities.
 include("Indirect_network.jl")
 using Random
 

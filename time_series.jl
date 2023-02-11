@@ -1,4 +1,4 @@
-# Simulation code with functions which are defined above.
+# Simulation code for plotting time-series data
 include("Indirect_network.jl")
 using Random
 
