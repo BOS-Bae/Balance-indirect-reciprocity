@@ -1,4 +1,6 @@
-### Codes for numerical results (by Minwoo Bae)
+# ABM model
+
+This is the Julia codes for numerical results of agent based model and indirect reciprocity.
 
 <!--
 **BOS-Bae/BOS-Bae** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
