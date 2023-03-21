@@ -1,4 +1,6 @@
-### Codes for numerical results (by Minwoo Bae)
+# ABM model for evolutionary game theory
+
+This is the code for numerical results of agent based model(ABM) and indirect reciprocity.
 
 <!--
 **BOS-Bae/BOS-Bae** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
