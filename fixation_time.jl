@@ -43,7 +43,7 @@ for n_idx in 1:n_sample
             #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, N, τ)
             τ = τ_tmp
             
-            #if (Check_absorbing(σ_matrix, e_matrix, N, L6_rule) == true)
+            #if (Check_absorbing(σ_matrix, e_matrix, N, L6_rule_ab) == true)
             if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
                 break
             end

@@ -332,7 +332,7 @@ function Check_absorbing(O_matrix, e_matrix, N, rule)
     if (val == check_val)
         true_val = true
     end
-    return (true_val)
+    return true_val
 end
 
 function Imbalance(O_matrix, triad_arr, N_triad)
