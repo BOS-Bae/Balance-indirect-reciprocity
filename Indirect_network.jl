@@ -83,6 +83,21 @@ function L6_rule(O_matrix, neigh_arr, d, r)
     end     
 end
 
+function L5_rule(O_matrix, neigh_arr, d, r)
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        if (O_matrix[d,r] == 1)
+            if (O_matrix[α,d] == 1)
+                O_matrix[α,d] = O_matrix[α,r]
+            elseif (O_matrix[α,d] == -1)
+                O_matrix[α,d] = 1
+            end
+        elseif (O_matrix[d,r] == -1)
+            O_matrix[α,d] = -O_matrix[α,r]
+        end
+    end
+end
+
 function L4_rule(O_matrix, neigh_arr, d, r)
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
@@ -95,6 +110,44 @@ function L4_rule(O_matrix, neigh_arr, d, r)
         end
     end
 end
+
+function L3_rule(O_matrix, neigh_arr, d, r)
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        if (O_matrix[d,r] == 1)
+            O_matrix[α,d] = 1
+        elseif (O_matrix[d,r] == -1)
+            O_matrix[α,d] = -O_matrix[α,r]
+        end
+    end
+end
+
+function L2_rule(O_matrix, neigh_arr, d, r)
+    c_d = 0
+    if (O_matrix[d,d]==1)
+        c_d =  O_matrix[d,r]
+    else if (O_matrix[d,d]==-1)
+        c_d = 1
+    end
+
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        if (c_d == 1)
+            if (O_matrix[α,d] == 1)
+                O_matrix[α,d] = O_matrix[α,r]
+            elseif (O_matrix[α,d] == -1)
+                O_matrix[α,d] = 1
+            end
+        elseif (c_d == -1)
+            if (O_matrix[α,d] == 1)
+                O_matrix[α,d] = -O_matrix[α,r]
+            elseif (O_matrix[α,d] == -1)
+                O_matrix[α,d] = -1
+            end
+        end
+    end
+end
+
 
 function Opinions_average(O_matrix, e_matrix, N)
     connect_count = 0
