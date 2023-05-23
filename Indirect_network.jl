@@ -126,7 +126,7 @@ function L2_rule(O_matrix, neigh_arr, d, r)
     c_d = 0
     if (O_matrix[d,d]==1)
         c_d =  O_matrix[d,r]
-    else if (O_matrix[d,d]==-1)
+    elseif (O_matrix[d,d]==-1)
         c_d = 1
     end
 
@@ -195,7 +195,7 @@ function L2_rule_ab(O_matrix,α, d, r)
     c_d = 0
     if (O_matrix[d,d]==1)
         c_d =  O_matrix[d,r]
-    else if (O_matrix[d,d]==-1)
+    elseif (O_matrix[d,d]==-1)
         c_d = 1
     end
 
