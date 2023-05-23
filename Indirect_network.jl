@@ -149,6 +149,72 @@ function L2_rule(O_matrix, neigh_arr, d, r)
 end
 
 
+function L6_rule_ab(O_matrix,α, d, r)
+    val = O_matrix[α,r] * O_matrix[d,r]
+    return val
+end
+
+function L5_rule_ab(O_matrix,α, d, r)
+    val = 0
+    if (O_matrix[d,r] == 1)
+        if (O_matrix[α,d] == 1)
+            val = O_matrix[α,r]
+        elseif (O_matrix[α,d] == -1)
+            val = 1
+        end
+    elseif (O_matrix[d,r] == -1)
+        val = -O_matrix[α,r]
+    end
+    return val
+end
+
+function L4_rule_ab(O_matrix,α, d, r)
+    val = 0
+    if (O_matrix[d,r] == 1)
+        if (O_matrix[α,d] == -1)
+            val = O_matrix[α,r]
+        end
+    elseif (O_matrix[d,r] == -1)
+        val = -O_matrix[α,r]
+    end
+    return val
+end
+
+function L3_rule_ab(O_matrix,α, d, r)
+    val = 0
+    if (O_matrix[d,r] == 1)
+        val = 1
+    elseif (O_matrix[d,r] == -1)
+        val = -O_matrix[α,r]
+    end
+    return val
+end
+
+function L2_rule_ab(O_matrix,α, d, r)
+    val = 0
+    c_d = 0
+    if (O_matrix[d,d]==1)
+        c_d =  O_matrix[d,r]
+    else if (O_matrix[d,d]==-1)
+        c_d = 1
+    end
+
+    if (c_d == 1)
+        if (O_matrix[α,d] == 1)
+            val = O_matrix[α,r]
+        elseif (O_matrix[α,d] == -1)
+            val = 1
+        end
+    elseif (c_d == -1)
+        if (O_matrix[α,d] == 1)
+            val = -O_matrix[α,r]
+        elseif (O_matrix[α,d] == -1)
+            val = -1
+        end
+    end
+    return val
+end
+
 function Opinions_average(O_matrix, e_matrix, N)
     connect_count = 0
     o_averaged = 0
@@ -245,6 +311,28 @@ function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)
     end
         
     return true_self && true_edge && true_triad
+end
+
+function Check_absorbing(O_matrix, e_matrix, N, rule)
+    val = 0
+    check_val = 0
+    true_val = false
+    for i in 1:N
+        for j in 1:N
+            for k in 1:N
+                if (e_matrix[i,j] == 1 &&  e_matrix[i,k] == 1 &&  e_matrix[j,k] == 1)
+                    val += 1
+                    if (O_matrix[i,j] == rule(O_matrix,i, j, k))
+                        check_val += 1
+                    end
+                end
+            end
+        end
+    end
+    if (val == check_val)
+        true_val = true
+    end
+    return (true_val)
 end
 
 function Imbalance(O_matrix, triad_arr, N_triad)
