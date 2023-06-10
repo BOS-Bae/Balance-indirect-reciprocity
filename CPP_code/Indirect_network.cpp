@@ -4,18 +4,26 @@
 
 using namespace std;
 
-void Opinion_Initialize(int **O, int N, double uni_p)
-{
+void Opinion_Initialize(int **O, int N)
+{   
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> uni(0,1);
+
     int i, j;
     for (i=0;i<N;i++){
         for (j=0;j<N;j++){
-            O[i][j] = (uni_p < 0.5) ? 1 : -1; 
+            O[i][j] = (uni(gen) < 0.5) ? 1 : -1; 
         }
     }
 }
 
-void ER_network_gen(int **Net, double p, int N, vector<vector<int>> E_List, vector<vector<int>> T_List, int n_E, int n_T, double uni_p)
-{
+void ER_network_gen(int **Net, double prob, int N, vector<vector<int>> E_List, vector<vector<int>> T_List, int n_E, int n_T)
+{   
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> uni(0,1);
+
     vector<int> input_element, input_element_T;
     int i, j;
     n_E = n_T = 0;
@@ -24,12 +32,13 @@ void ER_network_gen(int **Net, double p, int N, vector<vector<int>> E_List, vect
         for (j=i; j<N; j++){
             if (i!=j){
                 input_element = {};
-                Net[i][j] = (uni_p < p) ? 1 : 0;
-                n_E += 1;
+                Net[i][j] = (uni(gen) < prob) ? 1 : 0;
+                if (Net[i][j] == 1) n_E += 1;
+                Net[j][i] = Net[i][j];
+                
                 input_element.push_back(i);
                 input_element.push_back(j);
                 E_List.push_back(input_element);
-                Net[i][j] = Net[j][i];
             }
             else Net[i][j] =  1;
         }
