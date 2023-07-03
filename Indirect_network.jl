@@ -232,30 +232,33 @@ function Opinions_average(O_matrix, e_matrix, N)
 end
 
 function count_structure(e_matrix, N)
-    
-    d = rand(1:N)
-    r = rand(1:N)
-    T = 0
-    Q = 0
-    R = 0
-    
-    if (e_matrix[d,r] == 1)
-        for m in 1:N
-            if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1)
-                T += 1
-            end
-            for n in 1:N 
-                if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 1 && e_matrix[m,n] == 1) 
-                    Q += 1
-                elseif (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 0 && e_matrix[m,n] == 1)
-                    R += 1
+    T = Q = R =0
+    while true
+        d = rand(1:N)
+        r = rand(1:N)
+        if (e_matrix[d,r] == 1 && d!=r)
+            for m in 1:N
+                if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && m!=d && m!=r)
+                    T += 1
+                end
+                for n in 1:N 
+                    if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 1 && e_matrix[m,n] == 1 
+                            && m!=n && m!=d && m!=r && n!=d && n!=r) 
+                        Q += 1
+                    elseif (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 0 && e_matrix[m,n] == 1
+                            && m!=n && m!=d && m!=r && n!=d && n!=r)
+                        R += 1
+                    end
                 end
             end
         end
+        if (e_matrix[d,r] == 1 && d!=r)
+            break
+        end
     end
-    
-    return [T, Q, R]
+    return [T, Q ,R]
 end
+
 function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
     
     d = rand(1:N)
