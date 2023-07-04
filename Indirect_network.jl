@@ -243,7 +243,7 @@ function count_structure(e_matrix, N)
                 end
                 for n in 1:N 
                     if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 1 && e_matrix[m,n] == 1 
-                            && m!=n && m!=d && m!=r && n!=d && n!=r) 
+                            && n>m && m!=d && m!=r && n!=d && n!=r) 
                         Q += 1
                     elseif (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 0 && e_matrix[m,n] == 1
                             && m!=n && m!=d && m!=r && n!=d && n!=r)
