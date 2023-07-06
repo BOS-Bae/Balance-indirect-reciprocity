@@ -1,5 +1,49 @@
 # Functions for siumulation
 using Random
+
+function sum_formulae(O_matrix, e_matrix, N, d, r)
+    ΔΘ = 0
+    ΔΦ = 0
+    ΔΨ = 0
+    NList = NeighborList(e_matrix,N,d,r)
+    for k in 1:length(NList)
+        ΔΘ += (tri_balance(O_matrix, d, k, r) - edge_balance(O_matrix, d, k))
+        ΔΦ += ((edge_balance(O_matrix, r, k) - tri_balance(O_matrix, r, d, k)) + (1 - tri_balance(O_matrix, k, d, r)) 
+        + (1 - tri_balance(O_matrix, k, r, d)))
+
+        for l in 1:N
+            if (e_matrix[l,k] == 1 && e_matrix[l,d] == 1 && e_matrix[l,r] == 1 && l!=k && l!=d && l!=r)
+                # calculate ΔΨ on Q
+                ΔΨ += ((1 - tetrad_balance(O_matrix, k, l, d, r)) + (tri_balance(O_matrix, l, r, k) - tetrad_balance(O_matrix, r, l, d, k)) 
+                + (tri_balance(O_matrix, k, r, l) - tetrad_balance(O_matrix, r, k, d, l)))
+            end
+        end
+    end
+    ΔΘ += (1 - O_matrix[d,r])
+
+    arr = [ΔΘ, ΔΦ, ΔΨ]
+    return arr
+end
+
+function sum_nuemrical(O_matrix, N, eList, triList, d, r)
+    ΔΘ = 0
+    ΔΦ = 0
+    ΔΨ = 0
+
+end
+
+function tetrad_balance(O_matrix, k, l, d, r)
+    return O_matrix[k,d]*O_matrix[k,r]*O_matrix[l,d]*O_matrix[l,r]
+end
+
+function tri_balance(O_matrix, k, d, r)
+    return O_matrix[k,d]*O_matrix[k,r]*O_matrix[d,r]
+end
+
+function edge_balance(O_matrix, d, r)
+    return O_matrix[d,r]*O_matrix[r,d]
+end
+
 function Opinion_Initialize(O_zero, ρ, N)
     for x in 1:N
         for y in 1:N
@@ -43,13 +87,13 @@ function ER_network_gen(Mat_zero, p, N, eList_init, triList_init)
 
     if (n_e_init != 0)
         for x = 1:n_e_init
-            first_idx = eList_init[x][1]
-            second_idx = eList_init[x][2]
-            for third_idx = 1:N
-                if (Mat_zero[first_idx,third_idx] ==1 && Mat_zero[second_idx,third_idx] == 1 && second_idx < third_idx )
+            idx_1 = eList_init[x][1]
+            idx_2 = eList_init[x][2]
+            for idx_3 = 1:N
+                if (Mat_zero[idx_1,idx_3] ==1 && Mat_zero[idx_2,idx_3] == 1 && idx_2 < idx_3 )
                     input_list_T = []
                     n_T_init += 1
-                    push!(input_list_T, first_idx,second_idx,third_idx)
+                    push!(input_list_T, idx_1,idx_2,idx_3)
                     push!(triList_init,input_list_T)    
                 end
             end
@@ -232,7 +276,11 @@ function Opinions_average(O_matrix, e_matrix, N)
 end
 
 function count_structure(e_matrix, N)
-    T = Q = R =0
+    
+    T = 0
+    Q = 0
+    R = 0
+    
     while true
         d = rand(1:N)
         r = rand(1:N)
@@ -241,12 +289,11 @@ function count_structure(e_matrix, N)
                 if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && m!=d && m!=r)
                     T += 1
                 end
-                for n in 1:N 
-                    if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 1 && e_matrix[m,n] == 1 
-                            && n>m && m!=d && m!=r && n!=d && n!=r) 
+
+                for n in 1:N
+                    if (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 1 && e_matrix[m,n] == 1 && m!=n && m!=d && m!=r && n!=d && n!=r) 
                         Q += 1
-                    elseif (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 0 && e_matrix[m,n] == 1
-                            && m!=n && m!=d && m!=r && n!=d && n!=r)
+                    elseif (e_matrix[m,d] == 1 && e_matrix[m,r] == 1 && e_matrix[n,d] == 1 && e_matrix[n,r] == 0 && e_matrix[m,n] == 1 && n>m && m!=d && m!=r && n!=d && n!=r) 
                         R += 1
                     end
                 end
@@ -256,13 +303,24 @@ function count_structure(e_matrix, N)
             break
         end
     end
-    return [T, Q ,R]
+    
+    return [T, Q, R]
 end
 
 function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
     
     d = rand(1:N)
     r = rand(1:N)
+    
+    if (e_matrix[d,r] == 1)
+        τ_tmp += 1
+        NList = NeighborList(e_matrix,N,d,r)
+        rule(O_matrix, NList, d, r)
+    end
+    return τ_tmp
+end
+
+function d_r_pair_update(rule, O_matrix, e_matrix, N, τ_tmp, d, r)
     
     if (e_matrix[d,r] == 1)
         τ_tmp += 1
@@ -322,11 +380,11 @@ function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)
     end
     if (N_triad != 0)
         for triad_idx = 1:N_triad
-            first_idx = triad_arr[triad_idx][1]
-            second_idx = triad_arr[triad_idx][2]
-            third_idx = triad_arr[triad_idx][3]
+            idx_1 = triad_arr[triad_idx][1]
+            idx_2 = triad_arr[triad_idx][2]
+            idx_3 = triad_arr[triad_idx][3]
 
-            ϕ = O_matrix[first_idx,second_idx] * O_matrix[first_idx,third_idx] * O_matrix[second_idx,third_idx]
+            ϕ = O_matrix[idx_1,idx_2] * O_matrix[idx_1,idx_3] * O_matrix[idx_2,idx_3]
 
             if (ϕ == 1)
                 Φ_tot += 1
@@ -363,20 +421,64 @@ function Check_absorbing(O_matrix, e_matrix, N, rule)
     return true_val
 end
 
+function Balance(O_matrix, e_matrix, N, edge_arr, triad_arr, N_edge, N_triad)
+    θ = 0
+    ϕ = 0
+    ψ = 0
+    N_tetrad = 0
+
+    for edge_idx in 1:N_edge
+        idx_1 = edge_arr[edge_idx][1]
+        idx_2 = edge_arr[edge_idx][2]
+
+        θ += edge_balance(O_matrix, idx_1, idx_2)
+    end
+
+    for triad_idx in 1:N_triad
+        idx_1 = triad_arr[triad_idx][1]
+        idx_2 = triad_arr[triad_idx][2]
+        idx_3 = triad_arr[triad_idx][3]
+        
+        ϕ += tri_balance(O_matrix, idx_1, idx_2, idx_3)
+        ϕ += tri_balance(O_matrix, idx_1, idx_3, idx_2)
+        ϕ += tri_balance(O_matrix, idx_2, idx_1, idx_3)
+        ϕ += tri_balance(O_matrix, idx_2, idx_3, idx_1)
+        ϕ += tri_balance(O_matrix, idx_3, idx_1, idx_2)
+        ϕ += tri_balance(O_matrix, idx_3, idx_2, idx_1)
+
+        for idx_4 in 1:N
+            if (e_matrix[idx_4,idx_1] == 1 && e_matrix[idx_4,idx_2] == 1 && e_matrix[idx_4,idx_3] == 1 && idx_4!=idx_1 && idx_4!=idx_2 && idx_4!=idx_3)
+                N_tetrad += 1
+                ψ += tetrad_balance(O_matrix, idx_1, idx_2, idx_3, idx_4)
+                ψ += tetrad_balance(O_matrix, idx_1, idx_3, idx_2, idx_4)
+                ψ += tetrad_balance(O_matrix, idx_1, idx_4, idx_2, idx_3)
+                ψ += tetrad_balance(O_matrix, idx_2, idx_3, idx_1, idx_4)
+                ψ += tetrad_balance(O_matrix, idx_3, idx_4, idx_1, idx_2)
+                ψ += tetrad_balance(O_matrix, idx_4, idx_2, idx_3, idx_1)
+            
+            end
+        end
+
+    end
+
+    return [θ, ϕ, ψ]
+end
+
+
 function Imbalance(O_matrix, triad_arr, N_triad)
     ϕ = 0
+    
+    for triad_idx in 1:N_triad
+        idx_1 = triad_arr[triad_idx][1]
+        idx_2 = triad_arr[triad_idx][2]
+        idx_3 = triad_arr[triad_idx][3]
 
-    for triad_idx = 1:N_triad
-        first_idx = triad_arr[triad_idx][1]
-        second_idx = triad_arr[triad_idx][2]
-        third_idx = triad_arr[triad_idx][3]
-        
-        ϕ += O_matrix[first_idx,second_idx] * O_matrix[first_idx,third_idx] * O_matrix[second_idx,third_idx]
-        ϕ += O_matrix[first_idx,third_idx] * O_matrix[first_idx,second_idx] * O_matrix[third_idx,second_idx]
-        ϕ += O_matrix[second_idx,first_idx] * O_matrix[second_idx,third_idx] * O_matrix[first_idx,third_idx]
-        ϕ += O_matrix[second_idx,third_idx] * O_matrix[second_idx,first_idx] * O_matrix[third_idx,first_idx]
-        ϕ += O_matrix[third_idx,first_idx] * O_matrix[third_idx,second_idx] * O_matrix[first_idx,second_idx]
-        ϕ += O_matrix[third_idx,second_idx] * O_matrix[third_idx,first_idx] * O_matrix[second_idx,first_idx] 
+        ϕ += tri_balance(O_matrix, idx_1, idx_2, idx_3)
+        ϕ += tri_balance(O_matrix, idx_1, idx_3, idx_2)
+        ϕ += tri_balance(O_matrix, idx_2, idx_1, idx_3)
+        ϕ += tri_balance(O_matrix, idx_2, idx_3, idx_1)
+        ϕ += tri_balance(O_matrix, idx_3, idx_1, idx_2)
+        ϕ += tri_balance(O_matrix, idx_3, idx_2, idx_1)
     end
 
     Imbalance_val = 0
