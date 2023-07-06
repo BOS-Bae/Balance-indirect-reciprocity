@@ -320,14 +320,12 @@ function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
     return τ_tmp
 end
 
-function d_r_pair_update(rule, O_matrix, e_matrix, N, τ_tmp, d, r)
+function d_r_pair_update(rule, O_matrix, e_matrix, N, d, r)
     
     if (e_matrix[d,r] == 1)
-        τ_tmp += 1
         NList = NeighborList(e_matrix,N,d,r)
         rule(O_matrix, NList, d, r)
     end
-    return τ_tmp
 end
 
 function random_sequential_update(rule, O_matrix, e_matrix, N, τ_tmp)

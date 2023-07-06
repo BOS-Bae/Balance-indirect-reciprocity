@@ -31,8 +31,7 @@ for s in 1:n_sample
 
     tmp_arr = zeros(3)
     tmp_arr_τ = zeros(3)
-    τ = 0
-    τ_tmp = 0
+
     #prevent_div = 10000 # value for preventing divergence of variable
     
     for step in 1:Max_time
@@ -42,7 +41,7 @@ for s in 1:n_sample
 
         f_arr = sum_formulae(σ_matrix, e_matrix, N, d, r)
 
-        τ_tmp = d_r_pair_update(L6_rule, σ_matrix, e_matrix, N, τ, d, r)
+        d_r_pair_update(L6_rule, σ_matrix, e_matrix, N, d, r)
         # For random sequential update, use the function below :
         #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, N, τ)
         τ = τ_tmp
