@@ -19,7 +19,7 @@ function sum_formulae(O_matrix, e_matrix, N, d, r)
             end
         end
     end
-    ΔΘ += (1 - O_matrix[d,r])
+    ΔΘ += (1 - edge_balance(O_matrix, d, r))
 
     arr = [ΔΘ, ΔΦ, ΔΨ]
     return arr
