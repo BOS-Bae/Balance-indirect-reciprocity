@@ -11,7 +11,7 @@ initial_prob = 0.5
 
 n_result = zeros(3, Max_time)
 f_result = zeros(3, Max_time)
-balance_check = zeros(2, Max_time)
+balance_check = zeros(3, Max_time)
 
 for s in 1:n_sample
     #print(s,"\n")
@@ -25,34 +25,38 @@ for s in 1:n_sample
     
     num_edge = number_arr[1]
     num_triad = number_arr[2]
-    
-    f_arr = zeros(3)
 
-    tmp_arr = zeros(3)
-    tmp_arr_τ = zeros(3)
     tmp_edge = num_edge
     tmp_triad = num_triad
-    
-    for step in 1:Max_time
+    t = 0
+    while true
         d = rand(1:N)
         r = rand(1:N)
-        tmp_arr = Balance(σ_matrix, e_matrix, N, Edge_list, Triad_list, num_edge, num_triad)
+        if (e_matrix[d,r] == 1)
+            t += 1
+            tmp_arr = Balance(σ_matrix, e_matrix, N, Edge_list, Triad_list, num_edge, num_triad)
 
-        f_arr = sum_formulae(σ_matrix, e_matrix, N, d, r)
+            f_arr = sum_formulae(σ_matrix, e_matrix, N, d, r)
 
-        d_r_pair_update(L6_rule, σ_matrix, e_matrix, N, d, r)
-        # For random sequential update, use the function below :
-        #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, N, τ)
-    
-        tmp_arr_τ = Balance(σ_matrix, e_matrix, N, Edge_list, Triad_list, num_edge, num_triad)
+            d_r_pair_update(L6_rule, σ_matrix, e_matrix, N, d, r)
+            # For random sequential update, use the function below :
+            #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, N, τ)
+            
+            tmp_arr_τ = Balance(σ_matrix, e_matrix, N, Edge_list, Triad_list, num_edge, num_triad)
+            Δ_arr = tmp_arr_τ - tmp_arr
+            for i in 1:3
+                n_result[i, t] += Δ_arr[i]
+                f_result[i, t] += f_arr[i]
+            end
+            tmp_tetrad = tmp_arr_τ[4]
 
-        for i in 1:3
-            n_result[i, step] += (tmp_arr_τ[i] - tmp_arr[i])
-            f_result[i, step] += f_arr[i]
+            balance_check[1, t] += tmp_arr_τ[1]/tmp_edge
+            balance_check[2, t] += tmp_arr_τ[2]/(6*tmp_triad)
+            balance_check[3, t] += tmp_arr_τ[3]/(6*tmp_tetrad)
         end
-
-        balance_check[1, step] += tmp_arr_τ[1]/tmp_edge
-        balance_check[2, step] += tmp_arr_τ[2]/(6*tmp_triad)
+        if (t == Max_time)
+            break
+        end
     end
 end
 
@@ -68,7 +72,7 @@ for j in 1:Max_time
     for i in 1:3
         print(n_result[i,j], " ")
     end
-    for i in 1:2
+    for i in 1:3
         print(balance_check[i,j], " ")
     end
     print("\n")

@@ -7,29 +7,25 @@ function sum_formulae(O_matrix, e_matrix, N, d, r)
     ΔΨ = 0
     NList = NeighborList(e_matrix,N,d,r)
     for k in NList
-        ΔΘ += (tri_balance(O_matrix, d, k, r) - edge_balance(O_matrix, d, k))
-        ΔΦ += ((edge_balance(O_matrix, r, k) - tri_balance(O_matrix, r, d, k)) + (1 - tri_balance(O_matrix, k, d, r)) 
-        + (1 - tri_balance(O_matrix, k, r, d)))
-
-        for l in 1:N
-            if (e_matrix[l,k] == 1 && e_matrix[l,d] == 1 && e_matrix[l,r] == 1 && l!=k && l!=d && l!=r)
-                # calculate ΔΨ on Q
-                ΔΨ += ((1 - tetrad_balance(O_matrix, k, l, d, r)) + (tri_balance(O_matrix, l, r, k) - tetrad_balance(O_matrix, r, l, d, k)) 
-                + (tri_balance(O_matrix, k, r, l) - tetrad_balance(O_matrix, r, k, d, l)))
+        if (k != d && k != r && d != r)
+            ΔΘ += (tri_balance(O_matrix, d, k, r) - edge_balance(O_matrix, d, k))
+            ΔΦ += ((edge_balance(O_matrix, r, k) - tri_balance(O_matrix, r, k, d)) + (1 - tri_balance(O_matrix, k, d, r)) 
+                    + (1 - tri_balance(O_matrix, k, r, d)))
+            
+            for l in NList
+                if (e_matrix[l,k] == 1 && l!=k && l!=d && l!=r)
+                    # calculate ΔΨ on Q
+                    ΔΨ += ((1 - tetrad_balance(O_matrix, k, l, d, r)) + (tri_balance(O_matrix, l, r, k) - tetrad_balance(O_matrix, r, l, d, k)) 
+                            + (tri_balance(O_matrix, k, r, l) - tetrad_balance(O_matrix, r, k, d, l)))
+                end
             end
         end
     end
-    ΔΘ += (1 - edge_balance(O_matrix, d, r))
+    if (d != r) 
+        ΔΘ += (1 - edge_balance(O_matrix,d,r)) 
+    end
 
-    arr = [ΔΘ, ΔΦ, ΔΨ]
-    return arr
-end
-
-function sum_nuemrical(O_matrix, N, eList, triList, d, r)
-    ΔΘ = 0
-    ΔΦ = 0
-    ΔΨ = 0
-
+    return [ΔΘ, ΔΦ, ΔΨ]
 end
 
 function tetrad_balance(O_matrix, k, l, d, r)
@@ -423,8 +419,7 @@ function Balance(O_matrix, e_matrix, N, edge_arr, triad_arr, N_edge, N_triad)
     θ = 0
     ϕ = 0
     ψ = 0
-    N_tetrad = 0
-
+    N_tetrad = 0 
     for edge_idx in 1:N_edge
         idx_1 = edge_arr[edge_idx][1]
         idx_2 = edge_arr[edge_idx][2]
@@ -451,15 +446,14 @@ function Balance(O_matrix, e_matrix, N, edge_arr, triad_arr, N_edge, N_triad)
                 ψ += tetrad_balance(O_matrix, idx_1, idx_3, idx_2, idx_4)
                 ψ += tetrad_balance(O_matrix, idx_1, idx_4, idx_2, idx_3)
                 ψ += tetrad_balance(O_matrix, idx_2, idx_3, idx_1, idx_4)
-                ψ += tetrad_balance(O_matrix, idx_3, idx_4, idx_1, idx_2)
-                ψ += tetrad_balance(O_matrix, idx_4, idx_2, idx_3, idx_1)
+                ψ += tetrad_balance(O_matrix, idx_2, idx_4, idx_1, idx_3)
+                ψ += tetrad_balance(O_matrix, idx_3, idx_4, idx_2, idx_1)
             
             end
         end
-
     end
 
-    return [θ, ϕ, ψ]
+    return [θ, ϕ, ψ, N_tetrad]
 end
 
 
