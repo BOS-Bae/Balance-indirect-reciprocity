@@ -6,7 +6,7 @@ function sum_formulae(O_matrix, e_matrix, N, d, r)
     ΔΦ = 0
     ΔΨ = 0
     NList = NeighborList(e_matrix,N,d,r)
-    for k in 1:length(NList)
+    for k in NList
         ΔΘ += (tri_balance(O_matrix, d, k, r) - edge_balance(O_matrix, d, k))
         ΔΦ += ((edge_balance(O_matrix, r, k) - tri_balance(O_matrix, r, d, k)) + (1 - tri_balance(O_matrix, k, d, r)) 
         + (1 - tri_balance(O_matrix, k, r, d)))
