@@ -1,6 +1,43 @@
 # Functions for siumulation
 using Random
 
+function Phi_update(O_matrix, e_matrix, N, τ_tmp, n_triad, tri_List, Phi_List, Idx_List)
+    Head_list = Any[]
+    if (τ_tmp == 0) # initialization
+        for triad_idx in 1:n_triad
+            idx_1 = tri_List[triad_idx][1]
+            idx_2 = tri_List[triad_idx][2]
+            idx_3 = tri_List[triad_idx][3]
+            
+            idx_123 = [[idx_1, idx_2, idx_3] [idx_1, idx_3, idx_2] [idx_2, idx_1, idx_3] [idx_2, idx_3, idx_1] [idx_3, idx_1, idx_2] [idx_3, idx_2, idx_1]]
+            push!(Head_list, idx_1)
+            
+            for m in 1:6
+                Phi_List[triad_idx][m] = tri_balance(O_matrix, idx_123[m][1], idx_123[m][2], idx_123[m][3])
+                for n in 1:3
+                    Idx_List[triad_idx][m][n] = idx_123[m][n]
+                end
+            end
+
+        end
+        τ_tmp += 1
+
+    else
+        d = rand(1:N)
+        r = rand(1:N)
+        
+        if (e_matrix[d,r] == 1)
+            τ_tmp += 1
+            for k in NeighborList(e_matrix,N,d,r)
+                H_idx = findall(Head_list .== min(k, d, r))
+                Phi_List[H_idx][]
+            end
+
+        end
+    end
+    return τ_tmp
+end
+
 function sum_formulae(O_matrix, e_matrix, N, d, r)
     ΔΘ = 0
     ΔΦ = 0
@@ -52,8 +89,39 @@ function Opinion_Initialize(O_zero, ρ, N)
     end
 end
 
-function ER_network_gen(Mat_zero, p, N, eList_init, triList_init)
+function Edge_Triad_list(Mat, N, eList_init, triList_init)
+    n_e_init = 0
+    n_T_init = 0
 
+    for m = 1:N
+        for n = m:N
+            if (Mat[m,n] == 1 && Mat[n,m] == 1)
+                n_e_init += 1
+                input_list = []
+                push!(input_list, m)
+                push!(input_list, n)
+                push!(eList_init, input_list)
+            end
+        end
+    end
+
+    for x = 1:n_e_init
+        idx_1 = eList_init[x][1]
+        idx_2 = eList_init[x][2]
+        for idx_3 = 1:N
+            if (Mat_zero[idx_1,idx_3] ==1 && Mat_zero[idx_2,idx_3] == 1 && idx_2 < idx_3 )
+                input_list_T = []
+                n_T_init += 1
+                push!(input_list_T, idx_1,idx_2,idx_3)
+                push!(triList_init,input_list_T)    
+            end
+        end
+    end
+
+    return [n_e_init, n_T_init]
+end
+
+function ER_network_gen(Mat_zero, p, N, eList_init, triList_init)
     n_e_init = 0
     n_T_init = 0
 
@@ -315,6 +383,7 @@ function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
     end
     return τ_tmp
 end
+
 
 function d_r_pair_update(rule, O_matrix, e_matrix, N, d, r)
     
