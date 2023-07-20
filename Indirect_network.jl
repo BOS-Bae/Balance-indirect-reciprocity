@@ -1,6 +1,6 @@
 # Functions for siumulation
 using Random
-
+#=
 function Phi_update(O_matrix, e_matrix, N, τ_tmp, n_triad, tri_List, Phi_List, Idx_List)
     Head_list = Any[]
     if (τ_tmp == 0) # initialization
@@ -13,30 +13,40 @@ function Phi_update(O_matrix, e_matrix, N, τ_tmp, n_triad, tri_List, Phi_List, 
             push!(Head_list, idx_1)
             
             for m in 1:6
-                Phi_List[triad_idx][m] = tri_balance(O_matrix, idx_123[m][1], idx_123[m][2], idx_123[m][3])
+                Phi_List[triad_idx,m] = tri_balance(O_matrix, idx_123[m,1], idx_123[m,2], idx_123[m,3])
                 for n in 1:3
-                    Idx_List[triad_idx][m][n] = idx_123[m][n]
+                    Idx_List[triad_idx,m,n] = idx_123[m,n]
                 end
             end
 
         end
         τ_tmp += 1
-
     else
         d = rand(1:N)
         r = rand(1:N)
-        
+        d_idx = r_idx = k_idx = 0
         if (e_matrix[d,r] == 1)
             τ_tmp += 1
             for k in NeighborList(e_matrix,N,d,r)
-                H_idx = findall(Head_list .== min(k, d, r))
-                Phi_List[H_idx][]
+                H_idx = findall(Head_list .== min(k, d, r)) # find the order of triad_idx
+                for m in 1:3
+                    if (sort([k, d, r])[m] == k) k_idx = m
+                    elseif (sort([k, d, r])[m] == d) d_idx = m
+                    else r_idx = m
+                    end
+                end
+                # Idx_List[n_triad, 6, 3]
+                rdk_bool = [(Idx_List[H_idx,m,1] == r_idx && Idx_List[H_idx,m,2] == d_idx && Idx_List[H_idx,m,3] == k_idx) ? 1 : 0 for m in 1:6]
+                
+                Phi_List[H_idx,] findall(Idx_List[H_idx, : , :] .== )
+                
             end
 
         end
     end
     return τ_tmp
 end
+=#
 
 function sum_formulae(O_matrix, e_matrix, N, d, r)
     ΔΘ = 0
@@ -175,6 +185,29 @@ function NeighborList(Network_mat,N,d,r)
     end
     return α_arr
 end
+
+function K_result(O_matrix, α, d, r, K)
+
+    val = ((K*O_matrix[α,r] * O_matrix[d,r]
+    + (1-K)*(-O_matrix[α,r] + O_matrix[d,r] + O_matrix[d,r]*O_matrix[α,d]
+    - O_matrix[α,r]*O_matrix[α,d] +1 + O_matrix[α,d] 
+    - O_matrix[d,r]*O_matrix[α,r]*O_matrix[α,d])))
+
+    return val
+end
+
+
+function K_rule(O_matrix, neigh_arr, d, r, K)
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        # K = 0, K = 1/4
+        O_matrix[α,d] = ((K*O_matrix[α,r] * O_matrix[d,r]
+        + (1-K)*(-O_matrix[α,r] + O_matrix[d,r] + O_matrix[d,r]*O_matrix[α,d]
+        - O_matrix[α,r]*O_matrix[α,d] +1 + O_matrix[α,d] 
+        - O_matrix[d,r]*O_matrix[α,r]*O_matrix[α,d])))
+    end
+end
+
 
 # 'L6_rule_dr_all' is a function for parallel update.
 function L6_rule_dr_all(O_matrix, New_matrix, neigh_arr, d, r)
@@ -380,6 +413,19 @@ function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
         τ_tmp += 1
         NList = NeighborList(e_matrix,N,d,r)
         rule(O_matrix, NList, d, r)
+    end
+    return τ_tmp
+end
+
+function K_update(rule, O_matrix, e_matrix, N, τ_tmp, K)
+    
+    d = rand(1:N)
+    r = rand(1:N)
+    
+    if (e_matrix[d,r] == 1)
+        τ_tmp += 1
+        NList = NeighborList(e_matrix,N,d,r)
+        rule(O_matrix, NList, d, r, K)
     end
     return τ_tmp
 end

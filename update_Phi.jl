@@ -7,7 +7,6 @@ e_matrix = transpose([[0, 1, 0, 1, 0] [1, 0, 1, 1, 1] [0, 1, 0, 1, 1] [1, 1, 1, 
 
 N = length(e_matrix)
 println("N=", N)
-#U_matrix = zeros(N, N) # Additional matrix for update by new method, 'New_matrix' of 'L6_rule_dr_all'.
 
 Edge_list = Any[]
 Triad_list = Any[]
