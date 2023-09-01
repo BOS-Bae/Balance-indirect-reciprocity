@@ -217,14 +217,17 @@ function L6_rule_dr_all(O_matrix, New_matrix, neigh_arr, d, r)
     end     
 end
 
-function L6_rule(O_matrix, neigh_arr, d, r)
+function L6_rule(O_matrix, neigh_arr, d, r, ϵ)
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
         O_matrix[α,d] = O_matrix[α,r] * O_matrix[d,r]
+        if (rand(Float64) < ϵ)
+            O_matrix[α,d] *= -1
+        end
     end     
 end
 
-function L5_rule(O_matrix, neigh_arr, d, r)
+function L5_rule(O_matrix, neigh_arr, d, r, ϵ)
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
         if (O_matrix[d,r] == 1)
@@ -236,10 +239,13 @@ function L5_rule(O_matrix, neigh_arr, d, r)
         elseif (O_matrix[d,r] == -1)
             O_matrix[α,d] = -O_matrix[α,r]
         end
+        if (rand(Float64) < ϵ)
+            O_matrix[α,d] *= -1
+        end
     end
 end
 
-function L4_rule(O_matrix, neigh_arr, d, r)
+function L4_rule(O_matrix, neigh_arr, d, r, ϵ)
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
         if (O_matrix[d,r] == 1)
@@ -249,10 +255,13 @@ function L4_rule(O_matrix, neigh_arr, d, r)
         elseif (O_matrix[d,r] == -1)
             O_matrix[α,d] = -O_matrix[α,r]
         end
+        if (rand(Float64) < ϵ)
+            O_matrix[α,d] *= -1
+        end
     end
 end
 
-function L3_rule(O_matrix, neigh_arr, d, r)
+function L3_rule(O_matrix, neigh_arr, d, r, ϵ)
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
         if (O_matrix[d,r] == 1)
@@ -260,10 +269,13 @@ function L3_rule(O_matrix, neigh_arr, d, r)
         elseif (O_matrix[d,r] == -1)
             O_matrix[α,d] = -O_matrix[α,r]
         end
+        if (rand(Float64) < ϵ)
+            O_matrix[α,d] *= -1
+        end
     end
 end
 
-function L2_rule(O_matrix, neigh_arr, d, r)
+function L2_rule(O_matrix, neigh_arr, d, r, ϵ)
     c_d = 0
     if (O_matrix[d,d]==1)
         c_d =  O_matrix[d,r]
@@ -286,6 +298,9 @@ function L2_rule(O_matrix, neigh_arr, d, r)
                 O_matrix[α,d] = -1
             end
         end
+    end
+    if (rand(Float64) < ϵ)
+        O_matrix[α,d] *= -1
     end
 end
 
@@ -404,7 +419,7 @@ function count_structure(e_matrix, N)
     return [T, Q, R]
 end
 
-function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
+function original_update(rule, O_matrix, e_matrix, N, τ_tmp, ϵ)
     
     d = rand(1:N)
     r = rand(1:N)
@@ -412,7 +427,7 @@ function original_update(rule, O_matrix, e_matrix, N, τ_tmp)
     if (e_matrix[d,r] == 1)
         τ_tmp += 1
         NList = NeighborList(e_matrix,N,d,r)
-        rule(O_matrix, NList, d, r)
+        rule(O_matrix, NList, d, r, ϵ)
     end
     return τ_tmp
 end

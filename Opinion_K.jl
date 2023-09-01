@@ -3,18 +3,24 @@ include("Indirect_network.jl")
 using Random
 
 N = parse(Int, ARGS[1])
-#leng = 2
+#leng = 1
 leng = parse(Int, ARGS[2])
 
 initial_prob = 0.5
-#K_arr = [0.75, 1.0]
-K_arr =  collect(range(start=0.75, stop=1, length=leng)) # p_idx = 1:leng, so prob = P1[p_idx]
-O_arr = zeros(leng)
+#K_arr = [0.99]
+
+K_arr = collect(range(start=0.75, stop = 0.758, length = 9))
+K_append =  collect(range(start=0.759, stop=1, length=leng)) # p_idx = 1:leng, so prob = P1[p_idx]
+
+for i in 1:leng
+    push!(K_arr, K_append[i])
+end
+
+O_arr = zeros(length(K_arr))
 prob = 1.0
 
-for K_idx in 1:leng
+for K_idx in 1:length(K_arr)
     K = K_arr[K_idx]
-    
     e_matrix = zeros(N, N)
     σ_matrix = zeros(N, N)
     U_matrix = zeros(N, N) # Additional matrix for update by new method, 'New_matrix' of 'L6_rule_dr_all'.
@@ -55,9 +61,12 @@ for K_idx in 1:leng
             break
         end
     end
+    #print(σ_matrix)
+    #print("\n")
+    #print("\n")
     O_arr[K_idx] = (1 - Opinions_average(σ_matrix, e_matrix, N))
 end
 
-for i in 1:leng
+for i in 1:length(K_arr)
     println(K_arr[i], "    ",O_arr[i])
 end
