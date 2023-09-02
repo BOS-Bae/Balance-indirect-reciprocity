@@ -4,11 +4,11 @@ include("MonteCarlo.jl")
 
 nn_check = false
 nn_print = false
-draw_lattice = true
+draw_lattice = false
 auto_corr = false
 
 if (length(ARGS) < 7)
-    print("usage : Lx Ly MCS period H K M \n")
+    print("usage : Lx Ly MCS period H K T \n")
     exit(1)
 end
 
@@ -18,7 +18,9 @@ MCS = parse(Int64, ARGS[3])
 period = parse(Int64, ARGS[4])
 H = parse(Float64, ARGS[5])
 K = parse(Float64, ARGS[6])
-M = parse(Float64, ARGS[7])
+T = parse(Float64, ARGS[7])
+
+M = 1/T
 
 N = 3*Lx*Ly
 KK = 4 # number of neighbor
@@ -136,9 +138,16 @@ for s in 1:n_sample
     
     ground_E = (-H-2*K-2/3)*N
 	t = 0
+    t_avg = 5000
+    E_avg = E2_avg = 0
 	for t in 1:MCS
         E_data[t] = E
-        
+        if (t == MCS-t_avg)
+            E_avg = E2_avg = 0
+        end
+        E_avg += E/t_avg
+        E2_avg += E^2/t_avg
+
 		#print(mag,"    ", E, "    ", ground_E, "\n")
         for p in 1:period
             metropolis(spin, nn, N, H, K, M)
@@ -147,12 +156,13 @@ for s in 1:n_sample
         E = calc_E(spin, nn, H, K, M, N)
         mag = sum(spin)/N
 
-		if (Int64(round(E)) == Int64(round(ground_E)))
-			print("\n")
-			print("t = ", t)
-			break
-		end
+		#if (Int64(round(E)) == Int64(round(ground_E)))
+		#	print("\n")
+		#	print("t = ", t)
+		#	break
+		#end
     end
+    print(T,"    ", E_avg,"    ", E2_avg, "\n")
 
     if (auto_corr)
         for t in 1:MCS
@@ -167,7 +177,7 @@ for s in 1:n_sample
 	        print(C_t, "\n")
 	    end
     end
-    println("")
+
     if (draw_lattice)
         #L_matrix = zeros(Int64, 2*3*L + 2*L, 2*L)
         for i in 1:N
