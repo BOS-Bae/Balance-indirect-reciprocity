@@ -1,5 +1,5 @@
 #!/bin/bash
-
+gcc avg_BW.c -lm -o avg_BW
 T=0.6500
 for ((i=0; i<40; i++))
 do
@@ -11,5 +11,5 @@ do
 		T=$(echo "$T + 0.01" | bc -l)
 		T=$(printf "%.4f" $T)
 	fi
-	julia Baxter_Wu.jl $1 1000000 1 $T > ./dat_Baxter_Wu/L$1/L$1T$T.dat
+	./avg_BW $1 $T 1000000 200 100000  >> L$1/L$1_BW.dat
 done

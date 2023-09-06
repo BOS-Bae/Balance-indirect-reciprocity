@@ -1,5 +1,4 @@
 using Random
-
 include("MonteCarlo.jl")
 
 nn_check = false
@@ -16,6 +15,10 @@ L = parse(Int64, ARGS[1])
 MCS = parse(Int64, ARGS[2])
 period = parse(Int64, ARGS[3])
 T = parse(Float64, ARGS[4])
+
+#f_name = "./Baxter_Wu_dat/L$(lpad(L,3,"0"))T$(lpad(T,5,"0")).dat"
+#println(f_name)
+#fid = open(f_name, "w")
 
 N = L*L
 KK = 6 # number of neighbor
@@ -76,26 +79,31 @@ for s in 1:n_sample
     
     mag = sum(spin)/N
     
-    ground_E = -2*N
 	t = 0
-    t_avg = 5000
     E_avg = E2_avg = 0
+	E_sam = c_sam = 0
+
+	#n_sam = ((MCS - t_thm) ÷ t_ms)
+
+	#E_sam = zeros(Float64, Int64(n_sam))
+	#c_sam = zeros(Float64, Int64(n_sam))
+	n_s = 0
 	for t in 1:MCS
         E_data[t] = E
-        if (t == MCS-t_avg)
-            E_avg = E2_avg = 0
-        end
-        E_avg += E/t_avg
-        E2_avg += E^2/t_avg
-
-		#print(mag,"    ", E^2/(M^2), "    ", E/M, "    ", ground_E/M, "\n")
-        for p in 1:period
-            Baxter_wu_metropolis(spin, nn,N,T)
-        end
-        E = Baxter_wu_E(spin, nn, N)
-        mag = sum(spin)/N
-    end
-    print(T,"    ", E_avg,"    ", E2_avg, "\n")
+		E_avg = E2_avg = 0
+        
+		print(T,"    ", E, "    ", E^2, "\n")
+       	for p in 1:period
+	      	Baxter_wu_metropolis(spin, nn,N,T)
+		end
+       	E = Baxter_wu_E(spin, nn, N)
+		#println(E)
+       	#mag = sum(spin)/N
+		
+		n_s += 1
+		#print("t=",t,"\n")
+		#print(T,"    ", E_avg,"    ", (E2_avg -  E_avg*E_avg)/(T^2), "\n")
+	end
 
     if (auto_corr)
         for t in 1:MCS
@@ -137,6 +145,5 @@ for s in 1:n_sample
             end
         end
     end
-
 end
-
+#close(fid)
