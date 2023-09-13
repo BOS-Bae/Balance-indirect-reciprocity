@@ -17,8 +17,9 @@ function L6_rule(O_matrix, α, d, r)
     return val
 end
 
+
 function L4_rule(O_matrix, α, d, r)
-    val = 0
+    val = O_matrix[α,d]
     if (O_matrix[d,r] == 1)
         if (O_matrix[α,d] == -1)
             val = O_matrix[α,r]
@@ -30,19 +31,18 @@ function L4_rule(O_matrix, α, d, r)
 end
 
 function generate_config_matrix(N::Int64)
-    num_matrices = 2^((N * (N - 1)) ÷ 2)
+    num_matrices = 2^(N * (N - 1))
     matrices = Array{Int}[]
     
     for index in 0:num_matrices-1
         matrix = zeros(Int64, N, N)
         temp_index = index
         
-        for row in 1:N, col in row:N
+        for row in 1:N, col in 1:N
             if row != col
                 bit = temp_index & 1
                 tmp_unit = bit == 0 ? 1 : -1
                 matrix[row, col] = tmp_unit
-                matrix[col, row] = tmp_unit
                 temp_index >>= 1
             end
         end
@@ -53,8 +53,7 @@ function generate_config_matrix(N::Int64)
     return matrices
 end
 
-
-n_mat = 2^((N * (N - 1)) ÷ 2)
+n_mat = 2^(N * (N - 1))
 
 M_eig = zeros(Float64, n_mat, n_mat)
 
@@ -69,23 +68,18 @@ for i in 1:n_mat
             if (x != y)
                 tmp = matrices[i][x,y]
                 matrices[i][x,y] *= -1
-                matrices[i][y,x] = matrices[i][x,y]
                 idx = 0
                 for j in 1:n_mat
                     if ((matrices[j] == matrices[i]) && (i != j))
-                        M_eig[j,i] += (1/6)*ϵ
+                        M_eig[j,i] += (1/12)*ϵ
                     end
                 end
                 matrices[i][x,y] = tmp
-                matrices[i][y,x] = matrices[i][x,y]
                 for k in 1:N
                     if (k != x && k != y)
                         tmp = matrices[i][k,x]
-                        #if (i==64) println("k=",k," ,val=",matrices[i][k,x]) end
-                        matrices[i][k,x] = L6_rule(matrices[i], k, x, y)
-                        matrices[i][x,k] = matrices[i][k,x]
+                        matrices[i][k,x] = L4_rule(matrices[i], k, x, y)
 
-                        #if (i==64) println("k=",k," ,val=",matrices[i][k,x]) end
                         for j in 1:n_mat
                             if ((matrices[j] == matrices[i]) && (i != j))
                                 M_eig[j,i] += (1-ϵ)*(factorial(N-3)/factorial(N))
@@ -94,7 +88,6 @@ for i in 1:n_mat
                             end
                         end
                         matrices[i][k,x] = tmp
-                        matrices[i][x,k] = matrices[i][k,x]
                     end
                 end
             end
@@ -112,7 +105,11 @@ end
 n=1
 if (multiplication)
     for i in 1:n
-        ran_vec = rand(Float64, n_mat)
+        #ran_vec = rand(Float64, n_mat)
+        
+        #ran_vec = rand(Float64, n_mat)
+        ran_vec = zeros(Float64, n_mat)
+        ran_vec[2] = 1
         ran_vec /= sum(ran_vec)
 
         println(ran_vec)
@@ -124,7 +121,7 @@ if (multiplication)
 
         println("")
         for i in 1:n_mat
-            if (abs(ran_vec[i]) > 0.0001)
+            if (ran_vec[i] > 0.0001)
                 print(ran_vec[i], " ")
             else
                 print("x", " ")
