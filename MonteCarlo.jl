@@ -23,7 +23,7 @@ end
 function Baxter_wu_metropolis(spin, nn, N, T)
     # 1 : down, 2 : right, 3 : up, 4 : left, 5 : left-up , 6 : right-down	
     for i in 1:N
-        dE = spin[i]*(2/3)*(spin[nn[i,4]]*spin[nn[i,5]] + spin[nn[i,3]]*spin[nn[i,5]] 
+        dE = spin[i]*2*(spin[nn[i,4]]*spin[nn[i,5]] + spin[nn[i,3]]*spin[nn[i,5]] 
         + spin[nn[i,3]]*spin[nn[i,2]] + spin[nn[i,2]]*spin[nn[i,6]] 
         + spin[nn[i,1]]*spin[nn[i,6]] + spin[nn[i,4]]*spin[nn[i,1]])
         if (dE < 0)
