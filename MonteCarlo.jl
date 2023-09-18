@@ -37,8 +37,8 @@ end
 function metropolis(spin, nn, N, H, K, M)
     dE = 0
     for i in 1:N
-        dE = 2*(H*spin[i] + (K/2)*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
-                + (M/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
+        dE = 2*(H*spin[i] + K*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
+                + M*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
         if (dE < 0)
             spin[i] *= -1
         elseif (rand(Float64) < exp(-dE))
