@@ -7,8 +7,8 @@ nn_print = false
 draw_lattice = false
 auto_corr = false
 
-if (length(ARGS) < 7)
-    print("usage : Lx Ly MCS period H K T \n")
+if (length(ARGS) < 5)
+    print("usage : Lx Ly MCS period T \n")
     exit(1)
 end
 
@@ -16,11 +16,10 @@ Lx = parse(Int64, ARGS[1])
 Ly = parse(Int64, ARGS[2])
 MCS = parse(Int64, ARGS[3])
 period = parse(Int64, ARGS[4])
-H = parse(Float64, ARGS[5])
-K = parse(Float64, ARGS[6])
-T = parse(Float64, ARGS[7])
-
-M = 1/T
+H = 0
+K = 0
+M = 1 # there is three-spin interaction only.
+T = parse(Float64, ARGS[5])
 
 N = 3*Lx*Ly
 KK = 4 # number of neighbor
@@ -132,28 +131,26 @@ for s in 1:n_sample
         print(check," ", check_true," ", check==check_true, "\n")
     end
                 
-    E = calc_E(spin, nn, H, K, M, N)
+    E = kagome_E(spin, nn, H, K, M, N)
     
     mag = sum(spin)/N
     
-    ground_E = (-H-2*K-2/3)*N
+    ground_E = (-H-2*K-2*M/3)*N
 	t = 0
-    t_avg = 5000
-    E_avg = E2_avg = 0
+    #t_avg = 5000
+    #E_avg = E2_avg = 0
 	for t in 1:MCS
         E_data[t] = E
-        if (t == MCS-t_avg)
-            E_avg = E2_avg = 0
-        end
-        E_avg += E/t_avg
-        E2_avg += E^2/t_avg
-
-		#print(mag,"    ", E, "    ", ground_E, "\n")
+        #if (t == MCS-t_avg)
+        #    E_avg = E2_avg = 0
+        #end
+        #E_avg += E/t_avg
+        #E2_avg += E^2/t_avg
+		print(mag,"    ", E, "    ", ground_E, "\n")
         for p in 1:period
-            metropolis(spin, nn, N, H, K, M)
-            #Wolff(spin, nn, N, H, K, M, KK)
+            kagome_metropolis(spin, nn, N, H, K, M, T)
         end
-        E = calc_E(spin, nn, H, K, M, N)
+        E = kagome_E(spin, nn, H, K, M, N)
         mag = sum(spin)/N
 
 		#if (Int64(round(E)) == Int64(round(ground_E)))
@@ -162,7 +159,7 @@ for s in 1:n_sample
 		#	break
 		#end
     end
-    print(T,"    ", E_avg,"    ", E2_avg, "\n")
+    #print(T,"    ", E_avg,"    ", E2_avg, "\n")
 
     if (auto_corr)
         for t in 1:MCS
