@@ -42,7 +42,7 @@ int main(int argc, char **argv){
 	
 	int t_idx = 0;
 	for (b=t_thm-1;b<MCS;b++){
-		if ((b-t_thm) % t_ms == 0) {
+		if ((b+t_ms-t_thm+1) % t_ms == 0) {
 			data_sl[t_idx][0] = data[b][0];
 			data_sl[t_idx][1] = avg_E_t;
 			data_sl[t_idx][2] = (avg_E2_t - avg_E_t*avg_E_t)/(data[b][0]*data[b][0]);
