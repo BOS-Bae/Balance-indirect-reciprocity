@@ -1,5 +1,5 @@
 #!/bin/bash
-gcc avg_BW.c -lm -o avg_BW
+gcc binning_average.c -lm -o binning_average
 T=1.0000
 for ((i=0; i<337; i++))
 do
