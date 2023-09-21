@@ -34,7 +34,7 @@ end
 
 n_sample = 1
 for s in 1:n_sample
-    # Making structure of Kagome lattice
+    # Making structure of triangular lattice
     for i in 1:N
         idx = i-1
         # 1 : down, 2 : right, 3 : up, 4 : left, 5 : left-up , 6 : right-down
