@@ -1,5 +1,5 @@
 # Simulation code for calculating imbalance values for different connection probabilities.
-include("Indirect_network.jl")
+include("../Indirect_network.jl")
 using Random
 
 N = 30

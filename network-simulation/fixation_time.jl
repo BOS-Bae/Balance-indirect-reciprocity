@@ -1,5 +1,5 @@
 # Simulation code for plotting fixation time
-include("Indirect_network.jl")
+include("../Indirect_network.jl")
 using Random
 
 if (length(ARGS) < 4)
@@ -55,9 +55,7 @@ end
 result_arr = zeros(leng)
 std_arr = zeros(leng)
 for i in 1:leng
-    for n in 1:n_sample
-        result_arr[i] += τ_arr[n, i]
-    end
+    result_arr[i] = sum(τ_arr[:,i])
 end
 result_arr /= n_sample
 

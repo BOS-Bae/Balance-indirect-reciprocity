@@ -1,9 +1,9 @@
 using LinearAlgebra
 
 multiplication = false
-eig_histo = false
-ratio_check = true
-L4_norm = true
+eig_histo = true
+ratio_check = false
+L4_norm = false
 
 if (length(ARGS) < 3)
     print("usage : N ϵ MCS \n")
@@ -175,7 +175,6 @@ if (multiplication && (L4_norm==true))
 
         #idx = findall(ran_vec .== maximum(ran_vec))
         #println(matrices[idx])
-
     end
 elseif (multiplication && (L4_norm==false))
     for i in 1:n
@@ -237,10 +236,10 @@ elseif (eig_histo && (L4_norm==true))
         print("\n")
     end
     for conf in eig_conf_arr
-        println(matrices[conf]) 
+        println(matrices[conf])
     end
 
-elseif (eig_histo && (L6_norm==true))
+elseif (eig_histo && (L4_norm==false))
     #println(M_L4)
     R_arr = zeros(Float64, n_mat)
     E_arr = eigvals(M_L6)
