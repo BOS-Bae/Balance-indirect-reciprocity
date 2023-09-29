@@ -36,15 +36,34 @@ function LTD_update(x, p, Triad)
                 x[i,j] = x[j,k] = x[i,k] = 1
             else
                 if (x[i,j] == 1 && x[j,k] == 1 && x[i,k] == -1)
-                    x[i,j] = -1
+                    if (rand(Float64) < 0.5)
+                        x[i,j] = -1
+                    else
+                        x[j,k] = -1
+                    end
                 elseif (x[i,j] == 1 && x[j,k] == -1 && x[i,k] == 1)
-                    x[i,k] = -1
+                    if (rand(Float64) < 0.5)
+                        x[i,k] = -1
+                    else
+                        x[i,j] = -1
+                    end
                 elseif (x[i,j] == -1 && x[j,k] == 1 && x[i,k] == 1)
-                    x[j,k] = -1
+                    if (rand(Float64) < 0.5)
+                        x[j,k] = -1
+                    else
+                        x[i,k] = -1
+                    end
                 end
             end
         elseif (sum(signs) == -3)
-            x[i,j] *= -1
+            r_n = rand(Float64)
+            if (r_n < 1/3)
+                x[i,j] = 1
+            elseif (r_n >= 1/3 && r_n < 2/3)
+                x[j,k] = 1
+            elseif (r_n >= 2/3)
+                x[i,k] = 1
+            end
         end 
         x[j,i] = x[i,j]; x[k,i] = x[i,k]; x[k,j] = x[j,k]
     end
@@ -61,15 +80,17 @@ function balance(x, Triad)
     return bal
 end
 
-function ρ_cal(x, n_Edge, Edge)
+function ρ_cal(x, N)
     ρ_count = 0
-    for (i,j) in Edge
-        if (x[i,j] == 1)
-            ρ_count += 1 
+    for i in 1:N
+        for j in 1:N
+            if (x[i,j] == 1)
+                ρ_count += 1
+            end
         end
     end
 
-    return ρ_count/n_Edge
+    return ρ_count/(N*(N-1))
 end
 
 function n_k(x, n_Triad, Triad)
@@ -106,7 +127,7 @@ function x_init(N)
     return x_i
 end
 
-t_ms = 1000
+t_ms = 3000
 
 saved_mat = zeros(Float64, n_s,5)
 
@@ -116,7 +137,7 @@ for s in 1:n_s
     for t in 1:MCS
         if (t > (MCS-t_ms))
             t_m += 1
-            ρ = ρ_cal(x_t, n_Edge, Edge)
+            ρ = ρ_cal(x_t, N)
             n = n_k(x_t, n_Triad, Triad)
             saved_mat[s,1] += ρ; saved_mat[s,2] += n[1]; saved_mat[s,3] += n[2]
             saved_mat[s,4] += n[3]; saved_mat[s,5] += n[4]
