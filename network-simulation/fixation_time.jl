@@ -18,7 +18,6 @@ P1 =  collect(range(start=0.1, stop=1.0, length=leng)) # p_idx = 1:leng, so prob
 τ_arr = zeros(n_sample, leng)
     
 for n_idx in 1:n_sample
-    #print(n_idx, "\n")
     for p_idx in 1:leng
         prob = P1[p_idx]
 
@@ -37,12 +36,12 @@ for n_idx in 1:n_sample
         #end
         τ = 0
         τ_tmp = 0
-        while true
-            τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
+        while (true)
+            #τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
             # For random sequential update, use the function below :
-            #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, N, τ)
+            τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ)
             τ = τ_tmp
-
+            
             #if (Check_absorbing(σ_matrix, e_matrix, N, L6_rule_ab) == true)
             if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
                 break
@@ -69,9 +68,5 @@ for i in 1:leng
 end
 
 for i in 1:leng
-    print(result_arr[i], " ")
-end
-print("\n")
-for i in 1:leng
-    print(std_arr[i], " ")
+    println(P1[i], "  " , result_arr[i], "  ", std_arr[i])
 end

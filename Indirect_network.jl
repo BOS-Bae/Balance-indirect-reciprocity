@@ -454,20 +454,26 @@ function d_r_pair_update(rule, O_matrix, e_matrix, N, d, r)
     end
 end
 
-function random_sequential_update(rule, O_matrix, e_matrix, N, τ_tmp)
-    
-    Random_i_list = 1:N
-    d_arr = shuffle(Random_i_list)
-    r_arr = shuffle(Random_i_list)
-    
-    for d in d_arr
-        for r in r_arr
-            if (e_matrix[d,r] == 1)
-                NList = NeighborList(e_matrix,N,d,r)
-                rule(O_matrix, NList, d, r)
-            end
-        end
+function random_sequential_update(rule, O_matrix, e_matrix, e_list, τ_tmp)
+    e_arr = []
+    for i in 1:length(e_list)
+        push!(e_arr, e_list[i])
     end
+
+    for i in 1:N
+        push!(e_arr, [i,i])
+    end
+
+    r_list = shuffle(e_arr)
+    for r_idx in length(r_list)
+        r_list[r_idx] = shuffle(r_list[r_idx])
+    end
+
+    for (d,r) in r_list
+        NList = NeighborList(e_matrix,N,d,r)
+        rule(O_matrix, NList, d, r, ϵ)
+    end
+
     τ_tmp += 1
     return τ_tmp
 end
