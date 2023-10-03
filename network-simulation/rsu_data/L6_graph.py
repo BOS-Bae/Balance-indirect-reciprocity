@@ -24,8 +24,9 @@ N_arr = [23,21,19,17,15]
 c_arr = ["gold", "orange", "skyblue", "green", "purple"]
 
 for i in range(5):
-    plt.plot(p,data_arr[i],label="N = {}".format(N_arr[i]),color="{}".format(c_arr[i]),marker='s')
-    plt.errorbar(p,data_arr[i],yerr=err_arr[i],color="{}".format(c_arr[i]))
+    N = N_arr[i]
+    plt.plot(p,N*N*p*data_arr[i],label="N = {}".format(N),color="{}".format(c_arr[i]),marker='s')
+    plt.errorbar(p,N*N*p*data_arr[i],yerr=N*N*p*err_arr[i],color="{}".format(c_arr[i]))
 
 plt.xlabel("connection probability",fontsize=17)
 plt.ylabel("fixation time",fontsize=17)
