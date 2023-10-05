@@ -432,6 +432,60 @@ function original_update(rule, O_matrix, e_matrix, N, τ_tmp, ϵ)
     return τ_tmp
 end
 
+function LTD_update(rule, O_matrix, e_matrix, N, τ_tmp, p)
+    
+    d = rand(1:N)
+    r = rand(1:N)
+    
+    if (e_matrix[d,r] == 1)
+        τ_tmp += 1
+        NList = NeighborList(e_matrix,N,d,r)
+        rule(O_matrix, NList, d, r, p)
+    end
+    return τ_tmp
+end
+
+function LTD_rule(O_matrix, neigh_arr, d, r, p)
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        signs = [O_matrix[α,k], O_matrix[α,d], O_matrix[d,r]]
+        if (sum(signs) == 1)
+            if (rand(Float64) < p)
+                O_matrix[α,k] = 1; O_matrix[α,d] = 1; O_matrix[d,r] = 1
+            else
+                if (O_matrix[α,k] == 1 && O_matrix[α,d] == 1 && O_matrix[d,r] == -1)
+                    if (rand(Float64) < 0.5)
+                        O_matrix[α,k] = -1
+                    else
+                        O_matrix[α,d] = -1
+                    end
+                elseif (O_matrix[α,k] == 1 && O_matrix[α,d] == -1 && O_matrix[d,r] == 1)
+                    if (rand(Float64) < 0.5)
+                        O_matrix[d,r] = -1
+                    else
+                        O_matrix[α,k] = -1
+                    end
+                elseif (O_matrix[α,k] == -1 && O_matrix[α,d] == 1 && O_matrix[d,r] == 1)
+                    if (rand(Float64) < 0.5)
+                        O_matrix[α,d] = -1
+                    else
+                        O_matrix[d,r] = -1
+                    end
+                end
+            end
+        elseif (sum(signs) == -3)
+            r_n = rand(Float64)
+            if (r_n < 1/3)
+                O_matrix[α,k] = 1
+            elseif (r_n >= 1/3 && r_n < 2/3)
+                O_matrix[α,d] = 1
+            elseif (r_n >= 2/3)
+                O_matrix[d,r] = 1
+            end
+        end
+    end     
+end
+
 function K_update(rule, O_matrix, e_matrix, N, τ_tmp, K)
     
     d = rand(1:N)

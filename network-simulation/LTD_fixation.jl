@@ -2,24 +2,29 @@
 include("../Indirect_network.jl")
 using Random
 
-if (length(ARGS) < 4)
-    print("usage : N p_leng n_sample ϵ \n")
+if (length(ARGS) < 2)
+    print("usage : N_max n_sample \n")
+    print("!) N_max should be even number. \n")
     exit(1)
 end
 
-N = parse(Int64, ARGS[1])
-leng = parse(Int64, ARGS[2])
-n_sample = parse(Int64, ARGS[3])
-ϵ = parse(Float64, ARGS[4])
+N_max = parse(Int64, ARGS[1])
+n_sample = parse(Int64, ARGS[2])
+p_LTD = 1/3
+
+N_min = 4
+N_leng = Int64((N_max - N_min)/2 + 1)
+N_arr = range(N_min, stop=N_max, length=N_leng)
 
 initial_prob = 0.5
 
-P1 =  collect(range(start=0.1, stop=1.0, length=leng)) # p_idx = 1:leng, so prob = P1[p_idx]
-τ_arr = zeros(n_sample, leng)
+τ_arr = zeros(n_sample,N_leng)
     
 for n_idx in 1:n_sample
-    for p_idx in 1:leng
-        prob = P1[p_idx]
+    prob = 1.0
+    for N_idx in 1:N_leng
+        N = Int64(N_arr[N_idx])
+        println(N)
 
         e_matrix = zeros(N, N)
         σ_matrix = zeros(N, N)
@@ -37,9 +42,7 @@ for n_idx in 1:n_sample
         τ = 0
         τ_tmp = 0
         while (true)
-            τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
-            # For random sequential update, use the function below :
-            #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ)
+            τ_tmp = LTD_update(LTD_rule, σ_matrix, e_matrix, N, τ, p_LTD)
             τ = τ_tmp
             
             #if (Check_absorbing(σ_matrix, e_matrix, N, L6_rule_ab) == true)
@@ -47,18 +50,18 @@ for n_idx in 1:n_sample
                 break
             end
         end
-        τ_arr[n_idx, p_idx] = τ
+        τ_arr[n_idx, N_idx] = τ
     end
 end
 
-result_arr = zeros(leng)
-std_arr = zeros(leng)
-for i in 1:leng
+result_arr = zeros(N_leng)
+std_arr = zeros(N_leng)
+for i in 1:N_leng
     result_arr[i] = sum(τ_arr[:,i])
 end
 result_arr /= n_sample
 
-for i in 1:leng
+for i in 1:N_leng
     val = 0
     for n in 1:n_sample
         val += (τ_arr[n, i] - result_arr[i])^2
@@ -67,6 +70,6 @@ for i in 1:leng
     std_arr[i] = std_val/sqrt(n_sample)
 end
 
-for i in 1:leng
-    println(P1[i], "  " , result_arr[i], "  ", std_arr[i])
+for i in 1:N_leng
+    println(N_arr[i], "  " , result_arr[i], "  ", std_arr[i])
 end
