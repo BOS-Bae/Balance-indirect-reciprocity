@@ -11,5 +11,5 @@ do
 		p=$(echo "$p + 0.020" | bc -l)
 		p=$(printf "%.3f" $p)
 	fi
-	julia LTD.jl $1 $p 10000 20 >> dat_LTD_N$1.dat
+	julia LTD.jl $1 $p 10000 20 >> dat_LTD_N$1
 done
