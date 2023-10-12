@@ -68,8 +68,8 @@ function power_method(N::Int64, iter::Int64, matrices, r_init)
                     idx = 0
                     for j in 1:n_mat
                         if ((matrices[j] == matrices[i]) && (i != j))
-                            r_f[j] += (1/6)*ϵ*r_i[i]
-                            #M[j,i] += (1/6)*ϵ
+                            r_f[j] += (1/15)*ϵ*r_i[i]
+                            #M[j,i] += (1/(2*6)+3)*ϵ
                         end
                     end
                     matrices[i][x,y] = tmp
@@ -119,7 +119,7 @@ r_vector = rand(Float64, n_mat)
 result_vector = power_method(N, iter, matrices, r_vector)
 
 for i in 1:n_mat
-    print(result_vector[i])
+    print(result_vector[i], " ")
 end
 
 for i in 1:n_mat
