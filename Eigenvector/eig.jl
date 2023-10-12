@@ -1,7 +1,7 @@
 using LinearAlgebra
 
 multiplication = false
-eig = false
+eig = true
 
 if (length(ARGS) < 3)
     print("usage : N ϵ MCS \n")

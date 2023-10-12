@@ -18,6 +18,7 @@ P1 =  collect(range(start=0.1, stop=1.0, length=leng)) # p_idx = 1:leng, so prob
 τ_arr = zeros(n_sample, leng)
     
 for n_idx in 1:n_sample
+    println(n_idx)
     for p_idx in 1:leng
         prob = P1[p_idx]
 
