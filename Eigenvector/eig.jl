@@ -18,7 +18,7 @@ function L6_rule(O_matrix, α, d, r)
 end
 
 function L4_rule(O_matrix, α, d, r)
-    val = 0
+    val = O_matrix[α,d]
     if (O_matrix[d,r] == 1)
         if (O_matrix[α,d] == -1)
             val = O_matrix[α,r]
