@@ -1,20 +1,42 @@
 using Random
 
-function kagome_E(spin, nn, H, K, M, N)
+function calc_E(spin, nn, H, K, M, N)
     # H K M
     E = 0.0
     for i in 1:N
         E -= (H*spin[i] + (K/2)*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
-                + (M/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
+                + (1/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
     end
     return E
 end
 
-function kagome_metropolis(spin, nn, N, H, K, M, T)
-    dE = 0
+
+function deg_ground_E(spin, nn, N)
+    E_g = 0.0
     for i in 1:N
-        dE = 2*(H*spin[i] + K*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
-                + M*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
+    	E_g -= abs(spin[i])*(1/3)*(abs(spin[nn[i,4]]*spin[nn[i,5]]) + abs(spin[nn[i,3]]*spin[nn[i,5]])
+    	+ abs(spin[nn[i,3]]*spin[nn[i,2]]) + abs(spin[nn[i,2]]*spin[nn[i,6]]) 
+    	+ abs(spin[nn[i,1]]*spin[nn[i,6]]) + abs(spin[nn[i,4]]*spin[nn[i,1]]))
+	end
+	return E_g
+end
+
+function deg_Baxter_wu_E(spin, nn, N)
+    E = 0.0
+    for i in 1:N
+    	E -= spin[i]*(1/3)*(spin[nn[i,4]]*spin[nn[i,5]] + spin[nn[i,3]]*spin[nn[i,5]] 
+    	+ spin[nn[i,3]]*spin[nn[i,2]] + spin[nn[i,2]]*spin[nn[i,6]] 
+    	+ spin[nn[i,1]]*spin[nn[i,6]] + spin[nn[i,4]]*spin[nn[i,1]])
+	end
+    return E
+end
+
+function deg_Baxter_wu_metropolis(spin, nn, N, T)
+    # 1 : down, 2 : right, 3 : up, 4 : left, 5 : left-up , 6 : right-down	
+    for i in 1:N
+        dE = 2*spin[i]*(spin[nn[i,4]]*spin[nn[i,5]] + spin[nn[i,3]]*spin[nn[i,5]] 
+        + spin[nn[i,3]]*spin[nn[i,2]] + spin[nn[i,2]]*spin[nn[i,6]] 
+        + spin[nn[i,1]]*spin[nn[i,6]] + spin[nn[i,4]]*spin[nn[i,1]])
         if (dE < 0)
             spin[i] *= -1
         elseif (rand(Float64) < exp(-dE/T))
@@ -26,7 +48,7 @@ end
 function Baxter_wu_E(spin, nn, N)
     E = 0.0
     for i in 1:N
-        E -= (1/3)*spin[i]*(spin[nn[i,4]]*spin[nn[i,5]] + spin[nn[i,3]]*spin[nn[i,5]] 
+        E -= spin[i]*(1/3)*(spin[nn[i,4]]*spin[nn[i,5]] + spin[nn[i,3]]*spin[nn[i,5]] 
         + spin[nn[i,3]]*spin[nn[i,2]] + spin[nn[i,2]]*spin[nn[i,6]] 
         + spin[nn[i,1]]*spin[nn[i,6]] + spin[nn[i,4]]*spin[nn[i,1]])
     end
@@ -45,6 +67,53 @@ function Baxter_wu_metropolis(spin, nn, N, T)
             spin[i] *= -1
         end
     end
+end
+
+function metropolis(spin, nn, N, H, K, M)
+    dE = 0
+    for i in 1:N
+        dE = 2*(H*spin[i] + (K/2)*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
+                + (M/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
+        if (dE < 0)
+            spin[i] *= -1
+        elseif (rand(Float64) < exp(-dE))
+            spin[i] *= -1
+        end
+    end
+end
+
+function metropolis2(spin, nn, E_i, N, M, KK)
+    E_f = E_i
+    dE = 0.0
+    for i in 1:N
+        dE += 2*M*spin[i]*spin[nn[i,1]]*spin[nn[i,2]]/3
+        dE += 2*M*spin[i]*spin[nn[i,3]]*spin[nn[i,4]]/3
+        
+        if (dE < 0)
+            spin[i] *= -1
+            E_f += dE
+        elseif (rand(Float64) < exp(-dE))
+            spin[i] *= -1
+            E_f += dE
+        end
+    end
+    return E_f
+end
+
+function metropolis3(spin, nn, E_i, N, M, KK, t)
+    E_f = E_i
+    dE = 0
+    for i in 1:N
+        dE = 2*( M*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
+        if (dE < 0)
+            E_f += dE
+            spin[i] *= -1
+        elseif (rand(Float64) < exp(-dE))
+            E_f += dE
+            spin[i] *= -1
+        end
+    end
+    return E_f
 end
 
 function parallel_tempering(N, E_data, M_arr, i, j)
@@ -83,3 +152,4 @@ function parallel_tempering(N, E_data, M_arr, i, j)
     end
 	return ACCEPT
 end
+
