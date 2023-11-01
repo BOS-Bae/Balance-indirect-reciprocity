@@ -1,15 +1,14 @@
 using Random
 
-function calc_E(spin, nn, H, K, M, N)
+function kagome_E(spin, nn, H, K, M, N)
     # H K M
     E = 0.0
     for i in 1:N
         E -= (H*spin[i] + (K/2)*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
-                + (1/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
+                + M*(1/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
     end
     return E
 end
-
 
 function deg_ground_E(spin, nn, N)
     E_g = 0.0
@@ -69,14 +68,14 @@ function Baxter_wu_metropolis(spin, nn, N, T)
     end
 end
 
-function metropolis(spin, nn, N, H, K, M)
+function kagome_metropolis(spin, nn, N, H, K, M, T)
     dE = 0
     for i in 1:N
         dE = 2*(H*spin[i] + (K/2)*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
                 + (M/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
         if (dE < 0)
             spin[i] *= -1
-        elseif (rand(Float64) < exp(-dE))
+        elseif (rand(Float64) < exp(-dE/T))
             spin[i] *= -1
         end
     end
