@@ -74,6 +74,7 @@ for i in 1:n_mat
                 for j in 1:n_mat
                     if ((matrices[j] == matrices[i]) && (i != j))
                         M_eig[j,i] += (1/6)*ϵ
+                        #M_eig[j,i] += ϵ*(factorial(N-3)/factorial(N))
                     end
                 end
                 matrices[i][x,y] = tmp
@@ -102,6 +103,10 @@ for i in 1:n_mat
     end
 end
 
+for i in 1:n_mat
+    println(sum(M_eig[:,i]))
+    if (sum(M_eig[:,i]) > 1.5) println(i, " error") end
+end
 
 #for i in 1:n_mat
 #    println(ran_mat[:,i])
