@@ -13,14 +13,41 @@ using std::vector;
 
 int main(int argc, char* argv[]) {
 	if(argc<3){
-   		printf("./power_eig N err iter \n");
+   		printf("./L6_eig err iter \n");
    		exit(1);
 	}
-	int N = atoi(argv[1]);
-	double err = atof(argv[2]);
-	int iter = atoi(argv[3]);
+	int N = 4;
+	double err = atof(argv[1]);
+	int n_num = pow(2,N);
 
-	int i,j,k,t,x,y, idx, tmp_idx, bit, tmp_unit;
+	int iter = atoi(argv[2]);
+	double array[2];
+	array[0] = err; array[1] = (1.0 - err);
+	
+	int n_list[n_num][N];
+	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit;
+	int idx_n;
+	double prob_mul;
+	idx = 0;
+	for (n = 0; n < 2; n++){
+		for (m = 0; m < 2; m++){
+			for (l = 0; l < 2; l++){
+				for (p = 0; p < 2; p++){
+					n_list[idx][0] = n;
+					n_list[idx][1] = m;
+					n_list[idx][2] = l;
+					n_list[idx][3] = p;
+					idx += 1;
+				}
+			}
+		}
+	}
+//	for (i=0; i < 16; i++){
+//		for (j=0; j < 4; j++){
+//			cout << n_list[i][j] << " ";
+//		}
+//		cout << "\n";
+//	}
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<> distri(0.0,1.0);
@@ -28,7 +55,7 @@ int main(int argc, char* argv[]) {
 	
 	// for generating config_matrix
 	int num_matrix = pow(2,N*N);
-
+	
 	vector<vector<vector<int>>> matrices;
 	vector<vector<int>> matrix;
 	vector<int> list;
@@ -50,79 +77,76 @@ int main(int argc, char* argv[]) {
 		matrices.push_back(matrix);
 	}
 	int leng, tmp = 0;
-	double summ;
-	/*	
+	
 	//Check if the matrix elements are given well.
-	for (i=0; i<num_matrix; i++){
-
-		for (j=0; j<num_matrix; j++){
-			if (matrices[i] == matrices[j]){
-				cout << i << ", " << j << "\n";
-			}
-		}
-	}
-	cout << "no err \n";
-	*/
-	// for applying power method (instead of exact diagonalization)
+//	for (i=0; i<num_matrix; i++){
+//
+//		for (j=0; j<num_matrix; j++){
+//			if (matrices[i] == matrices[j]){
+//				cout << i << ", " << j << "\n";
+//			}
+//		}
+//	}
+//	cout << "no err \n";
+//	// for applying power method (instead of exact diagonalization)
 	
 	double r_i[num_matrix], r_f[num_matrix];
+	double summ = 0.0;
+
 	for (i=0; i<num_matrix; i++){
 		r_i[i] = distri(gen);
+		summ += r_i[i];
 	}
-
+	for (i=0; i<num_matrix; i++){
+		r_i[i] /= summ;
+	}
 	for (t=0; t<iter; t++){
-		cout << t << "\n";
 		for (i=0; i<num_matrix; i++){
+			vector<vector<int>> tmp_mat;
+			for (x=0; x<N; x++){
+				list = {};
+				for (y=0; y<N; y++){
+					list.push_back(matrices[i][x][y]);
+				}
+				tmp_mat.push_back(list);
+			}
+
 			for (x=0; x<N; x++){
 				for (y=0; y<N; y++){
-					tmp = matrices[i][x][y];
-					matrices[i][x][y] *= -1;
-					for (j=0; j<num_matrix; j++){
-						if ((matrices[j] == matrices[i]) && (i != j)){
-							r_f[j] += (1/15)*err*r_i[i];
-						}
-					}
-					matrices[i][x][y] = tmp;
+					int list[4];
 					for (k=0; k<N; k++){
-						tmp = matrices[i][k][x];
-						matrices[i][k][x] = matrices[i][k][y]*matrices[i][x][y]; // L6_rule
+						list[k] = matrices[i][k][x];
+					}
+					// n_list[16][4]
+					prob_mul = 1.0;
+					for (m=0; m<n_num; m++){
+						for (l=0; l<N; l++){
+							idx_n = n_list[m][l];
+							if (idx_n == 0) matrices[i][l][x] = matrices[i][l][y]*matrices[i][x][y];
+							else matrices[i][l][x] = -matrices[i][l][y]*matrices[i][x][y];
+							
+							prob_mul *= array[idx_n]; 
+						}
+
 						for (j=0; j<num_matrix; j++){
-							if (matrices[j] == matrices[i]){
-								r_f[j] += (1-err)*(1/(double)(N*(N-1)*(N-2)))*r_i[i];
+							if (matrices[j] == matrices[i] && j!=i){
+								r_f[j] += prob_mul*(1/(double)(N*N))*r_i[i];
 							}
 						}
-						matrices[i][k][x] = tmp;
+						if (tmp_mat == matrices[i])	r_f[i] += prob_mul*(1/(double)(N*N))*r_i[i];
+						for (l=0; l<N; l++) matrices[i][l][x] = list[l];
+					}
 					}
 				}
 			}
-		}
-		summ = 0.0;
-		for (i=0; i<num_matrix; i++) summ += r_f[i]*r_f[i];
-		
-		for (i=0; i<num_matrix; i++){
-			r_f[i] /= sqrt(summ);
-			r_i[i] = r_f[i];
-		}
 	}
+	
 	char result[100];
-	sprintf(result, "./N%dL6_e%s", N, argv[2]);
+	sprintf(result, "./N%dL6_e%s", N, argv[1]);
 	ofstream opening;
 	opening.open(result);
 	for (i=0; i<num_matrix; i++){
 		opening << r_f[i] << " ";
-	}
-	opening << "\n" << "\n";
-	for (i=0; i<num_matrix; i++){
-		if (fabs(r_f[i]) > 0.1){
-			opening << "[";
-			for (x=0; x<N; x++){
-				for (y=0; y<N; y++){
-					opening << matrices[i][x][y] << ", ";
-				}
-				opening <<"\n";
-			}
-			opening << "]\n";
-		}
 	}
 	return 0;
 }
