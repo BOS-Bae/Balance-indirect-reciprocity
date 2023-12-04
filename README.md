@@ -27,7 +27,7 @@ Available functions for the codes are in 'MonteCarlo.jl' in same directory.
 
 * L4_eig.cpp :  code (L4 rule) for conducting power-method instead of diagonalization.
 
-# LTD, Heat_bath_Heider
+## LTD, Heat_bath_Heider
 
 There are codes for reproducing the results of papers which are regarding our subjects.
 
