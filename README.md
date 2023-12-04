@@ -7,7 +7,7 @@ The description of each directory is below.
 ## network-simulation
 
 There are codes for agent-based simulation of Stern Judging rule and L4 rule.
-$$ \\ $$
+  
 Available functions for the codes are in 'Indirect_network.jl'
 
 ## Ising
@@ -16,7 +16,7 @@ Available functions for the codes are in 'Indirect_network.jl'
 * Baxter_Wu.jl : code for checking if our result of Ising model on kagome lattice is correct.
 
 We conducted the finite size scaling for the Baxter-Wu model, and checked that our code identifies the universality class of Baxter-Wu model well.
-$$ \\ $$
+  
 Available functions for the codes are in 'MonteCarlo.jl' in same directory.
 
 ## Eigenvector
