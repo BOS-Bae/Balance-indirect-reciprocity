@@ -139,6 +139,14 @@ int main(int argc, char* argv[]) {
 					}
 				}
 			}
+			summ = 0.0;
+			for (i=0; i<num_matrix; i++){
+				r_i[i] = r_f[i];
+				summ += r_f[i];
+			}
+			for (i=0; i<num_matrix; i++){
+				r_i[i] /= summ;
+			}
 	}
 	
 	char result[100];
