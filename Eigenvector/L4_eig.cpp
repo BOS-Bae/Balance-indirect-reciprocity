@@ -13,7 +13,7 @@ using std::vector;
 
 int main(int argc, char* argv[]) {
 	if(argc<3){
-   		printf("./L6_eig err iter \n");
+   		printf("./L4_eig err iter \n");
    		exit(1);
 	}
 	int N = 4;

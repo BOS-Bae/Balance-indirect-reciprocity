@@ -13,11 +13,20 @@ Available functions for the codes are in 'Indirect_network.jl'
 ## Ising
 
 * kagome.jl : code for Monte Carlo simulation of Ising model with three-spin interaction on kagome lattice.
+
+<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/kagome_m.png" width="400" height="250"/>
+
+<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/kagome_E.png" width="400" height="250"/>
+
+
 * Baxter_Wu.jl : code for checking if our result of Ising model on kagome lattice is correct.
 
+<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/Baxter_Wu.png" width="400" height="250"/>
+
 We conducted the finite size scaling for the Baxter-Wu model, and checked that our code identifies the universality class of Baxter-Wu model well.
-  
+
 Available functions for the codes are in 'MonteCarlo.jl' in same directory.
+
 
 ## Eigenvector
 
