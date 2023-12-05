@@ -27,7 +27,7 @@ Available functions for the codes are in 'Indirect_network.jl'
 
 <img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/Baxter_Wu.png" width="400" height="250"/>
 
-We conducted the finite size scaling for the Baxter-Wu model, and checked that our code identifies the universality class of Baxter-Wu model well.
+We conducted the finite size scaling for the Baxter-Wu model, and checked that our code identified the universality class of Baxter-Wu model well.
 
 Available functions for the codes are in 'MonteCarlo.jl' in same directory.
 
@@ -43,4 +43,3 @@ Available functions for the codes are in 'MonteCarlo.jl' in same directory.
 ## LTD, Heat_bath_Heider
 
 There are codes for reproducing the results of papers which are regarding our subjects.
-
