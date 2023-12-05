@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
 	int iter = atoi(argv[2]);
 	double array[2];
-	array[0] = err; array[1] = (1.0 - err);
+	array[0] = (1.0 - err); array[1] = err;
 	
 	int n_list[n_num][N];
 	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit, val;
@@ -113,13 +113,13 @@ int main(int argc, char* argv[]) {
 
 			for (x=0; x<N; x++){
 				for (y=0; y<N; y++){
-					int list[4];
+					int list[N];
 					for (k=0; k<N; k++){
 						list[k] = matrices[i][k][x];
 					}
 					// n_list[16][4]
-					prob_mul = 1.0;
 					for (m=0; m<n_num; m++){
+						prob_mul = 1.0;
 						for (l=0; l<N; l++){
 							val = matrices[i][l][x];
 							if (matrices[i][x][y] == 1){
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
 	}
 	
 	char result[100];
-	sprintf(result, "./N%dL6_e%s", N, argv[1]);
+	sprintf(result, "./N%dL4_e%s", N, argv[1]);
 	ofstream opening;
 	opening.open(result);
 	for (i=0; i<num_matrix; i++){
