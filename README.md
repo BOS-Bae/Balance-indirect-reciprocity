@@ -8,9 +8,9 @@ The description of each directory is below.
 
 There are codes for agent-based simulation of Stern Judging rule and L4 rule.
 
-<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L6_fixation.png" width="400" height="250"/>
+<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L6_fixation.pdf" width="400" height="250"/>
 
-<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L4_fixation.png" width="400" height="250"/>
+<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L4_fixation.pdf" width="400" height="250"/>
 
 Available functions for the codes are in 'Indirect_network.jl'
 
