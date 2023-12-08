@@ -372,17 +372,18 @@ function L2_rule_ab(O_matrix,α, d, r)
 end
 
 function Opinions_average(O_matrix, e_matrix, N)
-    #connect_count = 0
+    connect_count = 0
     o_averaged = 0
 
     for m in 1:N
         for n in 1:N
             if ((e_matrix[m,n] == 1) && m!=n)
+                connect_count += 1
                 o_averaged += O_matrix[m,n]
             end
         end
     end
-    return o_averaged/2
+    return o_averaged/connect_count
 end
 
 function count_structure(e_matrix, N)
