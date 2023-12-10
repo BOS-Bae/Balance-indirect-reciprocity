@@ -2,7 +2,7 @@
 include("../Indirect_network.jl")
 using Random
 
-if (length(ARGS) < 2)
+if (length(ARGS) < 3)
     print("usage : ϵ t_f t_avg \n")
     exit(1)
 end
