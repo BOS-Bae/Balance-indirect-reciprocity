@@ -14,7 +14,7 @@ using std::vector;
 
 int main(int argc, char* argv[]) {
 	if(argc<3){
-   		printf("./L4_eig err iter t_i \n");
+   		printf("./L4_eig_r err iter t_i \n");
    		exit(1);
 	}
 	int N = 4;
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	int t_i = atoi(argv[3]);
 	double array[2];
 	array[0] = (1.0 - err); array[1] = err;
-	char filename[100] = "N4L4";
+	char filename[100] = "../N4L4";
 	strcat(filename, "_e");
 	strcat(filename, argv[1]);
 	strcat(filename, "t");
@@ -164,9 +164,9 @@ int main(int argc, char* argv[]) {
 				r_i[i] /= summ;
 			}
 	}
-	
+	int tot_iter = t_i + iter;	
 	char result[100];
-	sprintf(result, "./N%dL4_e%s", N, argv[1]);
+	sprintf(result, "./N%dL4_e%st%d", N, argv[1], tot_iter);
 	ofstream opening;
 	opening.open(result);
 	for (i=0; i<num_matrix; i++){
