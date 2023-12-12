@@ -46,7 +46,8 @@ for n_idx in 1:n_run
     num_edge = number_arr[1]
     num_triad = number_arr[2]
     while(true)
-        τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
+        #τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
+        τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
         # For random sequential update, use the function below :
         #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ)
         τ = τ_tmp

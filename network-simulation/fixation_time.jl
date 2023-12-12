@@ -40,7 +40,7 @@ for n_idx in 1:n_sample
         while (true)
             τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
             # For random sequential update, use the function below :
-            #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ)
+            #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
             τ = τ_tmp
             
             #if (Check_absorbing(σ_matrix, e_matrix, N, L6_rule_ab) == true)

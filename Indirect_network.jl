@@ -507,7 +507,7 @@ function d_r_pair_update(rule, O_matrix, e_matrix, N, d, r)
     end
 end
 
-function random_sequential_update(rule, O_matrix, e_matrix, e_list, τ_tmp)
+function random_sequential_update(rule, O_matrix, e_matrix, e_list, τ_tmp, ϵ)
     e_arr = []
     for i in 1:length(e_list)
         push!(e_arr, e_list[i])
