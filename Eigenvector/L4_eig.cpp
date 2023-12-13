@@ -101,7 +101,8 @@ int main(int argc, char* argv[]) {
 		r_i[i] /= summ;
 	}
 	for (t=0; t<iter; t++){
-		for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
+		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
+		double r_f[num_matrix];
 		for (i=0; i<num_matrix; i++){
 			vector<vector<int>> tmp_mat;
 			for (x=0; x<N; x++){
@@ -150,13 +151,8 @@ int main(int argc, char* argv[]) {
 					}
 				}
 			}
-			summ = 0.0;
 			for (i=0; i<num_matrix; i++){
 				r_i[i] = r_f[i];
-				summ += r_f[i];
-			}
-			for (i=0; i<num_matrix; i++){
-				r_i[i] /= summ;
 			}
 	}
 	
@@ -165,7 +161,7 @@ int main(int argc, char* argv[]) {
 	ofstream opening;
 	opening.open(result);
 	for (i=0; i<num_matrix; i++){
-		opening << r_f[i] << " ";
+		opening << r_i[i] << " ";
 	}
 	return 0;
 }
