@@ -2,9 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-N = 4
-err = 0.01
-t=5
+if (len(sys.argv) < 3):
+    print("usage : N err iter")
+    exit(1)
+
+N = int(sys.argv[1])
+err = sys.argv[2]
+t = sys.argv[3]
 L6_elements = np.loadtxt("N{}L6_e{}t{}".format(N,err,t))
 L4_elements = np.loadtxt("N{}L4_e{}t{}".format(N,err,t))
 
@@ -20,15 +24,17 @@ for i in range(num):
 
 print("L4 :")
 for i in range(num):
-    if (L4_elements[i] > 0.0013):
+    if (L4_elements[i] > 0.0025):
         print(i)
 
-plt.hist(L6_elements, bins=200, label='L6, N={}, err=0.01, bins=70'.format(N),color="blue")
+plt.hist(L6_elements, bins=100, label='L6, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend()
 plt.yscale('log')
+#plt.xlim(0,0.02)
 plt.show()
 
-plt.hist(L4_elements, bins=200, label='L4, N={}, err=0.01, bins=70'.format(N),color="blue")
+plt.hist(L4_elements, bins=100, label='L4, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend()
 plt.yscale('log')
+#plt.xlim(0,0.02)
 plt.show()
