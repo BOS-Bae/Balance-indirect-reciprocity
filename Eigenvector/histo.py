@@ -6,11 +6,11 @@ if (len(sys.argv) < 3):
     print("usage : N err iter")
     exit(1)
 
-N = int(sys.argv[1])
+N = int(sys.argv[1]) # N=4 for the figure in our paper.
 err = sys.argv[2]
 t = sys.argv[3]
-L6_elements = np.loadtxt("N{}L6_e{}t{}".format(N,err,t))
-L4_elements = np.loadtxt("N{}L4_e{}t{}".format(N,err,t))
+L6_elements = np.loadtxt("./dat/N{}L6_e{}t{}".format(N,err,t))
+L4_elements = np.loadtxt("./dat/N{}L4_e{}t{}".format(N,err,t))
 
 L6_elements /= np.sum(L6_elements)
 L4_elements /= np.sum(L4_elements)
