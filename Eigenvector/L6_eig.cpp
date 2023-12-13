@@ -101,6 +101,7 @@ int main(int argc, char* argv[]) {
 		r_i[i] /= summ;
 	}
 	for (t=0; t<iter; t++){
+		for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
 		for (i=0; i<num_matrix; i++){
 			vector<vector<int>> tmp_mat;
 			for (x=0; x<N; x++){
@@ -150,7 +151,7 @@ int main(int argc, char* argv[]) {
 	}
 	
 	char result[100];
-	sprintf(result, "./N%dL6_e%s", N, argv[1]);
+	sprintf(result, "./N%dL6_e%st%d", N, argv[1],iter);
 	ofstream opening;
 	opening.open(result);
 	for (i=0; i<num_matrix; i++){
