@@ -1,6 +1,6 @@
 # The price of Stern Judging
 
-This is a simulation code for numerical results of the paper : 'The price of Stern Judging'.
+This are simulation codes which generate numerical results of the paper : 'The price of Stern Judging'.
 
 The description of each directory is below.
 
@@ -27,18 +27,18 @@ Available functions for the codes are in 'Indirect_network.jl'
 
 <img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/Baxter_Wu.png" width="400" height="250"/>
 
-We conducted the finite size scaling for the Baxter-Wu model, and checked that our code identified the universality class of Baxter-Wu model well.
+We conducted the finite size scaling for the Baxter-Wu model, and checked that our code identified the universality class of Baxter-Wu model properly.
 
-Available functions for the codes are in 'MonteCarlo.jl' in same directory.
+Available functions for the codes are in 'MonteCarlo.jl' within same directory.
 
 
 ## Eigenvector
 
 * eig_nr.jl : code for diagonalization of transition matrix, where there is no self-loop.
 
-* L6_eig.cpp : code (Stern Judigng rule) for conducting power-method instead of diagonalization.
+* L6_eig.cpp : code (Stern Judigng rule) for conducting power-method including self-loop.
 
-* L4_eig.cpp :  code (L4 rule) for conducting power-method instead of diagonalization.
+* L4_eig.cpp :  code (L4 rule) for conducting power-method including self-loop.
 
 ## LTD, Heat_bath_Heider
 
