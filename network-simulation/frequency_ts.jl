@@ -75,7 +75,9 @@ while(true)
             σ_distri .= 0
             for b in 1:8
                 σ_result[b, n_count] = sum(σ_check[b,:])/t_avg
+                print(σ_result[b, n_count], "    ")
             end
+            print("\n")
         end
     end
     if (t == t_f)
@@ -83,11 +85,11 @@ while(true)
     end
 end
 
-for n in 1:n_check-1
-    for b in 1:8
-        print(σ_result[b, n], "  ")
-    #println(N," ", σ_distri[b])
-    end
-    print("\n")
-end
+#for n in 1:n_check-1
+#    for b in 1:8
+#        print(σ_result[b, n], "  ")
+#    #println(N," ", σ_distri[b])
+#    end
+#    print("\n")
+#end
 println("sum : ", sum(σ_result[:,n_check-1]))
