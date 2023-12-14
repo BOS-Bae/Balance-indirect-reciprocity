@@ -73,7 +73,7 @@ if (N==4)
                     σ_distri[b, t % t_avg] = 1
                 end
             end
-            if ((t < t_f) && (t % t_avg == 0))
+            if ((t <= t_f) && (t % t_avg == 0))
                 n_count += 1
                 σ_check[:,:] = σ_distri[:,:]
                 σ_distri .= 0
@@ -102,7 +102,7 @@ else
                 σ_p[t % t_avg] = 1 
             end
             
-            if ((t < t_f) && (t % t_avg == 0))
+            if ((t <= t_f) && (t % t_avg == 0))
                 n_count += 1
                 σ_check_p[:] = σ_p[:]
                 σ_p .= 0
