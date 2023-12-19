@@ -8,5 +8,6 @@
         "deque": "cpp",
         "string": "cpp",
         "vector": "cpp"
-    }
+    },
+    "julia.environmentPath": "/home/minwoo/Balance-indirect-reciprocity"
 }

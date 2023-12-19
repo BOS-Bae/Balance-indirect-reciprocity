@@ -99,7 +99,7 @@ else
         if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
             t += 1
             if ((Opinions_average(σ_matrix, e_matrix, N) == 1) && ((t % t_avg) != 0))
-                σ_p[t % t_avg] = 1 
+                σ_p[t % t_avg] = 1
             end
             
             if ((t <= t_f) && (t % t_avg == 0))

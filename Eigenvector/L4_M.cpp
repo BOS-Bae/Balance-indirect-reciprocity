@@ -29,8 +29,7 @@ int main(int argc, char* argv[]) {
 	bal_list[6] = 27030; bal_list[7] = 30856;
 	int bal_elem;
 	bal_elem = bal_list[bal_idx];
-	// 0 : paradise / 1,2,4,7 : 1:3 / 3,5,6 : 2:2
-	
+
 	double array[2];
 	array[0] = (1.0 - err); array[1] = err;
 	
@@ -102,12 +101,11 @@ int main(int argc, char* argv[]) {
 	
 	double r_i[num_matrix] = {0};
 	r_i[bal_elem] = 1;
-	double r_f[num_matrix] = {0};
-	//double summ = 0.0;
+	double summ = 0.0;
 
 	for (t=0; t<iter; t++){
 		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
-		double r_f[num_matrix];
+		double r_f[num_matrix] = {0};
 		for (i=0; i<num_matrix; i++){
 			vector<vector<int>> tmp_mat;
 			for (x=0; x<N; x++){

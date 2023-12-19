@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 //	cout << "no err \n";
 //	// for applying power method (instead of exact diagonalization)
 	
-	double r_i[num_matrix], r_f[num_matrix];
+	double r_i[num_matrix];
 	double summ = 0.0;
 
 	for (i=0; i<num_matrix; i++){
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
 	}
 	for (t=0; t<iter; t++){
 		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
-		double r_f[num_matrix];
+		double r_f[num_matrix] = {0};
 		for (i=0; i<num_matrix; i++){
 			vector<vector<int>> tmp_mat;
 			for (x=0; x<N; x++){
