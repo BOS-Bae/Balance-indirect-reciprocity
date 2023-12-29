@@ -10,8 +10,8 @@ f_s = 12
 N = int(sys.argv[1])
 err = sys.argv[2]
 t = int(sys.argv[3])
-L6_elements = np.loadtxt("N{}L6_e{}t{}".format(N,err,t))
-L4_elements = np.loadtxt("N{}L4_e{}t{}".format(N,err,t))
+L6_elements = np.loadtxt("./dat/N{}L6_e{}t{}".format(N,err,t))
+L4_elements = np.loadtxt("./dat/N{}L4_e{}t{}".format(N,err,t))
 
 val = 0
 if (t==1): val = 0.000173
