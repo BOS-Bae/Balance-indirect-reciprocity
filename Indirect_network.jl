@@ -224,7 +224,8 @@ function L6_rule(O_matrix, neigh_arr, d, r, ϵ)
         if (rand(Float64) < ϵ)
             O_matrix[α,d] *= -1
         end
-    end     
+    end    
+
 end
 
 function L5_rule(O_matrix, neigh_arr, d, r, ϵ)
@@ -422,11 +423,15 @@ function original_update(rule, O_matrix, e_matrix, N, τ_tmp, ϵ)
     
     d = rand(1:N)
     r = rand(1:N)
-    
-    if (e_matrix[d,r] == 1)
-        τ_tmp += 1
+
+    if (e_matrix[d,r] == 1) # d!=r is not required, for isolated node which has no neighbor node (d=r case).
+    #if (e_matrix[d,r] == 1)
         NList = NeighborList(e_matrix,N,d,r)
-        rule(O_matrix, NList, d, r, ϵ)
+        if (length(NList) != 0)
+            rule(O_matrix, NList, d, r, ϵ)
+        end
+        τ_tmp += 1
+        
     end
     return τ_tmp
 end
@@ -543,12 +548,15 @@ function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)
     for self_idx = 1:N
         if (O_matrix[self_idx,self_idx] == 1)
             self_image += 1
+        #else 
+        #    println(self_idx)
+        #    println(e_matrix[self_idx])
         end
     end
     if (self_image == N)
         true_self = true
     end
-    if (N_edge != 0)
+    if (N_edge ≠ 0)
         for edge_idx = 1:N_edge
             one_idx = connection_arr[edge_idx][1]
             rival_idx = connection_arr[edge_idx][2]
@@ -561,7 +569,7 @@ function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)
     if (Θ_tot == N_edge)
         true_edge = true
     end
-    if (N_triad != 0)
+    if (N_triad ≠ 0)
         for triad_idx = 1:N_triad
             idx_1 = triad_arr[triad_idx][1]
             idx_2 = triad_arr[triad_idx][2]
@@ -578,7 +586,7 @@ function Check_fixation(O_matrix, connection_arr, triad_arr, N, N_edge, N_triad)
     if (Φ_tot == N_triad)
         true_triad = true
     end
-        
+    #println(N, " ",self_image," ",N_edge, " ",Θ_tot," ",N_triad," ", Φ_tot)
     return true_self && true_edge && true_triad
 end
 
@@ -648,18 +656,19 @@ end
 
 function Imbalance(O_matrix, triad_arr, N_triad)
     ϕ = 0
-    
-    for triad_idx in 1:N_triad
-        idx_1 = triad_arr[triad_idx][1]
-        idx_2 = triad_arr[triad_idx][2]
-        idx_3 = triad_arr[triad_idx][3]
+    if (N_triad != 0)
+        for triad_idx in 1:N_triad
+            idx_1 = triad_arr[triad_idx][1]
+            idx_2 = triad_arr[triad_idx][2]
+            idx_3 = triad_arr[triad_idx][3]
 
-        ϕ += tri_balance(O_matrix, idx_1, idx_2, idx_3)
-        ϕ += tri_balance(O_matrix, idx_1, idx_3, idx_2)
-        ϕ += tri_balance(O_matrix, idx_2, idx_1, idx_3)
-        ϕ += tri_balance(O_matrix, idx_2, idx_3, idx_1)
-        ϕ += tri_balance(O_matrix, idx_3, idx_1, idx_2)
-        ϕ += tri_balance(O_matrix, idx_3, idx_2, idx_1)
+            ϕ += tri_balance(O_matrix, idx_1, idx_2, idx_3)
+            ϕ += tri_balance(O_matrix, idx_1, idx_3, idx_2)
+            ϕ += tri_balance(O_matrix, idx_2, idx_1, idx_3)
+            ϕ += tri_balance(O_matrix, idx_2, idx_3, idx_1)
+            ϕ += tri_balance(O_matrix, idx_3, idx_1, idx_2)
+            ϕ += tri_balance(O_matrix, idx_3, idx_2, idx_1)
+        end
     end
 
     Imbalance_val = 0

@@ -21,6 +21,7 @@ for n_idx in 1:n_sample
     println(n_idx)
     for p_idx in 1:leng
         prob = P1[p_idx]
+        println(prob)
 
         e_matrix = zeros(N, N)
         σ_matrix = zeros(N, N)

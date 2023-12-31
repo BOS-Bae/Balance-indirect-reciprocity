@@ -2,14 +2,17 @@
 include("../Indirect_network.jl")
 using Random
 
-N = 30
-n_sample = 20
+if (length(ARGS) < 4)
+    print("usage : N p_leng n_sample ϵ \n")
+    exit(1)
+end
+
+N = parse(Int64, ARGS[1])
+leng = parse(Int64, ARGS[2])
+n_sample = parse(Int64, ARGS[3])
+ϵ = parse(Float64, ARGS[4])
 
 initial_prob = 0.5
-leng = 50
-
-#τ_init_check = 5*N*N
-#τ_length = 5*N*N
 
 τ_init_check = 5*N*N
 τ_length = 5*N*N
@@ -24,10 +27,7 @@ for n_idx in 1:n_sample
     
     for p_idx in 1:leng
         prob = P1[p_idx]
-        
-        if p_idx % 10 == 0
-            print("p=", prob, "\n")
-        end
+        print("p=", prob, "\n")
         e_matrix = zeros(N, N)
         σ_matrix = zeros(N, N)
         
@@ -42,18 +42,14 @@ for n_idx in 1:n_sample
         
         Im_val = 0
         τ = 0
-        while true
-            d = rand(1:N)
-            r = rand(1:N)
-            if (e_matrix[d,r] == 1)
-                τ += 1
-                NList = NeighborList(e_matrix,N,d,r)
-                L6_rule(σ_matrix, NList, d, r)
+        while (true)
+            τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
+            # For random sequential update, use the function below :
+            #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
+            τ = τ_tmp
             
-                if (τ >= τ_init_check)
-                    Im_val += Imbalance(σ_matrix, Triad_list, num_triad)
-                end
-                # imbalance should be calculated when (e_matrix[d,r] == 1), not otherwise.
+            if (τ >= τ_init_check)
+                Im_val += Imbalance(σ_matrix, Triad_list, num_triad)
             end
             
             if (τ == (τ_init_check + τ_length))
@@ -80,6 +76,6 @@ for i in 1:leng
     Im_std[i] = sqrt(Standard_err / n_sample)
 end
 
-print(Im_avg)
-println("")
-print(Im_std)
+for i in 1:leng
+    println(Im_avg[i], "  ", Im_std[i])
+end
