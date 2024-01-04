@@ -18,6 +18,10 @@ Available functions for the codes are in 'Indirect_network.jl'
 
 * kagome.jl : code for Monte Carlo simulation of Ising model with three-spin interaction on kagome lattice.
 
+$$
+H=-\sum_{\Delta_{ijk}} \sigma_i \sigma_j \sigma_k
+$$
+
 <img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/kagome_m.png" width="400" height="250"/>
 
 <img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/kagome_E.png" width="400" height="250"/>
@@ -36,9 +40,13 @@ Available functions for the codes are in 'MonteCarlo.jl' within same directory.
 
 * eig_nr.jl : code for diagonalization of transition matrix, where there is no self-loop.
 
-* L6_eig.cpp : code (Stern Judigng rule) for conducting power-method including self-loop.
+* L6_eig.cpp : code (Stern Judigng rule) to conduct power-method including self-loop.
 
-* L4_eig.cpp :  code (L4 rule) for conducting power-method including self-loop.
+* L4_eig.cpp :  code (L4 rule) to conduct power-method including self-loop from $t=0$.
+
+* L6_eig_r.cpp / L4_eig_r.cpp : codes to conduct power-method including self-loop from $t=t_0 \ne 0$.
+
+* L6_M.cpp / L4_M.cpp : codes to conduct power-method including self-loop and get each probability from one balanced state to other ones.
 
 ## LTD, Heat_bath_Heider
 
