@@ -20,7 +20,7 @@ elif (t==5) : val = 0.005
 #elif (t==10) : val =0.02
 elif (t==10) : val =0.05
 elif (t==20) : val =0.05
-elif (t==30) : val =0.1
+elif (t>=30) : val =0.1
 
 print("L6 sum : ", np.sum(L6_elements), "\n")
 print("L4 sum : ", np.sum(L4_elements) ,"\n")
@@ -39,7 +39,7 @@ for i in range(num):
     if (L4_elements[i] > val):
         print(i)
 
-plt.hist(L6_elements, bins=50, label='L6, N={}, err={}, {} multiplied'.format(N,err,t),color="blue")
+plt.hist(L6_elements, bins=20, label='L6, N={}, err={}, {} multiplied'.format(N,err,t),color="blue")
 plt.legend(fontsize=f_s)
 plt.yscale('log')
 plt.yticks(fontsize=f_s)

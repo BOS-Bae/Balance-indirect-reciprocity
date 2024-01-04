@@ -68,6 +68,19 @@ function Baxter_wu_metropolis(spin, nn, N, T)
     end
 end
 
+function kagome_metropolis_zeroT(spin, nn, N, H, K, M)
+    dE = 0
+    for i in 1:N
+        dE = 2*(H*spin[i] + (K/2)*spin[i]*(spin[nn[i,1]] + spin[nn[i,2]] + spin[nn[i,3]] + spin[nn[i,4]])
+                + (M/3)*spin[i]*(spin[nn[i,1]]*spin[nn[i,2]] + spin[nn[i,3]]*spin[nn[i,4]]))
+        if (dE < 0)
+            spin[i] *= -1
+        elseif (dE == 0)
+            if (rand(Float64) < 0.5) spin[i] *= -1 end
+        end
+    end
+end
+
 function kagome_metropolis(spin, nn, N, H, K, M, T)
     dE = 0
     for i in 1:N

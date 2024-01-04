@@ -130,7 +130,7 @@ for s in 1:n_sample
 
         print(check," ", check_true," ", check==check_true, "\n")
     end
-                
+
     E = kagome_E(spin, nn, H, K, M, N)
     
     mag = sum(spin)/N
@@ -149,6 +149,7 @@ for s in 1:n_sample
 		print(mag,"    ", E, "    ", ground_E, "\n")
         for p in 1:period
             kagome_metropolis(spin, nn, N, H, K, M, T)
+            #kagome_metropolis_zeroT(spin, nn, N, H, K, M)
         end
         E = kagome_E(spin, nn, H, K, M, N)
         mag = sum(spin)/N
