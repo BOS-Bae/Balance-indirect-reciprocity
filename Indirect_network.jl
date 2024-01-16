@@ -218,13 +218,15 @@ function L6_rule_dr_all(O_matrix, New_matrix, neigh_arr, d, r)
 end
 
 function L6_rule(O_matrix, neigh_arr, d, r, ϵ)
+    list = []
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
-        O_matrix[α,d] = O_matrix[α,r] * O_matrix[d,r]
-        if (rand(Float64) < ϵ)
-            O_matrix[α,d] *= -1
-        end
-    end    
+        push!(list, O_matrix[α,r] * O_matrix[d,r])
+    end
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        O_matrix[α,d] = rand(Float64) < 1-ϵ ? list[k] : -list[k]
+    end
 
 end
 
@@ -247,18 +249,22 @@ function L5_rule(O_matrix, neigh_arr, d, r, ϵ)
 end
 
 function L4_rule(O_matrix, neigh_arr, d, r, ϵ)
+    list = []
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
+        val = O_matrix[α,d]
         if (O_matrix[d,r] == 1)
             if (O_matrix[α,d] == -1)
-                O_matrix[α,d] = O_matrix[α,r]
+                val = O_matrix[α,r]
             end
         elseif (O_matrix[d,r] == -1)
-            O_matrix[α,d] = -O_matrix[α,r]
+            val = -O_matrix[α,r]
         end
-        if (rand(Float64) < ϵ)
-            O_matrix[α,d] *= -1
-        end
+        push!(list, val)
+    end
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        O_matrix[α,d] = rand(Float64) < 1-ϵ ? list[k] : -list[k]
     end
 end
 
@@ -431,7 +437,6 @@ function original_update(rule, O_matrix, e_matrix, N, τ_tmp, ϵ)
             rule(O_matrix, NList, d, r, ϵ)
         end
         τ_tmp += 1
-        
     end
     return τ_tmp
 end
@@ -649,7 +654,6 @@ function Balance(O_matrix, e_matrix, N, edge_arr, triad_arr, N_edge, N_triad)
             end
         end
     end
-
     return [θ, ϕ, ψ, N_tetrad]
 end
 

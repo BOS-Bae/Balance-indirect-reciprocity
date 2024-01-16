@@ -56,34 +56,34 @@ if (N==4)
         # For random sequential update, use the function below :
         #τ_tmp = random_sequential_update(L4_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
         τ = τ_tmp
-        if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
-            t += 1
-            for b in 1:8
-                count = 0
-                check = 0
-                for x in 1:N
-                    for y in 1:N
-                        count += 1
-                        if (balanced_list[b][x][y] == σ_matrix[x,y])
-                            check += 1
-                        end
+#        if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
+        t += 1
+        for b in 1:8
+            count = 0
+            check = 0
+            for x in 1:N
+                for y in 1:N
+                    count += 1
+                    if (balanced_list[b][x][y] == σ_matrix[x,y])
+                        check += 1
                     end
                 end
-                if ((count == check) && ((t % t_avg) != 0))
-                    σ_distri[b, t % t_avg] = 1
-                end
             end
-            if ((t <= t_f) && (t % t_avg == 0))
-                n_count += 1
-                σ_check[:,:] = σ_distri[:,:]
-                σ_distri .= 0
-                for b in 1:8
-                    σ_result[b, n_count] = sum(σ_check[b,:])/t_avg
-                    print(σ_result[b, n_count], "    ")
-                end
-                print("\n")
+            if ((count == check) && ((t % t_avg) != 0))
+                σ_distri[b, t % t_avg] = 1
             end
         end
+        if ((t <= t_f) && (t % t_avg == 0))
+            n_count += 1
+            σ_check[:,:] = σ_distri[:,:]
+            σ_distri .= 0
+            for b in 1:8
+                σ_result[b, n_count] = sum(σ_check[b,:])/t_avg
+                print(σ_result[b, n_count], "    ")
+            end
+            print("\n")
+        end
+#        end
         if (t == t_f)
             break
         end

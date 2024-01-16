@@ -39,7 +39,7 @@ for i in range(num):
     if (L4_elements[i] > val):
         print(i)
 
-plt.hist(L6_elements, bins=20, label='L6, N={}, err={}, {} multiplied'.format(N,err,t),color="blue")
+plt.hist(L6_elements, bins=20, label='L6, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend(fontsize=f_s)
 plt.yscale('log')
 plt.yticks(fontsize=f_s)
@@ -47,7 +47,7 @@ plt.xticks(fontsize=f_s)
 plt.xlim(0,1.0)
 plt.show()
 
-plt.hist(L4_elements, bins=50, label='L4, N={}, err={}, {} multiplied'.format(N,err,t),color="blue")
+plt.hist(L4_elements, bins=100, label='L4, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend(fontsize=f_s)
 plt.yscale('log')
 plt.yticks(fontsize=f_s)
