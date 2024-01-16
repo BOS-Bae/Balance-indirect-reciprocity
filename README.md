@@ -51,3 +51,7 @@ Available functions for the codes are in 'MonteCarlo.jl' within same directory.
 ## LTD, Heat_bath_Heider
 
 There are codes for reproducing the results of papers which are regarding our subjects.
+
+* LTD : for local triad dynamics
+
+* Heat_bath_Heider : for Heider-rule applied model on complete graph
