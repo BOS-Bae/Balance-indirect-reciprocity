@@ -12,6 +12,7 @@ using std::vector;
 using std::copy;
 
 const int N = 4;
+
 void idx_to_mat(int idx, int mat[][N]){
 	int i,j,slice_row,slice_col,M_ij,s_ij;
 	for (i=0; i<N; i++){
@@ -20,6 +21,18 @@ void idx_to_mat(int idx, int mat[][N]){
 			slice_col = N-j-1;
 			M_ij = idx >> slice_row >> slice_col & 1;
 			mat[i][j] = 2*M_ij-1;
+		}
+	}
+}
+
+void n_list_gen(int n_num, int n_list[][N]){
+	int i,j,val,idx;
+	for (i=0; i<n_num; i++){
+		// The number of possible configurations of assessment eror is n_num.
+		val = i;
+		for (j=0; j<N; j++){
+			n_list[i][j] = val & 1;
+			val = val >> 1;
 		}
 	}
 }
@@ -42,7 +55,6 @@ void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err){
 	mat_f[o][d] = (idx_err == 0 ? mat_f[o][r]*mat_f[d][r] : -mat_f[o][r]*mat_f[d][r]);
 }
 
-
 int mat_to_idx(int mat[][N]){
 	int i,j,idx,element,binary_num;
 	idx = binary_num = 0;
@@ -59,6 +71,7 @@ int mat_to_idx(int mat[][N]){
 void idx_to_mat(int idx, int mat[][N]);
 int mat_to_idx(int mat[][N]);
 void L6_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
+void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
 	if(argc<2){
@@ -71,34 +84,13 @@ int main(int argc, char* argv[]) {
 	int idx_n;
 
 	int iter = atoi(argv[2]);
-	char filename[100] = "./N4_confi_list";
-	FILE *fp = fopen(filename, "r");
-	int bal_list[8];
-	if (fp != NULL){
-		for (i=0; i<8; i++){
-			fscanf(fp, "%d", &bal_list[i]);
-		}
-	}
-	fclose(fp);
+
 	double array[2];
 	array[0] = (1.0 - err); array[1] = err;
 	
 	int n_list[n_num][N];
 	double prob_mul;
-	idx = 0;
-	for (n = 0; n < 2; n++){
-		for (m = 0; m < 2; m++){
-			for (l = 0; l < 2; l++){
-				for (p = 0; p < 2; p++){
-					n_list[idx][0] = n;
-					n_list[idx][1] = m;
-					n_list[idx][2] = l;
-					n_list[idx][3] = p;
-					idx += 1;
-				}
-			}
-		}
-	}
+	n_list_gen(n_num, n_list);
 	//for (i=0; i < 16; i++){
 	//	for (j=0; j < 4; j++){
 	//		cout << n_list[i][j] << " ";
@@ -107,46 +99,9 @@ int main(int argc, char* argv[]) {
 	//}
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	
-	// for generating config_matrix
+
 	int num_matrix = pow(2,N*N);
 	
-	vector<vector<vector<int>>> matrices;
-	vector<vector<int>> matrix;
-	vector<int> list;
-	//void idx_to_mat(int idx, int mat[][N]);
-	//int mat_to_idx(int mat[][N]);
-	//void L4_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
-	
-	//vector<vector<int>> mat_flip_04, mat_flip_13_p, mat_flip_22_p, mat_flip_13_n, mat_flip_22_n;
-	/*
-
-	mat_flip_04 = {{1,-1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}}; // flip σ_12
-	mat_flip_13_p = {{1,-1,-1,-1},{-1,1,-1,1},{-1,1,1,1},{-1,1,1,1}}; // flip σ_23
-	mat_flip_13_n = {{1,1,-1,-1},{-1,1,1,1},{-1,1,1,1},{-1,1,1,1}}; // flip σ_12
-	mat_flip_22_p = {{1,-1,-1,-1},{1,1,-1,-1},{-1,-1,1,1},{-1,-1,1,1}}; // flip σ_12
-	mat_flip_22_n = {{1,1,-1,-1},{1,1,1,-1},{-1,-1,1,1},{-1,-1,1,1}}; // flip σ_23
-
-	for (idx=0; idx <num_matrix; idx++){
-		if (matrices[idx] == mat_flip_04) cout << "0:4 flip :" << idx << "\n";
-		if (matrices[idx] == mat_flip_13_p) cout << "1:3 flip p -> n :" << idx << "\n";
-		if (matrices[idx] == mat_flip_13_n) cout << "1:3 flip n -> p :" << idx << "\n";
-		if (matrices[idx] == mat_flip_22_p) cout << "2:2 flip p -> n :" << idx << "\n";
-		if (matrices[idx] == mat_flip_22_n) cout << "2:2 flip n -> p :" << idx << "\n";
-	}
-	*/
-	//Check if the matrix elements are given well.
-//	for (i=0; i<num_matrix; i++){
-//
-//		for (j=0; j<num_matrix; j++){
-//			if (matrices[i] == matrices[j]){
-//				cout << i << ", " << j << "\n";
-//			}
-//		}
-//	}
-//	cout << "no err \n";
-//	// for applying power method (instead of exact diagonalization)
-
 	std::uniform_real_distribution<> distri(0.0,1.0);
 
 	double r_i[num_matrix] = {0};
