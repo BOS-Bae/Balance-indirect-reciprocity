@@ -11,7 +11,7 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 
-const int N = 4;
+const int N = 5;
 
 void idx_to_mat(int idx, int mat[][N]){
 	int i,j,slice_row,slice_col,M_ij,s_ij;
@@ -74,8 +74,36 @@ void L4_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main() {
-	int i,x,y,check,val;
+	int i,x,y,z,val,check;
+	int num_matrix = pow(2,N*N);
+	int mat[N][N];
+	
+	for (i=0; i<num_matrix; i++){
+		val = check = 0;
+		idx_to_mat(i, mat);
+		for (x=0; x<N; x++){
+			for (y=0; y<N; y++){
+				for (z=0; z<N; z++){
+					val += 1;
+					if (mat[x][y]*mat[x][z]*mat[y][z] == 1) check += 1;
+				}
+			}
+		}
+		if (val==check) {
+			cout << i << " ";
+			/*
+			cout << i << " :\n";
+			for (x=0; x<N; x++){
+				for (y=0; y<N; y++){
+					cout << mat[x][y] << ", ";
+				}
+				cout <<"\n";
+			}
+			*/
+		}
+	}
 
+	/*
 	vector<vector<int>> mat_flip_04,mat_flip_13_p,mat_flip_13_n,mat_flip_22_n,mat_flip_22_p;
 	mat_flip_04 = {{1,-1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}}; // flip σ_12
 	mat_flip_13_p = {{1,-1,-1,-1},{-1,1,-1,1},{-1,1,1,1},{-1,1,1,1}}; // flip σ_23
@@ -106,5 +134,6 @@ int main() {
 		if (mat_confi == mat_flip_22_p) cout << "2:2 flip p -> n :" << i << "\n";
 		if (mat_confi == mat_flip_22_n) cout << "2:2 flip n -> p :" << i << "\n";
 	}
+	*/
 	return 0;
 }

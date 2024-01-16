@@ -11,7 +11,7 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 
-const int N = 4;
+const int N = 5;
 
 void idx_to_mat(int idx, int mat[][N]){
 	int i,j,slice_row,slice_col,M_ij,s_ij;
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
 	int iter = atoi(argv[2]);
 	int bal_idx = atoi(argv[3]);
 
-	char filename[100] = "./N4_confi_list";
+	char filename[100] = "./N5_confi_list";
 	FILE *fp = fopen(filename, "r");
 	int bal_list[8];
 	if (fp != NULL){
