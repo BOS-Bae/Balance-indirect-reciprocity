@@ -74,6 +74,8 @@ void L4_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
+	int num_of_bal = 16;
+
 	if(argc<3){
    		printf("./L4_f err iter flip_idx\n");
    		exit(1);
@@ -88,12 +90,12 @@ int main(int argc, char* argv[]) {
 
 	char filename[100] = "./N5_confi_list";
 	char filename2[100] = "./N5_flip_list";
-	int bal_list[16];
+	int bal_list[num_of_bal];
 	int flip_list[5];
 	
 	FILE *fp = fopen(filename, "r");
 	if (fp != NULL){
-		for (i=0; i<16; i++){
+		for (i=0; i<num_of_bal; i++){
 			fscanf(fp, "%d", &bal_list[i]);
 		}
 	}
@@ -145,7 +147,6 @@ int main(int argc, char* argv[]) {
 			idx_to_mat(i, mat_i);
 			for (x=0; x<N; x++){
 				for (y=0; y<N; y++){
-					// n_list[16][4]
 					for (m=0; m<n_num; m++){
 						copy(&mat_i[0][0], &mat_i[0][0]+N*N, &mat_f[0][0]);
 						prob_mul = 1.0;
@@ -163,7 +164,7 @@ int main(int argc, char* argv[]) {
 		}
 		for (i=0; i<num_matrix; i++){
 			r_i[i] = r_f[i];
-			for (k=0; k<8; k++){
+			for (k=0; k<num_of_bal; k++){
 				if (i==bal_list[k]) cout << r_i[i] << " ";
 			}
 		}
