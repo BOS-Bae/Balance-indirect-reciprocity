@@ -75,7 +75,7 @@ void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
 	if(argc<3){
-   		printf("./L4_M err iter flip_idx\n");
+   		printf("./L4_f err iter flip_idx\n");
    		exit(1);
 	}
 	double err = atof(argv[1]);
@@ -87,6 +87,7 @@ int main(int argc, char* argv[]) {
 	int flip_idx = atoi(argv[3]);
 
 	char filename[100] = "./N4_confi_list";
+
 	FILE *fp = fopen(filename, "r");
 	int bal_list[8];
 	int flip_list[5];

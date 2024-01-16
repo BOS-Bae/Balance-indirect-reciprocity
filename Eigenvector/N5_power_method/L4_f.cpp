@@ -11,7 +11,7 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 
-const int N = 4;
+const int N = 5;
 
 void idx_to_mat(int idx, int mat[][N]){
 	int i,j,slice_row,slice_col,M_ij,s_ij;
@@ -75,7 +75,7 @@ void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
 	if(argc<3){
-   		printf("./L6_M err iter flip_idx\n");
+   		printf("./L4_f err iter flip_idx\n");
    		exit(1);
 	}
 	double err = atof(argv[1]);
@@ -86,18 +86,26 @@ int main(int argc, char* argv[]) {
 	int iter = atoi(argv[2]);
 	int flip_idx = atoi(argv[3]);
 
-	char filename[100] = "./N4_confi_list";
-	FILE *fp = fopen(filename, "r");
-	int bal_list[8];
+	char filename[100] = "./N5_confi_list";
+	char filename2[100] = "./N5_flip_list";
+	int bal_list[16];
 	int flip_list[5];
-	flip_list[0] = 34167; flip_list[1] = 35891; flip_list[2] = 49151; flip_list[3] = 51063; flip_list[4] = 52787;
 	
+	FILE *fp = fopen(filename, "r");
 	if (fp != NULL){
-		for (i=0; i<8; i++){
+		for (i=0; i<16; i++){
 			fscanf(fp, "%d", &bal_list[i]);
 		}
 	}
 	fclose(fp);
+
+	FILE *fp2 = fopen(filename2, "r");
+	if (fp2 != NULL){
+		for (i=0; i<5; i++){
+			fscanf(fp2, "%d", &flip_list[i]);
+		}
+	}
+	fclose(fp2);
 
 	int flip_elem;
 	flip_elem = flip_list[flip_idx];
@@ -143,7 +151,7 @@ int main(int argc, char* argv[]) {
 						prob_mul = 1.0;
 						for (l=0; l<N; l++){
 							idx_n = n_list[m][l];
-							L6_rule(mat_f, l, x, y, idx_n);
+							L4_rule(mat_f, l, x, y, idx_n);
 							prob_mul *= array[idx_n]; 
 						}
 						idx_f = mat_to_idx(mat_f);

@@ -74,6 +74,7 @@ void L4_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main() {
+/*
 	int i,x,y,z,val,check;
 	int num_matrix = pow(2,N*N);
 	int mat[N][N];
@@ -100,40 +101,38 @@ int main() {
 				cout <<"\n";
 			}
 			*/
-		}
-	}
+	//	}
+	//}
 
-	/*
-	vector<vector<int>> mat_flip_04,mat_flip_13_p,mat_flip_13_n,mat_flip_22_n,mat_flip_22_p;
-	mat_flip_04 = {{1,-1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}}; // flip σ_12
-	mat_flip_13_p = {{1,-1,-1,-1},{-1,1,-1,1},{-1,1,1,1},{-1,1,1,1}}; // flip σ_23
-	mat_flip_13_n = {{1,1,-1,-1},{-1,1,1,1},{-1,1,1,1},{-1,1,1,1}}; // flip σ_12
-	mat_flip_22_p = {{1,-1,-1,-1},{1,1,-1,-1},{-1,-1,1,1},{-1,-1,1,1}}; // flip σ_12
-	mat_flip_22_n = {{1,1,-1,-1},{1,1,1,-1},{-1,-1,1,1},{-1,-1,1,1}}; // flip σ_23
+	vector<vector<int>> mat_flip_05,mat_flip_14_p,mat_flip_14_n,mat_flip_23_n,mat_flip_23_p;
+	mat_flip_05 = {{1,-1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1}}; // flip σ_12
+	mat_flip_14_p = {{1,-1,-1,-1,-1},{-1,1,-1,1,1},{-1,1,1,1,1},{-1,1,1,1,1},{-1,1,1,1,1}}; // flip σ_23
+	mat_flip_14_n = {{1,1,-1,-1,-1},{-1,1,1,1,1},{-1,1,1,1,1},{-1,1,1,1,1},{-1,1,1,1,1}}; // flip σ_12
+	mat_flip_23_p = {{1,-1,-1,-1,-1},{1,1,-1,-1,-1},{-1,-1,1,1,1},{-1,-1,1,1,1},{-1,-1,1,1,1}}; // flip σ_12
+	mat_flip_23_n = {{1,1,-1,-1,-1},{1,1,1,-1,-1},{-1,-1,1,1,1},{-1,-1,1,1,1},{-1,-1,1,1,1}}; // flip σ_23
 
 	int num_matrix = pow(2,N*N);
 	int mat[N][N];
 	vector<int> input_list;
+	int i,x,y,val;
 
 	for (i=0; i< num_matrix; i++){
 		vector<vector<int>> mat_confi;
-		val=check=0;
+		
 		idx_to_mat(i, mat);
 
 		for (x=0; x<N; x++){
 			input_list = {};
 			for (y=0; y<N; y++){
-				val += 1;
 				input_list.push_back(mat[x][y]);
 			}
 			mat_confi.push_back(input_list);
 		}
-		if (mat_confi == mat_flip_04) cout << "0:4 flip :" << i << "\n";
-		if (mat_confi == mat_flip_13_p) cout << "1:3 flip p -> n :" << i << "\n";
-		if (mat_confi == mat_flip_13_n) cout << "1:3 flip n -> p :" << i << "\n";
-		if (mat_confi == mat_flip_22_p) cout << "2:2 flip p -> n :" << i << "\n";
-		if (mat_confi == mat_flip_22_n) cout << "2:2 flip n -> p :" << i << "\n";
+		if (mat_confi == mat_flip_05) cout << "0:5 flip :" << i << "\n";
+		if (mat_confi == mat_flip_14_p) cout << "1:4 flip p -> n :" << i << "\n";
+		if (mat_confi == mat_flip_14_n) cout << "1:4 flip n -> p :" << i << "\n";
+		if (mat_confi == mat_flip_23_p) cout << "2:3 flip p -> n :" << i << "\n";
+		if (mat_confi == mat_flip_23_n) cout << "2:3 flip n -> p :" << i << "\n";
 	}
-	*/
 	return 0;
 }
