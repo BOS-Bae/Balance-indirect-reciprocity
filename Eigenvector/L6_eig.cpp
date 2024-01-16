@@ -67,20 +67,23 @@ int main(int argc, char* argv[]) {
 	}
 	double err = atof(argv[1]);
 	int n_num = pow(2,N);
+	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit, val;
+	int idx_n;
 
 	int iter = atoi(argv[2]);
-	
+	char filename[100] = "./N4_confi_list";
+	FILE *fp = fopen(filename, "r");
 	int bal_list[8];
-	bal_list[0] = 0; bal_list[1] = 4382; bal_list[2] = 8914;
-	bal_list[3] = 13260; bal_list[4] = 19268; bal_list[5] = 23130;
-	bal_list[6] = 27030; bal_list[7] = 30856;
-
+	if (fp != NULL){
+		for (i=0; i<8; i++){
+			fscanf(fp, "%d", &bal_list[i]);
+		}
+	}
+	fclose(fp);
 	double array[2];
 	array[0] = (1.0 - err); array[1] = err;
 	
 	int n_list[n_num][N];
-	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit, val;
-	int idx_n;
 	double prob_mul;
 	idx = 0;
 	for (n = 0; n < 2; n++){
