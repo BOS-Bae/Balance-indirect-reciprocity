@@ -268,6 +268,43 @@ function L4_rule(O_matrix, neigh_arr, d, r, ϵ)
     end
 end
 
+function L8_rule(O_matrix, neigh_arr, d, r, ϵ)
+    list = []
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        val = O_matrix[α,d]
+        if (O_matrix[d,r] == 1)
+            val = O_matrix[α,r]
+        elseif (O_matrix[d,r] == -1)
+            if (O_matrix[α,d] == 1)
+                val = -O_matrix[α,r]
+            else
+                val = -1
+            end
+        end
+        push!(list, val)
+    end
+    for k in 1:length(neigh_arr)
+        α = neigh_arr[k]
+        O_matrix[α,d] = rand(Float64) < 1-ϵ ? list[k] : -list[k]
+    end
+end
+
+function L8_rule_ab(O_matrix,α, d, r)
+    val = O_matrix[α,d]
+    if (O_matrix[d,r] == 1)
+        val = O_matrix[α,r]
+    elseif (O_matrix[d,r] == -1)
+        if (O_matrix[α,d] == 1)
+            val = -O_matrix[α,r]
+        else
+            val = -1
+        end
+    end
+    
+    return val
+end
+
 function L3_rule(O_matrix, neigh_arr, d, r, ϵ)
     for k in 1:length(neigh_arr)
         α = neigh_arr[k]
