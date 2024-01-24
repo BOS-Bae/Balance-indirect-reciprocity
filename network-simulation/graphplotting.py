@@ -1,11 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
-N = 4
 
+N = 10
+rule_num = 8
 network=np.ones([N,N])
 
-action = np.loadtxt("./image_mat.dat")
+action = np.loadtxt("./N{}_image_mat.dat".format(N))
 
 plus=0
 negative=0
@@ -23,6 +24,7 @@ print("negative(%)=",negative/(N*N))
 
 fig,ax=plt.subplots()
 im=ax.imshow(action,cmap='gray')
+plt.title("N={}, L{} rule".format(N, rule_num))
 plt.show()
 
 
@@ -44,18 +46,17 @@ nx.draw_networkx_edges(G,pos=pos,edgelist=eplus,width=5,alpha=0.5,edge_color="b"
 nx.draw_networkx_edges(G,pos=pos,edgelist=eminus,width=5,alpha=0.5,edge_color="r")
 
 nx.draw_networkx(G,pos)
-
-
 plt.axis("off")
 plt.tight_layout()
+plt.title("N={}, L{} rule".format(N, rule_num))
 plt.show()
-
-G.remove_edges_from(eminus)
-
-nx.draw_networkx_edges(G,pos=pos,edgelist=eplus,width=5,alpha=0.5,edge_color="b")
-
-nx.draw_networkx(G,pos)
-
-plt.axis("off")
-plt.tight_layout()
-plt.show()
+#
+#G.remove_edges_from(eminus)
+#
+#nx.draw_networkx_edges(G,pos=pos,edgelist=eplus,width=5,alpha=0.5,edge_color="b")
+#
+#nx.draw_networkx(G,pos)
+#
+#plt.axis("off")
+#plt.tight_layout()
+#plt.show()

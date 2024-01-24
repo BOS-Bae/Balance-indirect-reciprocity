@@ -28,6 +28,7 @@ num_triad = number_arr[2]
 #end
 τ = 0
 τ_tmp = 0
+
 while (true)
     global τ, τ_tmp
     τ_tmp = original_update(L8_rule, σ_matrix, e_matrix, N, τ, ϵ)

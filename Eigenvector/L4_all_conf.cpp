@@ -11,17 +11,16 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 
-const int N = 5;
+const int N = 4;
 
 void idx_to_mat(int idx, int mat[][N]);
 int mat_to_idx(int mat[][N]);
-void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+void L4_rule(int mat[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
-	int num_of_bal = 16;
 	if(argc<3){
-   		printf("./L6_M err iter bal_idx\n");
+   		printf("./L4_f err iter flip_idx\n");
    		exit(1);
 	}
 	double err = atof(argv[1]);
@@ -30,20 +29,24 @@ int main(int argc, char* argv[]) {
 	int idx_n;
 
 	int iter = atoi(argv[2]);
-	int bal_idx = atoi(argv[3]);
+	int flip_idx = atoi(argv[3]);
 
-	char filename[100] = "./N5_confi_list";
+	char filename[100] = "./N4_confi_list";
+
 	FILE *fp = fopen(filename, "r");
-	int bal_list[num_of_bal];
+	int bal_list[8];
+	int flip_list[5];
+	flip_list[0] = 34167; flip_list[1] = 35891; flip_list[2] = 49151; flip_list[3] = 51063; flip_list[4] = 52787;
+
 	if (fp != NULL){
-		for (i=0; i<num_of_bal; i++){
+		for (i=0; i<8; i++){
 			fscanf(fp, "%d", &bal_list[i]);
 		}
 	}
 	fclose(fp);
 
-	int bal_elem;
-	bal_elem = bal_list[bal_idx];
+	int flip_elem;
+	flip_elem = flip_list[flip_idx];
 
 	double array[2];
 	array[0] = (1.0 - err); array[1] = err;
@@ -65,7 +68,7 @@ int main(int argc, char* argv[]) {
 	std::uniform_real_distribution<> distri(0.0,1.0);
 
 	double r_i[num_matrix] = {0};
-	r_i[bal_elem] = 1;
+	r_i[flip_elem] = 1;
 
 	int idx_f; // index of mat_f, which is the matrix updated by assessment rule.
 	for (t=0; t<iter; t++){
@@ -80,12 +83,13 @@ int main(int argc, char* argv[]) {
 			idx_to_mat(i, mat_i);
 			for (x=0; x<N; x++){
 				for (y=0; y<N; y++){
+					// n_list[16][4]
 					for (m=0; m<n_num; m++){
 						copy(&mat_i[0][0], &mat_i[0][0]+N*N, &mat_f[0][0]);
 						prob_mul = 1.0;
 						for (l=0; l<N; l++){
 							idx_n = n_list[m][l];
-							L6_rule(mat_f, l, x, y, idx_n);
+							L4_rule(mat_f, l, x, y, idx_n);
 							prob_mul *= array[idx_n]; 
 						}
 						idx_f = mat_to_idx(mat_f);
@@ -97,9 +101,7 @@ int main(int argc, char* argv[]) {
 		}
 		for (i=0; i<num_matrix; i++){
 			r_i[i] = r_f[i];
-			for (k=0; k<num_of_bal; k++){
-				if (i==bal_list[k]) cout << r_i[i] << " ";
-			}
+			if (r_i[i] != 0) cout << i << " ";
 		}
 		cout <<"\n";
 	}
