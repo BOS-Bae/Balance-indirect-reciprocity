@@ -20,7 +20,7 @@ void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
 	if(argc<3){
-   		printf("./L4_f err iter flip_idx\n");
+   		printf("./L4_all_conf err iter flip_idx\n");
    		exit(1);
 	}
 	double err = atof(argv[1]);
@@ -100,8 +100,18 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		for (i=0; i<num_matrix; i++){
+			int mat_check[N][N] = {0,};
 			r_i[i] = r_f[i];
-			if (r_i[i] != 0) cout << i << " ";
+			if (r_i[i] != 0) {
+				idx_to_mat(i, mat_check);
+				for (x=0; x<N; x++){
+					for (y=0; y<N; y++){
+						cout << mat_check[i][j] << " ";
+					}
+					cout << "\n";
+				}
+				cout << "\n";
+			}
 		}
 		cout <<"\n";
 	}
