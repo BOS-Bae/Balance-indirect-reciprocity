@@ -16,7 +16,6 @@ leng = (N_f-3+1)
 δ_arr = zeros(n_sample, leng)
 
 for n_idx in 1:n_sample
-    println(n_idx)
     for N in 3:N_f
         prob = 1
         e_matrix = zeros(N, N)
@@ -35,7 +34,7 @@ for n_idx in 1:n_sample
         τ = 0
         τ_tmp = 0
         while (true)
-            τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
+            τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
             # For random sequential update, use the function below :
             #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
             τ = τ_tmp
@@ -46,7 +45,7 @@ for n_idx in 1:n_sample
             end
         end
         δ = cluster_diff_complete(σ_matrix, N)
-        δ_arr[n_idx, p_idx] = δ
+        δ_arr[n_idx, N-2] = δ
     end
 end
 
