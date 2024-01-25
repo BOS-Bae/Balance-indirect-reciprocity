@@ -721,3 +721,22 @@ function Imbalance(O_matrix, triad_arr, N_triad)
     end
     return Imbalance_val
 end
+
+function cluster_diff_complete(O_matrix, N)
+    i = rand(1:N)
+    val = 0
+    size_1 = size_2 = 0
+    for j in 1:N
+        if (O_matrix[i,j] == 1) 
+            size_1 +=1 
+        elseif (O_matrix[i,j] == -1) 
+            size_2 +=1 
+        end
+    end
+    if (size_2 > size_1)
+        val = (size_2 - size_1)
+    else
+        val = (size_1 - size_2)
+    end
+    return val
+end

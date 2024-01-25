@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 
 	double r_i[num_matrix] = {0};
 	r_i[flip_elem] = 1;
-
+	int check;
 	int idx_f; // index of mat_f, which is the matrix updated by assessment rule.
 	for (t=0; t<iter; t++){
 		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
@@ -99,21 +99,17 @@ int main(int argc, char* argv[]) {
 				}
 			}
 		}
+		check = 0;
 		for (i=0; i<num_matrix; i++){
-			int mat_check[N][N] = {0,};
 			r_i[i] = r_f[i];
-			if (r_i[i] != 0) {
-				idx_to_mat(i, mat_check);
-				for (x=0; x<N; x++){
-					for (y=0; y<N; y++){
-						cout << mat_check[i][j] << " ";
-					}
-					cout << "\n";
-				}
-				cout << "\n";
+			//if (r_i[i] != 0) cout << i << ": " << r_i[i]  << ", ";
+			if (r_i[i] != 0 && t == iter-1) {
+				check += 1;
+				cout  << i << ": " << r_i[i]  << ", ";
 			}
 		}
-		cout <<"\n";
+		if (t == iter-1) cout << "\n" << check;
+		//cout <<"\n";
 	}
 	return 0;
 }

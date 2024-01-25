@@ -15,15 +15,14 @@ const int N = 4;
 
 void idx_to_mat(int idx, int mat[][N]);
 int mat_to_idx(int mat[][N]);
-void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+void L6_rule(int mat[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
 	if(argc<3){
-   		printf("./L4_f err iter flip_idx\n");
+   		printf("./L6_all_conf err iter flip_idx\n");
    		exit(1);
 	}
-	double a_val = 0.001;
 	double err = atof(argv[1]);
 	int n_num = pow(2,N);
 	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit, val;
@@ -70,7 +69,7 @@ int main(int argc, char* argv[]) {
 
 	double r_i[num_matrix] = {0};
 	r_i[flip_elem] = 1;
-
+	int check;
 	int idx_f; // index of mat_f, which is the matrix updated by assessment rule.
 	for (t=0; t<iter; t++){
 		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
@@ -90,7 +89,7 @@ int main(int argc, char* argv[]) {
 						prob_mul = 1.0;
 						for (l=0; l<N; l++){
 							idx_n = n_list[m][l];
-							L4_rule(mat_f, l, x, y, idx_n);
+							L6_rule(mat_f, l, x, y, idx_n);
 							prob_mul *= array[idx_n]; 
 						}
 						idx_f = mat_to_idx(mat_f);
@@ -100,16 +99,17 @@ int main(int argc, char* argv[]) {
 				}
 			}
 		}
+		check = 0;
 		for (i=0; i<num_matrix; i++){
 			r_i[i] = r_f[i];
-			//for (k=0; k<8; k++){
-				//if (i==bal_list[k]) cout << r_i[i] << " ";
-			//if (r_i[i] > a_val) cout << r_i << " ";
-			//}
+			//if (r_i[i] != 0) cout << i << ": " << r_i[i]  << ", ";
+			if (r_i[i] != 0 && t == iter-1) {
+				check += 1;
+				cout  << i << ": " << r_i[i]  << ", ";
+			}
 		}
-	}
-	for (i=0; i<num_matrix; i++){
-		if (r_i[i] > a_val) cout << i << "," << r_i[i] << "\n";
+		if (t == iter-1) cout << "\n" << check;
+		//cout <<"\n";
 	}
 	return 0;
 }
