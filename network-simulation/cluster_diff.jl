@@ -6,17 +6,18 @@ if (length(ARGS) < 3)
     print("usage : N_f n_sample ϵ \n")
     exit(1)
 end
-
+#N_0 = 3
+N_0 = 3
 N_f = parse(Int64, ARGS[1])
 n_sample = parse(Int64, ARGS[2])
 ϵ = parse(Float64, ARGS[3])
 
 initial_prob = 0.5
-leng = (N_f-3+1)
+leng = (N_f-N_0+1)
 δ_arr = zeros(n_sample, leng)
 
 for n_idx in 1:n_sample
-    for N in 3:N_f
+    for N in N_0:N_f
         prob = 1
         e_matrix = zeros(N, N)
         σ_matrix = zeros(N, N)
@@ -34,7 +35,7 @@ for n_idx in 1:n_sample
         τ = 0
         τ_tmp = 0
         while (true)
-            τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
+            τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
             # For random sequential update, use the function below :
             #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
             τ = τ_tmp
@@ -45,7 +46,7 @@ for n_idx in 1:n_sample
             end
         end
         δ = cluster_diff_complete(σ_matrix, N)
-        δ_arr[n_idx, N-2] = δ
+        δ_arr[n_idx, N-N_0+1] = δ
     end
 end
 
@@ -65,7 +66,7 @@ for i in 1:leng
     std_arr[i] = std_val/sqrt(n_sample)
 end
 
-for N in 3:N_f
+for N in N_0:N_f
     print(N, " ")
 end
 println("")

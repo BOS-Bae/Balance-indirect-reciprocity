@@ -733,10 +733,6 @@ function cluster_diff_complete(O_matrix, N)
             size_2 +=1 
         end
     end
-    if (size_2 > size_1)
-        val = (size_2 - size_1)
-    else
-        val = (size_1 - size_2)
-    end
-    return val
+    val = (size_2 - size_1)
+    return (val/N)
 end
