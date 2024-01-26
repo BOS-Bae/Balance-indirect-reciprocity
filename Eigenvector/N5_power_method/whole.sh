@@ -10,3 +10,6 @@ for ((i=0; i<5; i++))
 do
 	sbatch L4_run_f.sh $i
 done
+
+sbatch L6_eig_run.sh
+sbatch L4_eig_run.sh

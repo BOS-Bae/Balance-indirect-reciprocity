@@ -47,7 +47,7 @@ if (N==4)
         num_edge = number_arr[1]
         num_triad = number_arr[2]
         while(true)
-            τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
+            τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
             #τ_tmp = random_sequential_update(L4_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
             # For random sequential update, use the function below :
             #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ)
@@ -83,7 +83,78 @@ if (N==4)
         #println(N," ", σ_distri[b])
     end
     println("sum : ", sum(result_arr))
-elseif (N>4)
+
+elseif (N==5)
+    balanced_list = []
+    push!(balanced_list, [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]])
+    push!(balanced_list, [[1,-1,-1,-1],[-1,1,1,1],[-1,1,1,1],[-1,1,1,1]])
+    push!(balanced_list, [[1,-1,1,1],[-1,1,-1,-1],[1,-1,1,1],[1,-1,1,1]])
+    push!(balanced_list, [[1,1,-1,1],[1,1,-1,1],[-1,-1,1,-1],[1,1,-1,1]])
+    push!(balanced_list, [[1,1,1,-1],[1,1,1,-1],[1,1,1,-1],[-1,-1,-1,1]])
+    push!(balanced_list, [[1,1,-1,-1],[1,1,-1,-1],[-1,-1,1,1],[-1,-1,1,1]])
+    push!(balanced_list, [[1,-1,1,-1],[-1,1,-1,1],[1,-1,1,-1],[-1,1,-1,1]])
+    push!(balanced_list, [[1,-1,-1,1],[-1,1,1,-1],[-1,1,1,-1],[1,-1,-1,1]])
+    #if (N==4) σ_distri = [-2,0,6] end
+
+    σ_distri = zeros(n_run, 16)
+    result_arr = zeros(16)
+
+    #if n_idx == 1
+    #    println(num_edge,"   ", num_triad)
+    #end
+    for n_idx in 1:n_run
+        τ = 0
+        τ_tmp = 0
+        t = 0 
+        prob = 1.0 # for complete graph, p=1.0
+        e_matrix = zeros(N, N)
+        σ_matrix = zeros(N, N)
+        U_matrix = zeros(N, N) # Additional matrix for update by new method, 'New_matrix' of 'L6_rule_dr_all'.
+        Edge_list = Any[]
+        Triad_list = Any[]
+        Opinion_Initialize(σ_matrix, initial_prob, N)
+        number_arr = ER_network_gen(e_matrix, prob, N, Edge_list, Triad_list)
+        num_edge = number_arr[1]
+        num_triad = number_arr[2]
+        while(true)
+            τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
+            #τ_tmp = random_sequential_update(L4_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
+            # For random sequential update, use the function below :
+            #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ)
+            τ = τ_tmp
+            if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
+                for b in 1:16
+                    count = 0
+                    check = 0
+                    for x in 1:N
+                        for y in 1:N
+                            count += 1
+                            if (balanced_list[b][x][y] == σ_matrix[x,y])
+                                check += 1
+                            end
+                        end
+                    end
+                    if (check == count)
+                        σ_distri[n_idx, b] = 1
+                    end
+                end
+                break
+            end
+        end
+    end
+
+    for b in 1:16
+        result_arr[b] = sum(σ_distri[:,b])
+    end
+
+    result_arr /= n_run
+    for b in 1:16
+        println(result_arr[b])
+        #println(N," ", σ_distri[b])
+    end
+    println("sum : ", sum(result_arr))
+
+elseif (N>5)
     result_data = zeros(n_run)
 
     #if n_idx == 1
@@ -105,7 +176,7 @@ elseif (N>4)
         num_triad = number_arr[2]
         while(true)
             #τ_tmp = original_update(L6_rule, σ_matrix, e_matrix, N, τ, ϵ)
-            τ_tmp = random_sequential_update(L4_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
+            τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
             # For random sequential update, use the function below :
             #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ)
             τ = τ_tmp

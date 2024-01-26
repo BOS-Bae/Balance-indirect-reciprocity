@@ -25,19 +25,36 @@ push!(balanced_list, [[1,1,1,-1],[1,1,1,-1],[1,1,1,-1],[-1,-1,-1,1]])
 push!(balanced_list, [[1,1,-1,-1],[1,1,-1,-1],[-1,-1,1,1],[-1,-1,1,1]])
 push!(balanced_list, [[1,-1,1,-1],[-1,1,-1,1],[1,-1,1,-1],[-1,1,-1,1]])
 push!(balanced_list, [[1,-1,-1,1],[-1,1,1,-1],[-1,1,1,-1],[1,-1,-1,1]])
-#if (N==4) σ_distri = [-2,0,6] end
 
-σ_distri = zeros(8,t_avg)
+balanced_list_N5 = []
+push!(balanced_list_N5, [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]])
+push!(balanced_list_N5, [[1,-1,-1,-1,-1],[-1,1,1,1,1],[-1,1,1,1,1],[-1,1,1,1,1],[-1,1,1,1,1]])
+push!(balanced_list_N5, [[-1,1,-1,-1,-1],[1,-1,1,1,1],[1,-1,1,1,1],[1,-1,1,1,1],[1,-1,1,1,1]])
+push!(balanced_list_N5, [[-1,-1,1,-1,-1],[1,1,-1,1,1],[1,1,-1,1,1],[1,1,-1,1,1],[1,1,-1,1,1]])
+push!(balanced_list_N5, [[-1,-1,-1,1,-1],[1,1,1,-1,1],[1,1,1,-1,1],[1,1,1,-1,1],[1,1,1,-1,1]])
+push!(balanced_list_N5, [[-1,-1,-1,-1,1],[1,1,1,1,-1],[1,1,1,1,-1],[1,1,1,1,-1],[1,1,1,1,-1]])
+push!(balanced_list_N5, [[1,1,-1,-1,-1],[1,1,-1,-1,-1],[-1,-1,1,1,1],[-1,-1,1,1,1],[-1,-1,1,1,1]])
+push!(balanced_list_N5, [[1,-1,1,-1,-1],[-1,1,-1,1,1],[1,-1,1,-1,-1],[-1,1,-1,1,1],[-1,1,-1,1,1]])
+push!(balanced_list_N5, [[1,-1,-1,1,-1],[-1,1,1,-1,1],[-1,1,1,-1,1],[1,-1,-1,1,-1],[-1,1,1,-1,1]])
+push!(balanced_list_N5, [[1,-1,-1,-1,1],[-1,1,1,1,-1],[-1,1,1,1,-1],[-1,1,1,1,-1],[1,-1,-1,-1,1]])
+push!(balanced_list_N5, [[1,-1,-1,1,1],[-1,1,1,-1,-1],[-1,1,1,-1,-1],[1,-1,-1,1,1],[1,-1,-1,1,1]])
+push!(balanced_list_N5, [[1,-1,1,-1,1],[-1,1,-1,1,-1],[1,-1,1,-1,1],[-1,1,-1,1,-1],[1,-1,1,-1,1]])
+push!(balanced_list_N5, [[1,-1,1,1,-1],[-1,1,-1,-1,1],[1,-1,1,1,-1],[1,-1,1,1,-1],[-1,1,-1,-1,1]])
+push!(balanced_list_N5, [[1,1,-1,-1,1],[1,1,-1,-1,1],[-1,-1,1,1,-1],[-1,-1,1,1,-1],[1,1,-1,-1,1]])
+push!(balanced_list_N5, [[1,1,-1,1,-1],[1,1,-1,1,-1],[-1,-1,1,-1,1],[1,1,-1,1,-1],[-1,-1,1,-1,1]])
+push!(balanced_list_N5, [[1,1,1,-1,-1],[1,1,1,-1,-1],[1,1,1,-1,-1],[-1,-1,-1,1,1],[-1,-1,-1,1,1]])
+
+σ_distri = zeros(2^(N-1),t_avg)
 σ_p = zeros(t_avg)
-σ_check = zeros(8,t_avg)
+σ_check = zeros(2^(N-1),t_avg)
 σ_check_p = zeros(t_avg)
-σ_result = zeros(8,n_check)
+σ_result = zeros(2^(N-1),n_check)
 σ_result_p = zeros(n_check)
 
 prob = 1.0 # for complete graph, p=1.0
 e_matrix = zeros(N, N)
 σ_matrix = zeros(N, N)
-U_matrix = zeros(N, N) # Additional matrix for update by new method, 'New_matrix' of 'L6_rule_dr_all'.
+U_matrix = zeros(N, N) # Additional matrix for update by new method, 'New_matrix' of 'L4_rule_dr_all'.
 Edge_list = Any[]
 Triad_list = Any[]
 Opinion_Initialize(σ_matrix, initial_prob, N)
@@ -58,7 +75,7 @@ if (N==4)
         τ = τ_tmp
 #        if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
         t += 1
-        for b in 1:8
+        for b in 1:2^(N-1)
             count = 0
             check = 0
             for x in 1:N
@@ -77,7 +94,47 @@ if (N==4)
             n_count += 1
             σ_check[:,:] = σ_distri[:,:]
             σ_distri .= 0
-            for b in 1:8
+            for b in 1:2^(N-1)
+                σ_result[b, n_count] = sum(σ_check[b,:])/t_avg
+                print(σ_result[b, n_count], "    ")
+            end
+            print("\n")
+        end
+#        end
+        if (t == t_f)
+            break
+        end
+    end
+    println("sum : ", sum(σ_result[:,n_check-1]))
+elseif (N==5)
+    while(true)
+        global τ, t, τ_tmp, n_count
+        τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
+        # For random sequential update, use the function below :
+        #τ_tmp = random_sequential_update(L4_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
+        τ = τ_tmp
+#        if (Check_fixation(σ_matrix, Edge_list, Triad_list, N, num_edge, num_triad) == true)
+        t += 1
+        for b in 1:2^(N-1)
+            count = 0
+            check = 0
+            for x in 1:N
+                for y in 1:N
+                    count += 1
+                    if (balanced_list_N5[b][x][y] == σ_matrix[x,y])
+                        check += 1
+                    end
+                end
+            end
+            if ((count == check) && ((t % t_avg) != 0))
+                σ_distri[b, t % t_avg] = 1
+            end
+        end
+        if ((t <= t_f) && (t % t_avg == 0))
+            n_count += 1
+            σ_check[:,:] = σ_distri[:,:]
+            σ_distri .= 0
+            for b in 1:2^(N-1)
                 σ_result[b, n_count] = sum(σ_check[b,:])/t_avg
                 print(σ_result[b, n_count], "    ")
             end

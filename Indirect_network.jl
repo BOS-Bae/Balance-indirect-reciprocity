@@ -729,7 +729,7 @@ function cluster_diff_complete(O_matrix, N)
     for j in 1:N
         if (O_matrix[i,j] == 1) 
             size_1 +=1 
-        elseif (O_matrix[i,j] == -1) 
+        elseif (O_matrix[i,j] == -1)
             size_2 +=1 
         end
     end
