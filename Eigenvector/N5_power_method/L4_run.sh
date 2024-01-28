@@ -14,4 +14,4 @@ date
 
 cd $SLURM_SUBMIT_DIR
 
-./L4_M 0.0001 6 $1 > L4_e0.0001_bal_$1.dat
+./L4_M 0.0001 10 $1 > L4_e0.0001_bal_$1.dat

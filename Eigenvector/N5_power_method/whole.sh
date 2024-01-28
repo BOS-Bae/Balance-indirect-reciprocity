@@ -8,6 +8,7 @@ done
 
 for ((i=0; i<5; i++))
 do
+	sbatch L6_run_f.sh $i
 	sbatch L4_run_f.sh $i
 done
 
