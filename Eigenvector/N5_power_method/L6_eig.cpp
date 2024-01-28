@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	char result[100];
-	sprintf(result, "./N%dL6_e%st%d", N, argv[1],iter);
+	sprintf(result, "./N%dL6_e%st%d.dat", N, argv[1],iter);
 	ofstream opening;
 	opening.open(result);
 	for (i=0; i<num_matrix; i++){
