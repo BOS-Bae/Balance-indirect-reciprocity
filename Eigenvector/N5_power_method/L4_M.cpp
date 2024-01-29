@@ -11,7 +11,7 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 
-const int N = 5;
+constexpr int N = 5;
 
 void idx_to_mat(int idx, int mat[][N]);
 int mat_to_idx(int mat[][N]);
@@ -19,31 +19,26 @@ void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
-	int num_of_bal = 16;
+	constexpr int num_of_bal = 16;
 	if(argc<3){
    		printf("./L4_M err iter bal_idx\n");
    		exit(1);
 	}
 	double err = atof(argv[1]);
-	int n_num = pow(2,N);
+    constexpr int n_num = 1 << N;
 	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit, val;
 	int idx_n;
 
 	int iter = atoi(argv[2]);
 	int bal_idx = atoi(argv[3]);
 
-	char filename[100] = "./N5_confi_list";
-	FILE *fp = fopen(filename, "r");
-	int bal_list[num_of_bal];
-	if (fp != NULL){
-		for (i=0; i<num_of_bal; i++){
-			fscanf(fp, "%d", &bal_list[i]);
-		}
-	}
-	fclose(fp);
+    std::ifstream ifs("./N5_confi_list");
+	std::vector<int> bal_list(num_of_bal, 0);
+    for (size_t i = 0; i < num_of_bal; i++) {
+        ifs >> bal_list[i];
+    }
 
-	int bal_elem;
-	bal_elem = bal_list[bal_idx];
+	int bal_elem = bal_list[bal_idx];
 
 	double array[2];
 	array[0] = (1.0 - err); array[1] = err;
@@ -60,7 +55,7 @@ int main(int argc, char* argv[]) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 
-	int num_matrix = pow(2,N*N);
+    constexpr size_t num_matrix = 1 << (N*N);
 	
 	std::uniform_real_distribution<> distri(0.0,1.0);
 
