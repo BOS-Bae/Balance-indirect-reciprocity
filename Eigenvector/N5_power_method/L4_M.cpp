@@ -52,12 +52,12 @@ int main(int argc, char *argv[]) {
 
   constexpr size_t num_matrix = 1 << (N * N);
 
-  double r_i[num_matrix] = {0};
+  std::vector<double> r_i(num_matrix, 0.0);
   r_i[bal_elem] = 1;
 
   for (int t = 0; t < iter; t++) {
     //for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
-    double r_f[num_matrix] = {0};
+    std::vector<double> r_f(num_matrix, 0.0);
     for (int i = 0; i < num_matrix; i++) {
       //void idx_to_mat(int idx, int mat[][N]);
       //int mat_to_idx(int mat[][N]);
