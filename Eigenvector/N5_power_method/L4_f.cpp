@@ -28,9 +28,7 @@ int main(int argc, char* argv[]) {
    		exit(1);
 	}
 	double err = atof(argv[1]);
-	int n_num = pow(2,N);
-	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit, val;
-	int idx_n;
+	constexpr int n_num = 1 << N;
 
 	int iter = atoi(argv[2]);
 	int flip_idx = atoi(argv[3]);
@@ -43,7 +41,7 @@ int main(int argc, char* argv[]) {
 
 	FILE *fp2 = fopen(filename, "r");
 	if (fp2 != NULL){
-		for (i=0; i<num_flip; i++){
+		for (int i = 0; i < num_flip; i++){
 			fscanf(fp2, "%d", &flip_list[i]);
 		}
 	}
@@ -65,28 +63,28 @@ int main(int argc, char* argv[]) {
 	//	cout << "\n";
 	//}
 
-	unsigned long long num_matrix = pow(2,N*N);
-	double r_i[num_matrix] = {0};
+	constexpr size_t num_matrix = 1 << (N * N);
+	std::vector<double> r_i(num_matrix, 0.0);
 	r_i[flip_elem] = 1;
 
 	int idx_f; // index of mat_f, which is the matrix updated by assessment rule.
-	for (t=0; t<iter; t++){
+	for (int t = 0; t < iter; t++){
 		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
-		double r_f[num_matrix] = {0};
-		for (i=0; i<num_matrix; i++){
+		std::vector<double> r_f(num_matrix, 0.0);
+		for (int i = 0; i < num_matrix; i++){
 			//void idx_to_mat(int idx, int mat[][N]);
 			//int mat_to_idx(int mat[][N]);
 			//void L4_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
 			
 			int mat_i[N][N] = {0,}; int mat_f[N][N];
 			idx_to_mat(i, mat_i);
-			for (x=0; x<N; x++){
-				for (y=0; y<N; y++){
-					for (m=0; m<n_num; m++){
+			for (int x = 0; x < N; x++){
+				for (int y = 0; y < N; y++){
+					for (int m = 0; m < n_num; m++){
 						copy(&mat_i[0][0], &mat_i[0][0]+N*N, &mat_f[0][0]);
 						prob_mul = 1.0;
-						for (l=0; l<N; l++){
-							idx_n = n_list[m][l];
+						for (int l = 0; l < N; l++){
+							int idx_n = n_list[m][l];
 							L4_rule(mat_f, l, x, y, idx_n);
 							prob_mul *= array[idx_n]; 
 						}
@@ -97,13 +95,13 @@ int main(int argc, char* argv[]) {
 				}
 			}
 		}
-		for (i=0; i<num_matrix; i++){
+		for (int i = 0; i < num_matrix; i++){
 			r_i[i] = r_f[i];
-			for (k=0; k<num_of_bal; k++){
-				if (i==bal_list[k]) cout << r_i[i] << " ";
+			for (int k = 0; k < num_of_bal; k++){
+				if (i == bal_list[k]) cout << r_i[i] << " ";
 			}
 		}
-		cout <<"\n";
+		cout << "\n";
 	}
 	return 0;
 }

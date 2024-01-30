@@ -20,7 +20,7 @@ void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char *argv[]) {
-  
+  //constexpr int num_of_bal = 16;
   int num_of_bal = (int)pow(2,(N-1));
   if (argc < 3) {
     printf("./L6_M err iter bal_idx\n");
@@ -32,6 +32,12 @@ int main(int argc, char *argv[]) {
   int iter = atoi(argv[2]);
   int bal_idx = atoi(argv[3]);
 
+  //std::ifstream ifs("./N5_confi_list");
+  //std::vector<int> bal_list(num_of_bal, 0);
+  //for (size_t i = 0; i < num_of_bal; i++) {
+  //  ifs >> bal_list[i];
+  //}
+  //int bal_elem = bal_list[bal_idx];
   std::vector<unsigned long long> bal_list = {};
   balanced_idx(bal_list);
   sort(bal_list.begin(), bal_list.end());
@@ -188,3 +194,4 @@ unsigned long long mat_to_idx(int mat[][N]) {
   }
   return idx;
 }
+

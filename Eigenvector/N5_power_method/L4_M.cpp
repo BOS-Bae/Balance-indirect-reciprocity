@@ -16,7 +16,7 @@ constexpr int N = 6;
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 unsigned long long mat_to_idx(int mat[][N]);
 void balanced_idx(vector<unsigned long long>& bal_list);
-void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char *argv[]) {

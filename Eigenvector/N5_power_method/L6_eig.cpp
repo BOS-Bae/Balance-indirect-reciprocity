@@ -11,7 +11,7 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 
-constexpr int N = 6;
+constexpr int N = 4;
 
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 unsigned long long mat_to_idx(int mat[][N]);
@@ -25,10 +25,7 @@ int main(int argc, char* argv[]) {
    		exit(1);
 	}
 	double err = atof(argv[1]);
-	int n_num = pow(2,N);
-	int i,j,k,t,x,y,n,m,l,p, idx, tmp_idx, bit, tmp_unit, val;
-	int idx_n;
-
+	constexpr int n_num = 1 << N;
 	int iter = atoi(argv[2]);
 
 	double array[2];
@@ -50,34 +47,34 @@ int main(int argc, char* argv[]) {
 	
 	std::uniform_real_distribution<> distri(0.0,1.0);
 
-	double r_i[num_matrix] = {0};
+	std::vector<double> r_i(num_matrix, 0.0);
 	double summ = 0.0;
-	for (i=0; i<num_matrix; i++){
+	for (int i = 0; i < num_matrix; i++){
 		r_i[i] = distri(gen);
 		summ += r_i[i];
 	}
-	for (i=0; i<num_matrix; i++){
+	for (int i = 0; i < num_matrix; i++){
 		r_i[i] /= summ;
 	}
 	int idx_f; // index of mat_f, which is the matrix updated by assessment rule.
-	for (t=0; t<iter; t++){
+	for (int t = 0; t < iter; t++){
 		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
-		double r_f[num_matrix] = {0};
-		for (i=0; i<num_matrix; i++){
+		std::vector<double> r_f(num_matrix, 0.0);
+		for (int i = 0; i < num_matrix; i++){
 			//void idx_to_mat(int idx, int mat[][N]);
 			//int mat_to_idx(int mat[][N]);
 			//void L4_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
 			
 			int mat_i[N][N] = {0,}; int mat_f[N][N];
 			idx_to_mat(i, mat_i);
-			for (x=0; x<N; x++){
-				for (y=0; y<N; y++){
+			for (int x = 0; x < N; x++){
+				for (int y = 0; y < N; y++){
 					// n_list[16][4]
-					for (m=0; m<n_num; m++){
+					for (int m = 0; m < n_num; m++){
 						copy(&mat_i[0][0], &mat_i[0][0]+N*N, &mat_f[0][0]);
 						prob_mul = 1.0;
-						for (l=0; l<N; l++){
-							idx_n = n_list[m][l];
+						for (int l = 0; l < N; l++){
+							int idx_n = n_list[m][l];
 							L6_rule(mat_f, l, x, y, idx_n);
 							prob_mul *= array[idx_n]; 
 						}
@@ -88,7 +85,7 @@ int main(int argc, char* argv[]) {
 				}
 			}
 		}
-		for (i=0; i<num_matrix; i++){
+		for (int i = 0; i < num_matrix; i++){
 			r_i[i] = r_f[i];
 		}
 	}
@@ -96,7 +93,7 @@ int main(int argc, char* argv[]) {
 	sprintf(result, "./N%dL6_e%st%d.dat", N, argv[1],iter);
 	ofstream opening;
 	opening.open(result);
-	for (i=0; i<num_matrix; i++){
+	for (int i = 0; i < num_matrix; i++){
 		opening << r_i[i] << " ";
 	}
 	return 0;
