@@ -13,7 +13,7 @@ using std::vector;
 using std::copy;
 using std::sort;
 
-const int N = 5;
+const int N = 6;
 
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 unsigned long long mat_to_idx(int mat[][N]);
