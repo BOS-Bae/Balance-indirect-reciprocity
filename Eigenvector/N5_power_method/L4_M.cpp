@@ -3,11 +3,13 @@
 #include <fstream>
 #include <cmath>
 #include <vector>
+#include <algorithm>
 
 using std::cout;
 using std::ofstream;
 using std::vector;
 using std::copy;
+using std::sort;
 
 constexpr int N = 6;
 
@@ -30,13 +32,17 @@ int main(int argc, char *argv[]) {
   int iter = atoi(argv[2]);
   int bal_idx = atoi(argv[3]);
 
-  std::ifstream ifs("./N5_confi_list");
-  std::vector<int> bal_list(num_of_bal, 0);
-  for (size_t i = 0; i < num_of_bal; i++) {
-    ifs >> bal_list[i];
-  }
+  //std::ifstream ifs("./N5_confi_list");
+  //std::vector<int> bal_list(num_of_bal, 0);
+  //for (size_t i = 0; i < num_of_bal; i++) {
+  //  ifs >> bal_list[i];
+  //}
+  //int bal_elem = bal_list[bal_idx];
+  std::vector<unsigned long long> bal_list = {};
+  balanced_idx(bal_list);
+  sort(bal_list.begin(), bal_list.end());
 
-  int bal_elem = bal_list[bal_idx];
+  unsigned long long bal_elem = bal_list[bal_idx];
 
   double array[2];
   array[0] = (1.0 - err);
