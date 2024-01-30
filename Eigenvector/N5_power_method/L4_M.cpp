@@ -9,15 +9,17 @@ using std::ofstream;
 using std::vector;
 using std::copy;
 
-constexpr int N = 5;
+constexpr int N = 6;
 
-void idx_to_mat(int idx, int mat[][N]);
-int mat_to_idx(int mat[][N]);
-void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+void idx_to_mat(unsigned long long idx, int mat[][N]);
+unsigned long long mat_to_idx(int mat[][N]);
+void balanced_idx(vector<unsigned long long>& bal_list);
+void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char *argv[]) {
-  constexpr int num_of_bal = 16;
+  //constexpr int num_of_bal = 16;
+  int num_of_bal = (int)pow(2,(N-1));
   if (argc < 3) {
     printf("./L4_M err iter bal_idx\n");
     exit(1);
@@ -95,7 +97,47 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-void idx_to_mat(int idx, int mat[][N]) {
+void balanced_idx(vector<unsigned long long>& bal_list){
+	int max_idx = (int)pow(2,N)-1;
+	int id_mat[max_idx][N] = {0,};
+	for (int i = 0; i < max_idx; i++) {
+	  int idx = i;
+		for (int j = 0; j < N; j++) {
+			int id = idx & 1;
+			id_mat[i][j] = id;
+			idx = idx >> 1;
+		}
+	}
+	int max_num = 0;
+	for (int i = 0; i < max_idx; i++) {
+		int mat[N][N] = {0,};
+		for (int x = 0; x < N; x++) {
+			for (int y = 0; y < N; y++) {
+				if (id_mat[i][x] == id_mat[i][y]) mat[x][y] = mat[y][x] = 1;
+				else mat[x][y] = mat[y][x] = -1;
+			}
+		}
+		unsigned long long bal_idx = mat_to_idx(mat);
+		if (i == 0) {
+			bal_list.push_back(bal_idx);
+			max_num += 1;
+		}
+		else {
+			int check = 0; int different = 0;
+			for (int k = 0; k < max_num; k++) {
+				check += 1;
+				if (bal_list[k] != bal_idx)	different += 1;
+			}
+			if (check == different) {
+				bal_list.push_back(bal_idx);
+				max_num += 1;
+			}
+		}
+	}
+}
+
+
+void idx_to_mat(unsigned long long idx, int mat[][N]) {
   for (int i = 0; i < N; i++) {
     int slice_row = N * (N - 1 - i);
     for (int j = 0; j < N; j++) {
@@ -134,8 +176,8 @@ void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
   mat_f[o][d] = (idx_err == 0 ? mat_f[o][r] * mat_f[d][r] : -mat_f[o][r] * mat_f[d][r]);
 }
 
-int mat_to_idx(int mat[][N]) {
-  int idx = 0, binary_num = 0;
+unsigned long long mat_to_idx(int mat[][N]) {
+  unsigned long long idx = 0, binary_num = 0;
   idx = binary_num = 0;
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++) {
@@ -146,3 +188,4 @@ int mat_to_idx(int mat[][N]) {
   }
   return idx;
 }
+

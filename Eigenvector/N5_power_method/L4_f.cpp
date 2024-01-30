@@ -14,6 +14,7 @@ using std::copy;
 using std::sort;
 
 const int N = 6;
+const int num_flip = 7;
 
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 unsigned long long mat_to_idx(int mat[][N]);
@@ -39,12 +40,12 @@ int main(int argc, char* argv[]) {
   	balanced_idx(bal_list);
   	sort(bal_list.begin(), bal_list.end());
 
-	char filename[100] = "./N5_flip_list";
-	int flip_list[N];
+	char filename[100] = "./N6_flip_list";
+	int flip_list[num_flip];
 
 	FILE *fp2 = fopen(filename, "r");
 	if (fp2 != NULL){
-		for (i=0; i<5; i++){
+		for (i=0; i<num_flip; i++){
 			fscanf(fp2, "%d", &flip_list[i]);
 		}
 	}
