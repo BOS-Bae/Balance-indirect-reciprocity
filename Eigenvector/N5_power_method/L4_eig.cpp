@@ -11,7 +11,7 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 
-constexpr int N = 4;
+constexpr int N = 6;
 
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 unsigned long long mat_to_idx(int mat[][N]);
@@ -42,11 +42,10 @@ int main(int argc, char* argv[]) {
 	//}
 	std::random_device rd;
 	std::mt19937 gen(rd());
-
-	unsigned long long num_matrix = pow(2,N*N);
 	
 	std::uniform_real_distribution<> distri(0.0,1.0);
 
+	constexpr size_t num_matrix = 1 << (N * N);
 	std::vector<double> r_i(num_matrix, 0.0);
 	double summ = 0.0;
 	for (int i = 0; i < num_matrix; i++){

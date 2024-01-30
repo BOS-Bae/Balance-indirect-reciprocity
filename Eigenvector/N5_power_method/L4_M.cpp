@@ -21,7 +21,7 @@ void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char *argv[]) {
   //constexpr int num_of_bal = 16;
-  int num_of_bal = (int)pow(2,(N-1));
+  int num_of_bal = (int)pow(2, N - 1);
   if (argc < 3) {
     printf("./L4_M err iter bal_idx\n");
     exit(1);

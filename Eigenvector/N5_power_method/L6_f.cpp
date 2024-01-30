@@ -12,7 +12,7 @@ using std::copy;
 using std::sort;
 
 constexpr int N = 6;
-constexpr int num_flip = 7;
+constexpr int num_flip = 7; // when N=5 : num_flip = 5
 
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 unsigned long long mat_to_idx(int mat[][N]);
@@ -21,7 +21,7 @@ void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
-	int num_of_bal = (int)pow(2,(N-1));
+	int num_of_bal = (int)pow(2, N - 1);
 
 	if(argc<3){
    		printf("./L6_f err iter flip_idx\n");
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
   	balanced_idx(bal_list);
   	sort(bal_list.begin(), bal_list.end());
 
-	char filename[100] = "./N6_flip_list";
+	char filename[100] = "./N6_flip_list"; // when N=5 : "./N5_flip_list"
 	int flip_list[num_flip];
 
 	FILE *fp2 = fopen(filename, "r");
