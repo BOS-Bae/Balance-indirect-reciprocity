@@ -21,7 +21,7 @@ void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
 	if(argc<2){
-   		printf("./L6_eig err iter \n");
+   		printf("./L4_eig err iter \n");
    		exit(1);
 	}
 	double err = atof(argv[1]);

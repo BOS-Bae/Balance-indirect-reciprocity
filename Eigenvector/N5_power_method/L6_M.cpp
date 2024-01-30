@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   int iter = atoi(argv[2]);
   int bal_idx = atoi(argv[3]);
 
-  std::vector<unsigned long long> bal_list = {0};
+  std::vector<unsigned long long> bal_list = {};
   balanced_idx(bal_list);
   sort(bal_list.begin(), bal_list.end());
 

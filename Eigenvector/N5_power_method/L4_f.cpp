@@ -4,12 +4,14 @@
 #include <cmath>
 #include <vector>
 #include <random>
+#include <algorithm>
 
 using std::cout;
 using std::ofstream;
 using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
+using std::sort;
 
 const int N = 5;
 
@@ -23,7 +25,7 @@ int main(int argc, char* argv[]) {
 	int num_of_bal = (int)pow(2,(N-1));
 
 	if(argc<3){
-   		printf("./L6_f err iter flip_idx\n");
+   		printf("./L4_f err iter flip_idx\n");
    		exit(1);
 	}
 	double err = atof(argv[1]);
@@ -33,21 +35,14 @@ int main(int argc, char* argv[]) {
 
 	int iter = atoi(argv[2]);
 	int flip_idx = atoi(argv[3]);
+	std::vector<unsigned long long> bal_list = {};
+  	balanced_idx(bal_list);
+  	sort(bal_list.begin(), bal_list.end());
 
-	char filename[100] = "./N5_confi_list";
-	char filename2[100] = "./N5_flip_list";
-	int bal_list[num_of_bal];
-	int flip_list[5];
-	
-	FILE *fp = fopen(filename, "r");
-	if (fp != NULL){
-		for (i=0; i<num_of_bal; i++){
-			fscanf(fp, "%d", &bal_list[i]);
-		}
-	}
-	fclose(fp);
+	char filename[100] = "./N5_flip_list";
+	int flip_list[N];
 
-	FILE *fp2 = fopen(filename2, "r");
+	FILE *fp2 = fopen(filename, "r");
 	if (fp2 != NULL){
 		for (i=0; i<5; i++){
 			fscanf(fp2, "%d", &flip_list[i]);
