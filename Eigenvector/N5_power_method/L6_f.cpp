@@ -3,18 +3,16 @@
 #include <fstream>
 #include <cmath>
 #include <vector>
-#include <random>
 #include <algorithm>
 
 using std::cout;
 using std::ofstream;
-using std::uniform_int_distribution;
 using std::vector;
 using std::copy;
 using std::sort;
 
-const int N = 6;
-const int num_flip = 7;
+constexpr int N = 6;
+constexpr int num_flip = 7;
 
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 unsigned long long mat_to_idx(int mat[][N]);
@@ -66,13 +64,8 @@ int main(int argc, char* argv[]) {
 	//	}
 	//	cout << "\n";
 	//}
-	std::random_device rd;
-	std::mt19937 gen(rd());
 
 	unsigned long long num_matrix = pow(2,N*N);
-	
-	std::uniform_real_distribution<> distri(0.0,1.0);
-
 	double r_i[num_matrix] = {0};
 	r_i[flip_elem] = 1;
 
