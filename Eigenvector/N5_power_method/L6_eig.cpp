@@ -60,10 +60,6 @@ int main(int argc, char* argv[]) {
 		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
 		std::vector<double> r_f(num_matrix, 0.0);
 		for (int i = 0; i < num_matrix; i++){
-			//void idx_to_mat(int idx, int mat[][N]);
-			//int mat_to_idx(int mat[][N]);
-			//void L4_rule(int mat[][N], int mat_f[][N], int o, int d, int r, int idx_err);
-			
 			int mat_i[N][N] = {0,}; int mat_f[N][N];
 			idx_to_mat(i, mat_i);
 			for (int x = 0; x < N; x++){
