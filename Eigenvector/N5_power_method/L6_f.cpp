@@ -23,7 +23,7 @@ void n_list_gen(int n_num, int n_list[][N]);
 int main(int argc, char* argv[]) {
   int num_of_bal = (int)pow(2, N - 1);  
   if(argc<3){
-  	printf("./L4_f err iter flip_idx\n");
+  	printf("./L6_f err iter flip_idx\n");
   	exit(1);
   }
   double err = atof(argv[1]);
