@@ -20,78 +20,76 @@ void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 void n_list_gen(int n_num, int n_list[][N]);
 
 int main(int argc, char* argv[]) {
-	if(argc<2){
-   		printf("./L4_eig err iter \n");
-   		exit(1);
-	}
-	double err = atof(argv[1]);
-	constexpr int n_num = 1 << N;
-	int iter = atoi(argv[2]);
-
-	double array[2];
-	array[0] = (1.0 - err); array[1] = err;
-	
-	int n_list[n_num][N];
-	double prob_mul;
-	n_list_gen(n_num, n_list);
-	//for (i=0; i < 16; i++){
-	//	for (j=0; j < 4; j++){
-	//		cout << n_list[i][j] << " ";
-	//	}
-	//	cout << "\n";
-	//}
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	
-	std::uniform_real_distribution<> distri(0.0,1.0);
-
-	constexpr size_t num_matrix = 1 << (N * N);
-	std::vector<double> r_i(num_matrix, 0.0);
-	double summ = 0.0;
-	for (int i = 0; i < num_matrix; i++){
-		r_i[i] = distri(gen);
-		summ += r_i[i];
-	}
-	for (int i = 0; i < num_matrix; i++){
-		r_i[i] /= summ;
-	}
-	int idx_f; // index of mat_f, which is the matrix updated by assessment rule.
-	for (int t = 0; t < iter; t++){
-		//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
-		std::vector<double> r_f(num_matrix, 0.0);
-		for (int i = 0; i < num_matrix; i++){
-			int mat_i[N][N] = {0,}; int mat_f[N][N];
-			idx_to_mat(i, mat_i);
-			for (int x = 0; x < N; x++){
-				for (int y = 0; y < N; y++){
-					// n_list[16][4]
-					for (int m = 0; m < n_num; m++){
-						copy(&mat_i[0][0], &mat_i[0][0]+N*N, &mat_f[0][0]);
-						prob_mul = 1.0;
-						for (int l = 0; l < N; l++){
-							int idx_n = n_list[m][l];
-							L4_rule(mat_f, l, x, y, idx_n);
-							prob_mul *= array[idx_n]; 
-						}
-						idx_f = mat_to_idx(mat_f);
-						//cout << idx_f << "\n";
-						r_f[idx_f] += prob_mul*(1/(double)(N*N))*r_i[i];
-					}
-				}
-			}
-		}
-		for (int i = 0; i < num_matrix; i++){
-			r_i[i] = r_f[i];
-		}
-	}
-	char result[100];
-	sprintf(result, "./N%dL4_e%st%d.dat", N, argv[1],iter);
-	ofstream opening;
-	opening.open(result);
-	for (int i = 0; i < num_matrix; i++){
-		opening << r_i[i] << " ";
-	}
-	return 0;
+  if(argc<2){
+  	printf("./L6_eig err iter \n");
+  	exit(1);
+  }
+  double err = atof(argv[1]);
+  constexpr int n_num = 1 << N;
+  int iter = atoi(argv[2]);  
+  double array[2];
+  array[0] = (1.0 - err); array[1] = err;
+  
+  int n_list[n_num][N];
+  double prob_mul;
+  n_list_gen(n_num, n_list);
+  //for (i=0; i < 16; i++){
+  //	for (j=0; j < 4; j++){
+  //		cout << n_list[i][j] << " ";
+  //	}
+  //	cout << "\n";
+  //}
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  
+  std::uniform_real_distribution<> distri(0.0,1.0);  
+  constexpr size_t num_matrix = 1 << (N * N);
+  std::vector<double> r_i(num_matrix, 0.0);
+  double summ = 0.0;
+  for (int i = 0; i < num_matrix; i++){
+  	r_i[i] = distri(gen);
+  	summ += r_i[i];
+  }
+  for (int i = 0; i < num_matrix; i++){
+  	r_i[i] /= summ;
+  }
+  int idx_f; // index of mat_f, which is the matrix updated by assessment rule.
+  for (int t = 0; t < iter; t++){
+  	//for (i=0; i<num_matrix; i++) r_f[i] = 0.0;
+  	std::vector<double> r_f(num_matrix, 0.0);
+  	for (int i = 0; i < num_matrix; i++){
+  	  int mat_i[N][N] = {0,}; int mat_f[N][N];
+  	  idx_to_mat(i, mat_i);
+  	  for (int x = 0; x < N; x++){
+  	  	for (int y = 0; y < N; y++){
+  		  // n_list[16][4]
+  		  for (int m = 0; m < n_num; m++){
+  		  	copy(&mat_i[0][0], &mat_i[0][0]+N*N, &mat_f[0][0]);
+  		  	prob_mul = 1.0;
+  		  	for (int l = 0; l < N; l++){
+  		  		int idx_n = n_list[m][l];
+  		  		L4_rule(mat_f, l, x, y, idx_n);
+  		  		prob_mul *= array[idx_n]; 
+  		  	}
+  		  	idx_f = mat_to_idx(mat_f);
+  		  	//cout << idx_f << "\n";
+  		  	r_f[idx_f] += prob_mul*(1/(double)(N*N))*r_i[i];
+  		  }
+  	  	}
+  	  }
+  	}
+  	for (int i = 0; i < num_matrix; i++){
+  		r_i[i] = r_f[i];
+  	}
+  }
+  char result[100];
+  sprintf(result, "./N%dL4_e%st%d.dat", N, argv[1],iter);
+  ofstream opening;
+  opening.open(result);
+  for (int i = 0; i < num_matrix; i++){
+  	opening << r_i[i] << " ";
+  }
+  return 0;
 }
 
 void balanced_idx(vector<unsigned long long>& bal_list){

@@ -138,7 +138,6 @@ void balanced_idx(vector<unsigned long long>& bal_list){
 	}
 }
 
-
 void idx_to_mat(unsigned long long idx, int mat[][N]) {
   for (int i = 0; i < N; i++) {
     int slice_row = N * (N - 1 - i);
