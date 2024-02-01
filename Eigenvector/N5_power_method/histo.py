@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 f_s = 12
-N = 6
+N = 4
 err = 0.0001
-t = 1000
+t = 100
 
 L6_elements = np.loadtxt("./N{}L6_e{}t{}.dat".format(N,err,t))
 L4_elements = np.loadtxt("./N{}L4_e{}t{}.dat".format(N,err,t))
@@ -19,12 +19,12 @@ num = np.power(2, N*N)
 print("L6 :")
 for i in range(num):
     if (L6_elements[i] > 0.01):
-        print(i)
+        print(i, "    ", L6_elements[i])
 
 print("\nL4 :")
 for i in range(num):
     if (L4_elements[i] > 0.4):
-        print(i)
+        print(i, "    ", L4_elements[i])
 
 plt.hist(L6_elements, bins=20, label='L6, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend(fontsize=f_s)
