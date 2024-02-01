@@ -34,6 +34,8 @@ plt.xticks(fontsize=f_s)
 plt.xlim(0,1.0)
 plt.savefig('./L6_eigen.pdf', format='pdf')
 
+plt.clf()
+
 plt.hist(L4_elements, bins=100, label='L4, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend(fontsize=f_s)
 plt.yscale('log')
