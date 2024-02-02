@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 f_s = 12
-N = 4
+N = 6
 err = 0.0001
-t = 100
+t = 1000
 
-L6_elements = np.loadtxt("./N{}L6_e{}t{}.dat".format(N,err,t))
-L4_elements = np.loadtxt("./N{}L4_e{}t{}.dat".format(N,err,t))
+L6_elements = np.loadtxt("./N{}L6_e{}t{}.dat".format(N,int(np.log10(err)),t))
+L4_elements = np.loadtxt("./N{}L4_e{}t{}.dat".format(N,int(np.log10(err)),t))
 
 print("L6 sum : ", np.sum(L6_elements), "\n")
 print("L4 sum : ", np.sum(L4_elements) ,"\n")
