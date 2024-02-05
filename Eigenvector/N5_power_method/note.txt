@@ -1,0 +1,9 @@
+1. I edit the 'CMakeLists.txt', because only two files ("L_power.cpp" and "L_power" respectively) are needed.
+Original 'CMakeLists.txt' is in './old_codes/'
+
+2. In our computer, we cannot make an output file whose name is "L_power", because the error below occurs :
+" error: right operand of shift expression ‘(1 << 36)’ is >= than the precision of the left operand [-fpermissive]
+  169 |   constexpr size_t num_matrix = 1 << (N * N); "
+by 'g++ L_power.cpp -o L_power -Ofast'.
+
+It seems to be due to the limit of memories of our computer, which may not be the problem in the Fugaku.
