@@ -3,12 +3,9 @@
 #include <fstream>
 #include <cmath>
 #include <vector>
+#include <array>
 #include <algorithm>
 
-using std::ofstream;
-using std::vector;
-using std::copy;
-using std::sort;
 
 constexpr int N = 6;
 
@@ -17,7 +14,7 @@ void idx_to_mat(unsigned long long idx, int mat[][N]);
 
 unsigned long long mat_to_idx(int mat[][N]);
 
-void balanced_idx(vector<unsigned long long> &bal_list);
+void balanced_idx(std::vector<unsigned long long> &bal_list);
 
 void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 
@@ -46,7 +43,6 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   double err = atof(argv[1]);
-  constexpr int n_num = 1 << N; // number for the possible configurations of err for N observers
 
   int iter = atoi(argv[2]);
   int rule_num = atoi(argv[3]);
@@ -58,7 +54,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-void balanced_idx(vector<unsigned long long> &bal_list) {
+void balanced_idx(std::vector<unsigned long long> &bal_list) {
   const size_t max_idx = (1ull << N) - 1;
   std::vector<std::array<int, N> > id_mat(max_idx);
   for (int i = 0; i < max_idx; i++) {
@@ -175,34 +171,33 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
 
   const size_t num_matrix = 1ull << (N * N);
   std::vector<double> r_i(num_matrix, 0);
-  char result[100];
-  ofstream opening;
-  switch (init_vect_idx) {
-    case 0: {
-      sprintf(result, "./N%dL%d_e%dt%d.dat", N, rule_num, (int) log10(err), iter);
-      opening.open(result);
-      for (unsigned long long i = 0; i < num_matrix; i++) {
-        r_i[i] = 1 / (double) num_matrix;
-      }
-
-      break;
+  std::ofstream opening;
+  if (init_vect_idx == 0) {
+    char result[100];
+    sprintf(result, "./N%dL%d_e%dt%d.dat", N, rule_num, (int) log10(err), iter);
+    opening.open(result);
+    for (unsigned long long i = 0; i < num_matrix; i++) {
+      r_i[i] = 1 / (double) num_matrix;
     }
-    case 1: {
-      sprintf(result, "./N%dL%d_e%f_bal%d.dat", N, rule_num, err, bal_idx);
-      opening.open(result);
-      int bal_elem = bal_list[bal_idx];
-      r_i[bal_elem] = 1;
-      break;
-    }
-    case 2: {
-      sprintf(result, "./N%dL%d_e%f_flip%d.dat", N, rule_num, err, flip_idx);
-      opening.open(result);
-      vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727,
-                                                 43903906247, 51539607551};
-      unsigned long long flip_elem = flip_list_N6[flip_idx];
-      r_i[flip_elem] = 1;
-      break;
-    }
+  }
+  else if (init_vect_idx == 1) {
+    char result[100];
+    sprintf(result, "./N%dL%d_e%f_bal%d.dat", N, rule_num, err, bal_idx);
+    opening.open(result);
+    int bal_elem = bal_list[bal_idx];
+    r_i[bal_elem] = 1;
+  }
+  else if (init_vect_idx == 2) {
+    char result[100];
+    sprintf(result, "./N%dL%d_e%f_flip%d.dat", N, rule_num, err, flip_idx);
+    opening.open(result);
+    std::vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727,
+                                               43903906247, 51539607551};
+    unsigned long long flip_elem = flip_list_N6[flip_idx];
+    r_i[flip_elem] = 1;
+  }
+  else {
+    throw std::runtime_error("Invalid init_vect_idx");
   }
 
   for (int t = 0; t < iter; t++) {
@@ -214,7 +209,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
       for (int x = 0; x < N; x++) {
         for (int y = 0; y < N; y++) {
           for (int m = 0; m < n_num; m++) {
-            copy(&mat_i[0][0], &mat_i[0][0] + N * N, &mat_f[0][0]);
+            std::copy(&mat_i[0][0], &mat_i[0][0] + N * N, &mat_f[0][0]);
             prob_mul = 1.0;
             for (int l = 0; l < N; l++) {
               int idx_n = n_list[m][l];
@@ -237,31 +232,26 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     for (unsigned long long i = 0; i < num_matrix; i++) {
       r_i[i] = r_f[i];
     }
-    switch (init_vect_idx) {
-      case 0: {
-        if (t == iter - 1) {
-          for (unsigned long long i = 0; i < num_matrix; i++) {
-            opening << r_i[i] << " ";
-          }
+    if (init_vect_idx == 0) {
+      if (t == iter - 1) {
+        for (unsigned long long i = 0; i < num_matrix; i++) {
+          opening << r_i[i] << " ";
         }
-        break;
       }
-      case 1: {
-        for (int i = 0; i < num_of_bal; i++) {
-          unsigned long long bal_elem = bal_list[i];
-          opening << r_i[bal_elem] << " ";
-        }
-        opening << "\n";
-        break;
+    }
+    else if (init_vect_idx == 1) {
+      for (int i = 0; i < num_of_bal; i++) {
+        unsigned long long bal_elem = bal_list[i];
+        opening << r_i[bal_elem] << " ";
       }
-      case 2: {
-        for (int i = 0; i < num_of_bal; i++) {
-          unsigned long long bal_elem = bal_list[i];
-          opening << r_i[bal_elem] << " ";
-        }
-        opening << "\n";
-        break;
+      opening << "\n";
+    }
+    else if (init_vect_idx == 2) {
+      for (int i = 0; i < num_of_bal; i++) {
+        unsigned long long bal_elem = bal_list[i];
+        opening << r_i[bal_elem] << " ";
       }
+      opening << "\n";
     }
   }
   opening.close();
