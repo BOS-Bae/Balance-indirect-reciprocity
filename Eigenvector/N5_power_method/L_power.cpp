@@ -53,8 +53,8 @@ int main(int argc, char* argv[]) {
 }
 
 void balanced_idx(vector<unsigned long long>& bal_list){
-	int max_idx = (int)pow(2,N)-1;
-	int id_mat[max_idx][N] = {0,};
+	const size_t max_idx = (1ull << N) - 1;
+  std::vector< std::array<int, N> > id_mat(max_idx);
 	for (int i = 0; i < max_idx; i++) {
 	  int idx = i;
 		for (int j = 0; j < N; j++) {
@@ -166,7 +166,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
   double prob_mul;
   n_list_gen(n_num, n_list);
   
-  constexpr size_t num_matrix = 1 << (N * N);
+  const size_t num_matrix = 1ull << (N * N);
   std::vector<double> r_i(num_matrix, 0);
 	char result[100];
 	ofstream opening;
