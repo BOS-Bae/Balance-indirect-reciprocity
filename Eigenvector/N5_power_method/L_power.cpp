@@ -5,9 +5,9 @@
 #include <vector>
 #include <array>
 #include <algorithm>
+#include <chrono>
 
-
-constexpr int N = 6;
+constexpr int N = 5;
 
 // The reason for using 'usigned long long' : 2^(N*N) exceeds the maximum of 'int', when N=6.
 void idx_to_mat(unsigned long long idx, int mat[][N]);
@@ -200,9 +200,15 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     throw std::runtime_error("Invalid init_vect_idx");
   }
 
+  // measure elapsed time
+  auto start = std::chrono::system_clock::now();
+
   for (int t = 0; t < iter; t++) {
+    std::cerr << "iter: " << t << std::endl;
     std::vector<double> r_f(num_matrix, 0.0);
     for (unsigned long long i = 0; i < num_matrix; i++) {
+      if (i % 1'000'000 == 0) { std::cerr << "i: " << i << " / " << num_matrix << std::endl; }
+      if (i == 1'000'000) { break; }  // for performance measurement
       int mat_i[N][N] = {0,};
       int mat_f[N][N];
       idx_to_mat(i, mat_i);
@@ -229,6 +235,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
         }
       }
     }
+
     for (unsigned long long i = 0; i < num_matrix; i++) {
       r_i[i] = r_f[i];
     }
@@ -254,5 +261,10 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
       opening << "\n";
     }
   }
+
+  auto end = std::chrono::system_clock::now();
+  // get seconds in double
+  double sec = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1'000.0;
+  std::cerr << "time: " << sec << " sec" << std::endl;
   opening.close();
 }
