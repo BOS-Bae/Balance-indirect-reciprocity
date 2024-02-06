@@ -14,7 +14,8 @@ bool L6(bool o_d, bool o_r, bool d_r) {  // o_d: o -> d, o_r: o -> r, d_r: d -> 
   // else return !d_r;  // when G meets B
 }
 
-std::map<size_t,double> CalculateTransitionsWithDonor(const Configuration& config, size_t d, double err) {
+using transition_t = std::vector<std::pair<size_t,double>>;
+void CalculateTransitionsWithDonor(const Configuration& config, size_t d, double err, transition_t& transitions) {
   // transition from config when the donor is d
 
   // initialize dests with zero
@@ -35,27 +36,18 @@ std::map<size_t,double> CalculateTransitionsWithDonor(const Configuration& confi
     }
   }
 
-  std::map<size_t, double> ans;
+  Configuration dest_config = config;
   for (size_t i = 0; i < (1 << N); i++) {
-    Configuration dest_config = config;
     dest_config.set_column(d, std::bitset<64>(i));
-    ans[dest_config.ID()] = dests[i];
+    transitions.emplace_back(dest_config.ID(), dests[i]);
   }
-  return ans;
 }
 
-std::map<size_t,double> CalculateTransitionsFrom(const Configuration& config, double err) {
-  std::map<size_t,double> dests;
-
+void CalculateTransitionsFrom(const Configuration& config, double err, transition_t& transitions) {
   // when the donor is d
   for (size_t d = 0; d < N; d++) {
-    auto transitions = CalculateTransitionsWithDonor(config, d, err);
-    // merge dests and transitions
-    for (const auto &[key, value]: transitions) {
-      dests[key] += value;
-    }
+    CalculateTransitionsWithDonor(config, d, err, transitions);
   }
-  return dests;
 }
 
 
@@ -91,16 +83,15 @@ int main(int argc, char *argv[]) {
   // since it is a sparse matrix, use a vector of maps
   // T[i][j] = probability of transitioning from i to j
   const size_t NN = 1 << (N*N);  // 2^(N*N)
-  std::vector< std::map<size_t,double> > T(NN);
+  std::vector<transition_t> T(NN);
   for (size_t i = 0; i < NN; i++) {
-    if (i % 1'000'000 == 0) {
+    if (i % 100'000 == 0) {
       std::cerr << " i: " << i << std::endl;
     }
-    if (i == 1'000'000) break;
+    if (i == 100'000) break;
     Configuration config(N, i);
     // find the destinations from i
-    std::map<size_t,double> dests = CalculateTransitionsFrom(config, err);
-    T[i] = dests;
+    CalculateTransitionsFrom(config, err, T[i]);
   }
 
   auto end = std::chrono::system_clock::now();
