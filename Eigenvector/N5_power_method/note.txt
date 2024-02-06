@@ -7,3 +7,5 @@ Original 'CMakeLists.txt' is in './old_codes/'
 by 'g++ L_power.cpp -o L_power -Ofast'.
 
 It seems to be due to the limit of memories of our computer, which may not be the problem in the Fugaku.
+
+3. The command 'sbatch' in my whole.sh may be equivalent to the 'qsub' that is proper for other computers.
