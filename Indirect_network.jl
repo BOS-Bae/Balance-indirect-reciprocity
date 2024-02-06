@@ -230,24 +230,6 @@ function L6_rule(O_matrix, neigh_arr, d, r, ϵ)
 
 end
 
-function L5_rule(O_matrix, neigh_arr, d, r, ϵ)
-    for k in 1:length(neigh_arr)
-        α = neigh_arr[k]
-        if (O_matrix[d,r] == 1)
-            if (O_matrix[α,d] == 1)
-                O_matrix[α,d] = O_matrix[α,r]
-            elseif (O_matrix[α,d] == -1)
-                O_matrix[α,d] = 1
-            end
-        elseif (O_matrix[d,r] == -1)
-            O_matrix[α,d] = -O_matrix[α,r]
-        end
-        if (rand(Float64) < ϵ)
-            O_matrix[α,d] *= -1
-        end
-    end
-end
-
 function L4_rule(O_matrix, neigh_arr, d, r, ϵ)
     list = []
     for k in 1:length(neigh_arr)
@@ -305,66 +287,8 @@ function L8_rule_ab(O_matrix,α, d, r)
     return val
 end
 
-function L3_rule(O_matrix, neigh_arr, d, r, ϵ)
-    for k in 1:length(neigh_arr)
-        α = neigh_arr[k]
-        if (O_matrix[d,r] == 1)
-            O_matrix[α,d] = 1
-        elseif (O_matrix[d,r] == -1)
-            O_matrix[α,d] = -O_matrix[α,r]
-        end
-        if (rand(Float64) < ϵ)
-            O_matrix[α,d] *= -1
-        end
-    end
-end
-
-function L2_rule(O_matrix, neigh_arr, d, r, ϵ)
-    c_d = 0
-    if (O_matrix[d,d]==1)
-        c_d =  O_matrix[d,r]
-    elseif (O_matrix[d,d]==-1)
-        c_d = 1
-    end
-
-    for k in 1:length(neigh_arr)
-        α = neigh_arr[k]
-        if (c_d == 1)
-            if (O_matrix[α,d] == 1)
-                O_matrix[α,d] = O_matrix[α,r]
-            elseif (O_matrix[α,d] == -1)
-                O_matrix[α,d] = 1
-            end
-        elseif (c_d == -1)
-            if (O_matrix[α,d] == 1)
-                O_matrix[α,d] = -O_matrix[α,r]
-            elseif (O_matrix[α,d] == -1)
-                O_matrix[α,d] = -1
-            end
-        end
-    end
-    if (rand(Float64) < ϵ)
-        O_matrix[α,d] *= -1
-    end
-end
-
-
 function L6_rule_ab(O_matrix,α, d, r)
     val = O_matrix[α,r] * O_matrix[d,r]
-    return val
-end
-
-function L5_rule_ab(O_matrix,α, d, r)
-    val = 0
-    if (O_matrix[d,r] == 1)
-        if (O_matrix[α,d] == 1)
-            val = O_matrix[α,r]
-        elseif (O_matrix[α,d] == -1)
-            val = 1
-        end
-    elseif (O_matrix[d,r] == -1)
-        val = -O_matrix[α,r]
-    end
     return val
 end
 
@@ -376,41 +300,6 @@ function L4_rule_ab(O_matrix,α, d, r)
         end
     elseif (O_matrix[d,r] == -1)
         val = -O_matrix[α,r]
-    end
-    return val
-end
-
-function L3_rule_ab(O_matrix,α, d, r)
-    val = 0
-    if (O_matrix[d,r] == 1)
-        val = 1
-    elseif (O_matrix[d,r] == -1)
-        val = -O_matrix[α,r]
-    end
-    return val
-end
-
-function L2_rule_ab(O_matrix,α, d, r)
-    val = 0
-    c_d = 0
-    if (O_matrix[d,d]==1)
-        c_d =  O_matrix[d,r]
-    elseif (O_matrix[d,d]==-1)
-        c_d = 1
-    end
-
-    if (c_d == 1)
-        if (O_matrix[α,d] == 1)
-            val = O_matrix[α,r]
-        elseif (O_matrix[α,d] == -1)
-            val = 1
-        end
-    elseif (c_d == -1)
-        if (O_matrix[α,d] == 1)
-            val = -O_matrix[α,r]
-        elseif (O_matrix[α,d] == -1)
-            val = -1
-        end
     end
     return val
 end
