@@ -2,8 +2,8 @@
 
 e=0.0001
 
-sbatch $e 1000 4 0 0 0
-sbatch $e 1000 6 0 0 0
+sbatch L_run.sh $e 1000 4 0 0 0
+sbatch L_run.sh $e 1000 6 0 0 0
 
 for ((i=0; i<32; i++))
 do
