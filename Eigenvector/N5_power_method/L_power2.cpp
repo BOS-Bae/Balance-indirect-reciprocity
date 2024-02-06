@@ -32,7 +32,15 @@ void CalculateTransitionsWithDonor(const Configuration& config, size_t d, double
     for (size_t i = 0; i < dests.size(); i++) {
       std::bitset<64> dest(i);
       size_t num_diff = (expected ^ dest).count();  // count the number of errors
-      dests[i] += std::pow(1.0 - err, N - num_diff) * std::pow(err, num_diff) / (N * (N - 1));
+      // dests[i] += std::pow(1.0 - err, N - num_diff) * std::pow(err, num_diff) / (N * (N - 1));  // [TODO] this is the slowest part
+      double prob = 1.0 / (N * (N - 1));  // probability of choosing the recipient
+      for (size_t power = 0; power < num_diff; power++) {
+        prob *= err;
+      }
+      for (size_t power = 0; power < N - num_diff; power++) {
+        prob *= (1.0 - err);
+      }
+      dests[i] += prob;
     }
   }
 
