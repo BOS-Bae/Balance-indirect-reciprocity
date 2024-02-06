@@ -16,6 +16,11 @@ TEST(Configuration, Configuration) {
   EXPECT_EQ(config.get(1, 0), true);
   EXPECT_EQ(config.get(2, 0), false);
 
+  EXPECT_EQ(config.get_column(0), std::bitset<64>("011"));
+  EXPECT_EQ(config.get_column(1), std::bitset<64>("000"));
+  config.set_column(2, 0b110);
+  EXPECT_EQ(config.to_string(), "100\n101\n001\n");
+
   Configuration config2(3, 1);
   EXPECT_EQ(config2.ID(), 1);
   EXPECT_EQ(config2.to_string(), "100\n000\n000\n");
