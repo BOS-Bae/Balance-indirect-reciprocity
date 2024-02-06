@@ -1,5 +1,5 @@
 # Simulation code for plotting fixation time
-include("./Indirect_network.jl")
+include("../Indirect_network.jl")
 using Random
 
 if (length(ARGS) < 2)
@@ -34,7 +34,7 @@ for N in N_0:N_f
     while (true)
         τ_tmp = original_update(L4_rule, σ_matrix, e_matrix, N, τ, ϵ)
         # For random sequential update, use the function below :
-        #τ_tmp = random_sequential_update(L6_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
+        #τ_tmp = random_sequential_update(L4_rule, σ_matrix, e_matrix, Edge_list, τ, ϵ)
         τ = τ_tmp
         
         #if (Check_absorbing(σ_matrix, e_matrix, N, L6_rule_ab) == true)

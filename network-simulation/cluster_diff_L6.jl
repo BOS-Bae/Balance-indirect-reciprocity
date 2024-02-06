@@ -1,5 +1,5 @@
 # Simulation code for plotting fixation time
-include("./Indirect_network.jl")
+include("../Indirect_network.jl")
 using Random
 
 if (length(ARGS) < 2)
