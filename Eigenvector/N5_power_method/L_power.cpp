@@ -184,7 +184,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     char result[100];
     sprintf(result, "./N%dL%d_e%f_bal%d.dat", N, rule_num, err, bal_idx);
     opening.open(result);
-    int bal_elem = bal_list[bal_idx];
+    unsigned long long bal_elem = bal_list[bal_idx];
     r_i[bal_elem] = 1;
   }
   else if (init_vect_idx == 2) {

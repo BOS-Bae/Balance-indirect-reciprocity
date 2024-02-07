@@ -1,8 +1,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include <fstream>
 #include <array>
 #include <map>
+#include <cmath>
+#include <algorithm>
 #include <chrono>
 #include "Configuration.hpp"
 
@@ -16,6 +19,58 @@ bool L6(bool o_d, bool o_r, bool d_r) {  // o_d: o -> d, o_r: o -> r, d_r: d -> 
 
 bool L4(bool o_d, bool o_r, bool d_r) {
   return ((!d_r || o_d || o_r) && (d_r || !o_r)); // L4 rule (simplified from NAND gate sequence.)
+}
+
+unsigned long long mat_to_idx(int mat[][N]) {
+  unsigned long long idx = 0, binary_num = 0;
+  idx = binary_num = 0;
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+      int element = ((int) (mat[N - i - 1][N - j - 1] + 1) / 2);
+      idx += element * (int) pow(2, binary_num);
+      binary_num += 1;
+    }
+  }
+  return idx;
+}
+
+void balanced_idx(std::vector<unsigned long long> &bal_list) {
+  const size_t max_idx = (1ull << N) - 1;
+  std::vector<std::array<int, N> > id_mat(max_idx);
+  for (int i = 0; i < max_idx; i++) {
+    int idx = i;
+    for (int j = 0; j < N; j++) {
+      int id = idx & 1;
+      id_mat[i][j] = id;
+      idx = idx >> 1;
+    }
+  }
+  int max_num = 0;
+  for (int i = 0; i < max_idx; i++) {
+    int mat[N][N] = {0,};
+    for (int x = 0; x < N; x++) {
+      for (int y = 0; y < N; y++) {
+        if (id_mat[i][x] == id_mat[i][y]) mat[x][y] = mat[y][x] = 1;
+        else mat[x][y] = mat[y][x] = -1;
+      }
+    }
+    unsigned long long bal_idx = mat_to_idx(mat);
+    if (i == 0) {
+      bal_list.push_back(bal_idx);
+      max_num += 1;
+    } else {
+      int check = 0;
+      int different = 0;
+      for (int k = 0; k < max_num; k++) {
+        check += 1;
+        if (bal_list[k] != bal_idx) different += 1;
+      }
+      if (check == different) {
+        bal_list.push_back(bal_idx);
+        max_num += 1;
+      }
+    }
+  }
 }
 
 using transition_t = std::vector<std::pair<size_t,double>>;
@@ -97,12 +152,19 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  auto start = std::chrono::system_clock::now();
+  const size_t NN = 1 << (N*N);  // 2^(N*N)
+	const size_t num_of_bal = 1 << (N-1);
+
+  std::vector<unsigned long long> bal_list = {};
+  balanced_idx(bal_list);
+  sort(bal_list.begin(), bal_list.end());
+	
+  //auto start = std::chrono::system_clock::now();
 
   // construct transition matrix
   // since it is a sparse matrix, use a vector of maps
   // T[i][j] = probability of transitioning from i to j
-  const size_t NN = 1 << (N*N);  // 2^(N*N)
+
   std::vector<transition_t> T(NN);
   for (size_t i = 0; i < NN; i++) {
 	/*
@@ -123,7 +185,38 @@ int main(int argc, char *argv[]) {
 
   // update state using power iteration
   // state vector
-  std::vector<double> state(NN, 1.0 / NN);
+  //std::vector<double> state(NN, 1.0 / NN);
+	std::ofstream opening;
+	std::vector<double> state(NN, 0.0);
+	char result[100];
+  switch (init_vect_idx) {
+		case 0:{
+			sprintf(result, "./N%dL%ld_e%dt%ld.dat", N, rule_num, (int) log10(err), iter);
+			opening.open(result);
+			for (int i = 0; i < NN; i++) {
+				state[i] = 1.0 / (double) NN;
+      }
+			break;
+		}
+		
+		case 1:{
+			sprintf(result, "./N%dL%ld_e%d_bal%ld.dat", N, rule_num, (int) log10(err), bal_idx);
+			opening.open(result);
+			unsigned long long bal_elem = bal_list[bal_idx];
+			state[bal_elem] = 1.0;
+			break;
+		}
+		
+		case 2:{
+			sprintf(result, "./N%dL%ld_e%d_flip%ld.dat", N, rule_num, (int) log10(err), flip_idx);
+			opening.open(result);
+			std::vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727,
+                                               43903906247, 51539607551};
+			unsigned long long flip_elem = flip_list_N6[flip_idx];
+			state[flip_elem]= 1.0;
+			break;
+		}
+  }
 
   for (size_t t = 0; t < iter; t++) {
     std::vector<double> new_state(NN, 0.0);
@@ -133,6 +226,27 @@ int main(int argc, char *argv[]) {
       }
     }
     state = new_state;
+		if (init_vect_idx == 0) {
+			if (t == iter - 1) {
+				for (size_t i = 0; i < NN; i++) {
+					opening << state[i] << " ";
+				}
+			}
+		}
+		else if (init_vect_idx == 1) {
+			for (size_t i = 0; i << num_of_bal; i++) {
+				unsigned long long bal_elem = bal_list[i];
+				opening << state[bal_elem] << " ";
+			}
+			opening << "\n";
+		}
+		else if (init_vect_idx == 2) {
+			for (size_t i = 0; i << num_of_bal; i++) {
+				unsigned long long bal_elem = bal_list[i];
+				opening << state[bal_elem] << " ";
+			}
+			opening << "\n";
+		}
   }
   /*
   for (int i = 0; i < NN; i++) {
