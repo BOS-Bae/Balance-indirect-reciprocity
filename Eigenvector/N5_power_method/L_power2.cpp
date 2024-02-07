@@ -6,7 +6,7 @@
 #include <chrono>
 #include "Configuration.hpp"
 
-constexpr int N = 5;
+constexpr int N = 4;
 
 bool L6(bool o_d, bool o_r, bool d_r) {  // o_d: o -> d, o_r: o -> r, d_r: d -> r
   return o_r == d_r;  // return true when the recipient reputation aligns with the donor's action
@@ -14,8 +14,12 @@ bool L6(bool o_d, bool o_r, bool d_r) {  // o_d: o -> d, o_r: o -> r, d_r: d -> 
   // else return !d_r;  // when G meets B
 }
 
+bool L4(bool o_d, bool o_r, bool d_r) {
+  return ((!d_r || o_d || o_r) && (d_r || !o_r)); // L4 rule (simplified from NAND gate sequence.)
+}
+
 using transition_t = std::vector<std::pair<size_t,double>>;
-void CalculateTransitionsWithDonor(const Configuration& config, size_t d, double err, transition_t& transitions) {
+void CalculateTransitionsWithDonor(const Configuration& config, size_t d, double err, transition_t& transitions, int rule_num) {
   // transition from config when the donor is d
 
   // initialize dests with zero
@@ -25,7 +29,16 @@ void CalculateTransitionsWithDonor(const Configuration& config, size_t d, double
   for (size_t r = 0; r < N; r++) {
     std::bitset<64> expected(0);  // updated d-th column without error
     for (size_t o = 0; o < N; o++) {  // [TODO] replace with bitwise operation. could be simpler
-      bool b = L6(config.get(o, d), config.get(o, r), config.get(d, r));
+      bool b;
+	  switch(rule_num){
+	    case 4:
+		  b = L4(config.get(o, d), config.get(o, r), config.get(d, r));
+		break;
+
+		case 6:
+		  b = L6(config.get(o, d), config.get(o, r), config.get(d, r));
+		break;
+	  }
       expected.set(o, b);
     }
     for (size_t i = 0; i < dests.size(); i++) {
@@ -50,10 +63,10 @@ void CalculateTransitionsWithDonor(const Configuration& config, size_t d, double
   }
 }
 
-void CalculateTransitionsFrom(const Configuration& config, double err, transition_t& transitions) {
+void CalculateTransitionsFrom(const Configuration& config, double err, transition_t& transitions, int rule_num) {
   // when the donor is d
   for (size_t d = 0; d < N; d++) {
-    CalculateTransitionsWithDonor(config, d, err, transitions);
+    CalculateTransitionsWithDonor(config, d, err, transitions, rule_num);
   }
 }
 
@@ -92,24 +105,27 @@ int main(int argc, char *argv[]) {
   const size_t NN = 1 << (N*N);  // 2^(N*N)
   std::vector<transition_t> T(NN);
   for (size_t i = 0; i < NN; i++) {
+	/*
     if (i % 100'000 == 0) {
       std::cerr << " i: " << i << std::endl;
     }
     if (i == 100'000) break;
+	*/
     Configuration config(N, i);
     // find the destinations from i
-    CalculateTransitionsFrom(config, err, T[i]);
+    CalculateTransitionsFrom(config, err, T[i], rule_num);
   }
-
+  /*
   auto end = std::chrono::system_clock::now();
   std::cerr << "elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()/1000.0 << " s" << std::endl;
   return 0;
+  */
 
   // update state using power iteration
   // state vector
   std::vector<double> state(NN, 1.0 / NN);
 
-  for (size_t t=0; t < iter; t++) {
+  for (size_t t = 0; t < iter; t++) {
     std::vector<double> new_state(NN, 0.0);
     for (size_t i = 0; i < NN; i++) {
       for (auto &dest : T[i]) {
@@ -118,6 +134,11 @@ int main(int argc, char *argv[]) {
     }
     state = new_state;
   }
+  /*
+  for (int i = 0; i < NN; i++) {
+    std::cout << state[i] << " ";
+  }
+  */
 
   return 0;
 }

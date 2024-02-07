@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 f_s = 12
-N = 6
+N = 4
 err = 0.0001
 t = 1000
 
