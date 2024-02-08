@@ -189,7 +189,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
   }
   else if (init_vect_idx == 2) {
     char result[100];
-    sprintf(result, "./N%dL%d_e%f_flip%d.dat", N, rule_num, err, flip_idx);
+    sprintf(result, "./N%dL%d_flip%d.dat", N, rule_num, flip_idx);
     opening.open(result);
     std::vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727,
                                                43903906247, 51539607551};
@@ -199,6 +199,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
   else {
     throw std::runtime_error("Invalid init_vect_idx");
   }
+
 
   // measure elapsed time
   auto start = std::chrono::system_clock::now();

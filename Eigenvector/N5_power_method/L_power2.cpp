@@ -9,7 +9,7 @@
 #include <chrono>
 #include "Configuration.hpp"
 
-constexpr int N = 4;
+constexpr int N = 6;
 
 bool L6(bool o_d, bool o_r, bool d_r) {  // o_d: o -> d, o_r: o -> r, d_r: d -> r
   return o_r == d_r;  // return true when the recipient reputation aligns with the donor's action
@@ -158,6 +158,11 @@ int main(int argc, char *argv[]) {
   std::vector<unsigned long long> bal_list = {};
   balanced_idx(bal_list);
   sort(bal_list.begin(), bal_list.end());
+	/*
+	for (int i = 0; i < num_of_bal; i++) {
+		std::cout << bal_list[i] << "\n";
+	}
+	*/
 	
   //auto start = std::chrono::system_clock::now();
 
@@ -208,10 +213,10 @@ int main(int argc, char *argv[]) {
 		}
 		
 		case 2:{
-			sprintf(result, "./N%dL%ld_e%d_flip%ld.dat", N, rule_num, (int) log10(err), flip_idx);
+			sprintf(result, "./N%dL%ld_flip%ld.dat", N, rule_num, flip_idx);
 			opening.open(result);
-			std::vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727,
-                                               43903906247, 51539607551};
+			//std::vector<unsigned long long> flip_list_N4 = {34167, 35891, 49151, 51063, 52787};
+			std::vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727, 43903906247, 51539607551};
 			unsigned long long flip_elem = flip_list_N6[flip_idx];
 			state[flip_elem]= 1.0;
 			break;
@@ -234,14 +239,15 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		else if (init_vect_idx == 1) {
-			for (size_t i = 0; i << num_of_bal; i++) {
+			for (size_t i = 0; i < num_of_bal; i++) {
 				unsigned long long bal_elem = bal_list[i];
+				//opening << state[bal_elem] << " ";
 				opening << state[bal_elem] << " ";
 			}
 			opening << "\n";
 		}
 		else if (init_vect_idx == 2) {
-			for (size_t i = 0; i << num_of_bal; i++) {
+			for (size_t i = 0; i < num_of_bal; i++) {
 				unsigned long long bal_elem = bal_list[i];
 				opening << state[bal_elem] << " ";
 			}
