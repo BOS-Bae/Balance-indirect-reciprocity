@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
 		}
 		
 		case 2:{
-			sprintf(result, "./N%dL%ld_flip%ld.dat", N, rule_num, flip_idx);
+			sprintf(result, "./N%dL%ld_flip%ld.dat", N, rule_num, flip_idx); // err = 0 for init_vect_idx = 2.
 			opening.open(result);
 			//std::vector<unsigned long long> flip_list_N4 = {34167, 35891, 49151, 51063, 52787};
 			std::vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727, 43903906247, 51539607551};
@@ -241,7 +241,6 @@ int main(int argc, char *argv[]) {
 		else if (init_vect_idx == 1) {
 			for (size_t i = 0; i < num_of_bal; i++) {
 				unsigned long long bal_elem = bal_list[i];
-				//opening << state[bal_elem] << " ";
 				opening << state[bal_elem] << " ";
 			}
 			opening << "\n";
@@ -254,11 +253,6 @@ int main(int argc, char *argv[]) {
 			opening << "\n";
 		}
   }
-  /*
-  for (int i = 0; i < NN; i++) {
-    std::cout << state[i] << " ";
-  }
-  */
 
   return 0;
 }
