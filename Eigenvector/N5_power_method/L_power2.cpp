@@ -9,7 +9,7 @@
 #include <chrono>
 #include "Configuration.hpp"
 
-constexpr int N = 6;
+constexpr int N = 5;
 
 bool L6(bool o_d, bool o_r, bool d_r) {  // o_d: o -> d, o_r: o -> r, d_r: d -> r
   return o_r == d_r;  // return true when the recipient reputation aligns with the donor's action
@@ -224,6 +224,7 @@ int main(int argc, char *argv[]) {
   }
 
   for (size_t t = 0; t < iter; t++) {
+		std::cout << t << "\n";
     std::vector<double> new_state(NN, 0.0);
     for (size_t i = 0; i < NN; i++) {
       for (auto &dest : T[i]) {
