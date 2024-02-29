@@ -176,7 +176,7 @@ void power_method(double err, int max_iter, int rule_num, int flip_idx) {
   std::ofstream opening;
   
 	char result[100];
-  sprintf(result, "./N%dL%d_flip%d.dat", N, rule_num, flip_idx);
+  sprintf(result, "./network_flip/N%dL%d_flip%d.dat", N, rule_num, flip_idx);
   opening.open(result);
 	std::vector<unsigned long long> flip_list_N5 = {846865, 838737, 822289, 838657};
   unsigned long long flip_elem = flip_list_N5[flip_idx];
@@ -235,6 +235,7 @@ void power_method(double err, int max_iter, int rule_num, int flip_idx) {
 	std::cout << flip_idx << " " << chk << "\n";
 	int len_f = s_f.size();
 	for (int i = 0; i < len_f; i++){
+    std::vector<double> r_f(num_matrix, 0.0);
 		int state_i = s_f[i];
     int mat_i[N][N] = {0,};
     int mat_f[N][N] = {0,};
@@ -257,11 +258,13 @@ void power_method(double err, int max_iter, int rule_num, int flip_idx) {
             prob_mul *= array[idx_n];
          } 
          int state_f = mat_to_idx(mat_f);
-     	   double prob = prob_mul * (1 / (double) (N * N));
-				 if ((prob != 0) && (state_i != state_f)) opening << state_i << " " << state_f << " " << prob << "\n";
+     	   r_f[state_f] += prob_mul * (1 / (double) (N * N));
         }
       }
     }
+		for (int k = 0; k < N; k++) {
+			if ((r_f[k] != 0) && (state_i != k)) opening << state_i << " " << k << " " << r_f[k] << "\n"; 
+		}
 	}
   opening.close();
 }
