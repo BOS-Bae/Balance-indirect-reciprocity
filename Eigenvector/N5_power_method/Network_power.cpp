@@ -262,7 +262,7 @@ void power_method(double err, int max_iter, int rule_num, int flip_idx) {
         }
       }
     }
-		for (int k = 0; k < N; k++) {
+		for (int k = 0; k < num_matrix; k++) {
 			if ((r_f[k] != 0) && (state_i != k)) opening << state_i << " " << k << " " << r_f[k] << "\n"; 
 		}
 	}
