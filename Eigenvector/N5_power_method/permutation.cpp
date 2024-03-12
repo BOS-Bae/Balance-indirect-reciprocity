@@ -4,18 +4,17 @@
 #include <algorithm>
 #include <set>
 
-const int N=5;
+const int N=4;
 const int num_matrix = 1 << N*(N-1);
 using namespace std;
 
-// Function to generate all permutations of nodes
 void idx_to_mat(unsigned long long idx, int mat[][N]) {
 	int idx_tmp = idx;
   for (int i = 0; i < N; i++) {
 		mat[i][i] = 1;
     for (int j = 0; j < N; j++) {
 			if (i!=j){
-      	int M_ij = idx_tmp & 1;  // [TODO] check this line
+      	int M_ij = idx_tmp & 1; 
       	mat[i][j] = 2 * M_ij - 1;
 				idx_tmp = idx_tmp >> 1;
 			}
@@ -54,7 +53,6 @@ void generatePermutations(vector<vector<int>>& permutations, vector<int>& curren
     }
 }
 
-// Function to apply permutation to mat matrix
 vector<vector<int>> applyPermutation(int mat[][N], const vector<int>& permutation) {
 	vector<vector<int>> result(N, vector<int>(N, 0));	
     for (int i = 0; i < permutation.size(); i++) {
@@ -89,7 +87,6 @@ int main() {
     	vector<bool> chosen(N, false);
     	generatePermutations(permutations, current, chosen);
 
-    	// Apply permutations to the mat matrix and store unique results
     	set<vector<vector<int>>> uniqueGroups;
     	for (const auto& permutation : permutations) {
     	    vector<vector<int>> permutedAdjacency = applyPermutation(mat, permutation);
