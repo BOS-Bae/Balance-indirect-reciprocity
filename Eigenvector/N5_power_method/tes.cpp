@@ -6,7 +6,7 @@
 #include <array>
 #include <algorithm>
 
-constexpr int N = 4;
+constexpr int N = 5;
 
 // The reason for using 'usigned long long' : 2^(N*N) exceeds the maximum of 'int', when N=6.
 void idx_to_mat(unsigned long long idx, int mat[][N]);
@@ -37,8 +37,12 @@ void power_method(double err, int max_iter, int rule_num, int flip_idx);
 int main() {
   int mat[N][N] = {0,};
 	//std::vector<unsigned long long> vec = {1, 32, 128, 512};
-	std::vector<unsigned long long> vec = {4078, 4062, 4030, 3582, 4085, 3965, 3837, 3581, 4083, 4027, 3067 ,2043 ,3959, 3063, 4015 ,3823, 3055, 3935, 3551, 2015, 1983, 1919 ,3327, 2815};
+	//std::vector<unsigned long long> vec = {4078, 4062, 4030, 3582, 4085, 3965, 3837, 3581, 4083, 4027, 3067 ,2043 ,3959, 3063, 4015 ,3823, 3055, 3935, 3551, 2015, 1983, 1919 ,3327, 2815};
+	
+//std::vector<unsigned long long> vec = {523127, 523263, 1048439};
+std::vector<unsigned long long> vec = {822289};
 	for (int i = 0; i < vec.size(); i++){
+		std::cout << vec[i] << " : ";
 		idx_to_mat(vec[i], mat);
 		print_mat(mat);
 	}

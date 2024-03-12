@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <set>
 
-const int N = 4;
+const int N = 5;
 const int num_matrix = 1 << N*(N-1);
 using namespace std;
 
@@ -38,16 +38,6 @@ unsigned long long mat_to_idx(int mat[][N]) {
   return idx;
 }
 
-void print_mat(int mat[][N]){
-	for (int j=0; j<N; j++){
-		for (int k=0; k<N; k++){
-			std::cout << mat[j][k] << " ";
-		}
-		std::cout << "; ";
-	}
-	std::cout << "\n";
-}
-
 void generatePermutations(vector<vector<int>>& permutations, vector<int>& current, vector<bool>& chosen) {
     if (current.size() == chosen.size()) {
         permutations.push_back(current);
@@ -75,11 +65,6 @@ vector<vector<int>> applyPermutation(int mat[][N], const vector<int>& permutatio
 }
 
 int main() {
-		std::ofstream opening;
-		char result[100];
-		sprintf(result, "./N%d_configuration.dat",N);
-		opening.open(result);
-
 		vector<vector<int>> permutations;
     vector<int> current;
     vector<bool> chosen(N, false);
@@ -87,10 +72,8 @@ int main() {
     
 		set<set<vector<vector<int>>>> uniqueGroups_set;
     
-		for (int i=0; i<num_matrix; i++){
-			if (i % 10000 == 0) cout << i << "\n";
 			int mat[N][N] = {0,};	
-			idx_to_mat(i,mat);
+			idx_to_mat(523263,mat);
 			
 			//vector<vector<int>> permutations;
     	//vector<int> current;
@@ -104,36 +87,20 @@ int main() {
     	}
 
     	//cout << "Number of unique groups: " << uniqueGroups.size() << endl;
-			int check = 0;
-			for (const auto& unique : uniqueGroups_set){
-				if (uniqueGroups == unique) check += 1;
-			}
-			if (check == 0)	uniqueGroups_set.insert(uniqueGroups);
-		}	
-		int idx = 0;
-		for (const auto& uniqueGroups : uniqueGroups_set){
-			opening << "[" << idx << "] : ";
-			int mat[N][N] = {0,};
 			for (const auto& adj : uniqueGroups){
+					int mat[N][N] = {0,};
 					for (int j=0; j<N; j++){
 						for (int k=0; k<N; k++){
 							mat[j][k] = adj[j][k];
+							cout << adj[j][k] << " ";
 						}
-					}
+						cout << "; ";
+					}	
+					cout << "\n";
 					int mat_idx = mat_to_idx(mat);
-					opening << mat_idx << " ";
+					cout << mat_idx << " ";
 				}
-				opening << "\n";
-				for (int j=0; j<N; j++){
-					for (int k=0; k<N; k++){
-						opening << mat[j][k] << " ";
-					}
-					opening << "; ";
-				}
-				opening << "\n";
-				idx += 1;
-			}
-	opening.close();
+				cout << "\n";
 	return 0;
 }
 
