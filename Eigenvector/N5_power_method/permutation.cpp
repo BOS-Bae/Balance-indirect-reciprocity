@@ -64,18 +64,6 @@ vector<vector<int>> applyPermutation(int mat[][N], const vector<int>& permutatio
 }
 
 int main() {
-   // vector<vector<int>> adjac = {
-   //     {1, 1, -1, -1},
-   //     {1, 1, -1, -1},
-   //     {-1, -1, 1, 1},
-   //     {-1, -1, 1, 1}
-   // }; // Example mat matrix
-	 // int	mat[N][N] = {0,};
-	 // for (int i=0; i<N; i++){
-	 // 	for (int j=0; j<N; j++){
-	 // 		mat[i][j] = adjac[i][j];
-	 // 	}
-	 // }
     set<set<vector<vector<int>>>> uniqueGroups_set;
     
 		for (int i=0; i<num_matrix; i++){
