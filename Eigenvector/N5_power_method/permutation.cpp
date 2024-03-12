@@ -1,10 +1,11 @@
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <vector>
 #include <algorithm>
 #include <set>
 
-const int N=4;
+const int N = 5;
 const int num_matrix = 1 << N*(N-1);
 using namespace std;
 
@@ -64,16 +65,27 @@ vector<vector<int>> applyPermutation(int mat[][N], const vector<int>& permutatio
 }
 
 int main() {
-    set<set<vector<vector<int>>>> uniqueGroups_set;
+		std::ofstream opening;
+		char result[100];
+		sprintf(result, "./N%d_permute.dat",N);
+		opening.open(result);
+
+		vector<vector<int>> permutations;
+    vector<int> current;
+    vector<bool> chosen(N, false);
+    generatePermutations(permutations, current, chosen);
+    
+		set<set<vector<vector<int>>>> uniqueGroups_set;
     
 		for (int i=0; i<num_matrix; i++){
+			if (i % 10000 == 0) cout << i << "\n";
 			int mat[N][N] = {0,};	
 			idx_to_mat(i,mat);
 			
-			vector<vector<int>> permutations;
-    	vector<int> current;
-    	vector<bool> chosen(N, false);
-    	generatePermutations(permutations, current, chosen);
+			//vector<vector<int>> permutations;
+    	//vector<int> current;
+    	//vector<bool> chosen(N, false);
+    	//generatePermutations(permutations, current, chosen);
 
     	set<vector<vector<int>>> uniqueGroups;
     	for (const auto& permutation : permutations) {
@@ -88,9 +100,7 @@ int main() {
 			}
 			if (check == 0)	uniqueGroups_set.insert(uniqueGroups);
 		}
-		int idx = 0;
 		for (const auto& uniqueGroups : uniqueGroups_set){
-			idx += 1;
 			for (const auto& adj : uniqueGroups){
 					int mat[N][N] = {0,};
 					for (int j=0; j<N; j++){
@@ -99,10 +109,11 @@ int main() {
 						}
 					}	
 					int mat_idx = mat_to_idx(mat);
-					cout << mat_idx << " ";
+					opening << mat_idx << " ";
 				}
-				cout << "\n";
+				opening << "\n";
 			}
+	opening.close();
 	return 0;
 }
 
