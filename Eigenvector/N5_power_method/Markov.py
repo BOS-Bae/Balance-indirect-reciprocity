@@ -60,8 +60,8 @@ for i, j in G.edges():
 	group_i = group_info[i]
 	group_j = group_info[j]
 	prob = G.get_edge_data(i,j)['weight']
-	if (group_i == problem[0] and group_j == problem[1]):
-		print(i, j, prob)
+#	if (group_i == problem[0] and group_j == problem[1]):
+#		print(i, j, prob)
 	check_list.append([group_i, group_j, prob])
 
 big_node = []
@@ -126,10 +126,11 @@ straight_edges = list(set(G.edges()) - set(curved_edges))
 
 #degrees = [20*G.degree[node] for node in G.nodes()]
 #print(len(degrees))
-#print(len(G.nodes()))
+print(len(G.nodes()))
 #nx.draw_networkx_nodes(G, pos, node_size=degrees)
 
 pos = nx.kamada_kawai_layout(G)
+#pos = nx.spring_layout(G)
 #pos = nx.planar_layout(G)
 #for edge in G.edges(data='weight'):
 #    nx.draw_networkx_edges(G,pos,edgelist=[edge],width=edge[2])
@@ -141,15 +142,29 @@ plt.title("N={}, L{}".format(N,rule_idx))
 #nx.draw_networkx_edges(G, pos=pos, width=edge_weights, arrows=True)
 nx.draw_networkx_edges(G, pos=pos, arrows=True)
 #nx.draw_networkx_nodes(G, pos=pos, node_color=color_map, cmap=plt.cm.gist_ncar)
-nx.draw_networkx_nodes(G, pos=pos, node_size = 200)
+nx.draw_networkx_nodes(G, pos=pos, node_size = 300)
 
-nx.draw_networkx_labels(G, pos=pos,font_size = 7, labels={n: str(n) for n in G.nodes()}, font_color='black')
+nx.draw_networkx_labels(G, pos=pos,font_size = 10, labels={n: str(n) for n in G.nodes()}, font_color='black')
 
 #edge_labels = {(u, v): d['weight'] for u, v, d in G.edges(data=True)}
 edge_labels = {(u, v): "{}/{}".format(int(N*N*d['weight']),N*N) for u, v, d in G.edges(data=True)}
 
-# Draw edge labels
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size = 8)
+check_arr = [big_node[0][0]]
+for arr in big_node:
+	i = arr[0]
+	if (i not in check_arr):
+		check_arr.append(i)
+		print("q{}".format(i), " == ", end="")
+		count = 0
+		for j in G.neighbors(i):
+			count += 1
+			w_ij = G.get_edge_data(i, j)['weight']
+			if (count < len(list(G.neighbors(i)))):
+				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j), "+", end="")
+			else:
+				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j))
+# 		Draw edge labels
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size = 10)
 #nx.draw_networkx_edge_labels(G, pos=pos,font_size = 7, edge_labels=edge_weights_label, font_color='black')
 plt.show()
 
