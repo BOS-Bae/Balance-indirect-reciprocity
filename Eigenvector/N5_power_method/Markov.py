@@ -129,8 +129,8 @@ straight_edges = list(set(G.edges()) - set(curved_edges))
 
 #print(len(G.nodes()))
 
-pos = nx.kamada_kawai_layout(G)
-#pos = nx.spring_layout(G)
+#pos = nx.kamada_kawai_layout(G)
+pos = nx.spring_layout(G)
 #pos = nx.planar_layout(G)
 #for edge in G.edges(data='weight'):
 #    nx.draw_networkx_edges(G,pos,edgelist=[edge],width=edge[2])
@@ -149,21 +149,28 @@ nx.draw_networkx_labels(G, pos=pos,font_size = 10, labels={n: str(n) for n in G.
 #edge_labels = {(u, v): d['weight'] for u, v, d in G.edges(data=True)}
 edge_labels = {(u, v): "{}/{}".format(int(N*N*d['weight']),N*N) for u, v, d in G.edges(data=True)}
 
-check_arr = [big_node[0][0]]
+check_arr = []
+check_neigh = []
 for arr in big_node:
 	i = arr[0]
 	if (i not in check_arr):
 		check_arr.append(i)
-		print("{", "q{}".format(i), " == ", "(", end="")
+		print("q{}".format(i), " == ", "(", end="")
 		count = 0
 		for j in G.neighbors(i):
+			if (j not in check_neigh):
+				check_neigh.append(j)
 			count += 1
 			w_ij = G.get_edge_data(i, j)['weight']
 			if (count < len(list(G.neighbors(i)))):
 				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j), "+", end="")
 			else:
-				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j), ")},")
+				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j), ") && ")
 # 		Draw edge labels
+print("{", end="")
+for i in (set(check_arr).union(set(check_neigh))):
+	print("q{}".format(i), "," ,end="")	
+print("}")
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size = 10)
 #nx.draw_networkx_edge_labels(G, pos=pos,font_size = 7, edge_labels=edge_weights_label, font_color='black')
 plt.show()
