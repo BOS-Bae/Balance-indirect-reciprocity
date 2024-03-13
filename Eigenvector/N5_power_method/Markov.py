@@ -101,7 +101,7 @@ for arr in check_list:
 		#print(count)
 		check_true += 1
 
-print(check_true == count_idx)
+#print(check_true == count_idx)
 	
 mapping_color = {}
 new_idx = 1
@@ -126,8 +126,8 @@ straight_edges = list(set(G.edges()) - set(curved_edges))
 
 #degrees = [20*G.degree[node] for node in G.nodes()]
 #print(len(degrees))
-print(len(G.nodes()))
-#nx.draw_networkx_nodes(G, pos, node_size=degrees)
+
+#print(len(G.nodes()))
 
 pos = nx.kamada_kawai_layout(G)
 #pos = nx.spring_layout(G)
@@ -154,7 +154,7 @@ for arr in big_node:
 	i = arr[0]
 	if (i not in check_arr):
 		check_arr.append(i)
-		print("q{}".format(i), " == ", end="")
+		print("{", "q{}".format(i), " == ", "(", end="")
 		count = 0
 		for j in G.neighbors(i):
 			count += 1
@@ -162,7 +162,7 @@ for arr in big_node:
 			if (count < len(list(G.neighbors(i)))):
 				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j), "+", end="")
 			else:
-				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j))
+				print("({}/{})".format(w_ij*N*N, N*N), "*q{}".format(j), ")},")
 # 		Draw edge labels
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size = 10)
 #nx.draw_networkx_edge_labels(G, pos=pos,font_size = 7, edge_labels=edge_weights_label, font_color='black')
