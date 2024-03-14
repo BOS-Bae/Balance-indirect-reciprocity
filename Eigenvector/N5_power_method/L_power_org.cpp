@@ -93,14 +93,32 @@ void balanced_idx(std::vector<unsigned long long> &bal_list) {
 }
 
 void idx_to_mat(unsigned long long idx, int mat[][N]) {
+	int idx_tmp = idx;
   for (int i = 0; i < N; i++) {
-    int slice_row = N * (N - 1 - i);
+		mat[i][i] = 1;
     for (int j = 0; j < N; j++) {
-      int slice_col = N - j - 1;
-      int M_ij = idx >> slice_row >> slice_col & 1;  // [TODO] check this line
-      mat[i][j] = 2 * M_ij - 1;
+			if (i!=j){
+      	int M_ij = idx_tmp & 1;  // [TODO] check this line
+      	mat[i][j] = 2 * M_ij - 1;
+				idx_tmp = idx_tmp >> 1;
+			}
     }
   }
+}
+
+unsigned long long mat_to_idx(int mat[][N]) {
+  unsigned long long idx = 0, binary_num = 0;
+  idx = binary_num = 0;
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+			if (i!=j){
+      	int element = ((int) (mat[i][j] + 1) / 2);
+      	idx += element * (int) pow(2, binary_num);
+      	binary_num += 1;
+			}
+    }
+  }
+  return idx;
 }
 
 void n_list_gen(int n_num, int n_list[][N]) {
@@ -131,19 +149,6 @@ void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
   mat_f[o][d] = (idx_err == 0 ? mat_f[o][r] * mat_f[d][r] : -mat_f[o][r] * mat_f[d][r]);
 }
 
-unsigned long long mat_to_idx(int mat[][N]) {
-  unsigned long long idx = 0, binary_num = 0;
-  idx = binary_num = 0;
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      int element = ((int) (mat[N - i - 1][N - j - 1] + 1) / 2);
-      idx += element * (int) pow(2, binary_num);
-      binary_num += 1;
-    }
-  }
-  return idx;
-}
-
 void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal_idx, int flip_idx) {
   /*
     init_vect_idx = 0 : r_i has elments with uniform values (=1/num_matrix)
@@ -168,7 +173,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
   double prob_mul;
   n_list_gen(n_num, n_list);
 
-  const size_t num_matrix = 1ull << (N * N);
+  const size_t num_matrix = 1ull << (N * (N-1));
   std::vector<double> r_i(num_matrix, 0);
   std::ofstream opening;
   if (init_vect_idx == 0) {
@@ -191,7 +196,8 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     sprintf(result, "./N%dL%d_flip%d.dat", N, rule_num, flip_idx);
     opening.open(result);
     //std::vector<unsigned long long> flip_list_N6 = {39183054815, 34753869791, 56643875791, 35169039311, 65378742727, 43903906247, 51539607551};
-		std::vector<unsigned long long> flip_list_N5 = {25165823, 25673199, 17153519, 25976039, 17571047};
+//		std::vector<unsigned long long> flip_list_N5 = {25165823, 25673199, 17153519, 25976039, 17571047};
+		std::vector<unsigned long long> flip_list_N5 = {2057, 2441};
     unsigned long long flip_elem = flip_list_N5[flip_idx];
     r_i[flip_elem] = 1;
   }

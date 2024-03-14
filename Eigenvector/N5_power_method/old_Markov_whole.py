@@ -3,16 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-problem = [9594, 9604]
-
-if (len(sys.argv) < 3):
-	print("python3 Markov.py N rule_idx flip_idx group_cut")
+if (len(sys.argv) < 4):
+	print("python3 Markov.py N rule_idx flip_idx group_step")
 	exit(1)
 
 N = int(sys.argv[1])
 rule_idx = int(sys.argv[2])
 flip_idx = int(sys.argv[3])
-group_cut = int(sys.argv[4])
+group_step = int(sys.argv[4])
 num = np.power(2, N*(N-1)) # ex) N=4 : 4096
 
 group_set = []
@@ -26,9 +24,7 @@ dict_group = {}
 dat_len = 0
 for idx, element in enumerate(group_set):
 	dict_group[idx] = element
-#    dat_len += len(element)
-#    print(element)
-    
+
 fr_L4 = np.zeros(num)
 to_L4 = np.zeros(num)
 prob_L4 = np.zeros(num)
@@ -40,15 +36,17 @@ for i in range(len(dat)):
 
 G = nx.DiGraph()
 for i in range(len(dat)):
-  fr = fr_L4[i]
-  to = to_L4[i]
-  if (fr!=to): G.add_edge(int(fr),int(to), weight = prob_L4[i])
+    fr = fr_L4[i]
+    to = to_L4[i]
+    if (fr!=to): G.add_edge(int(fr),int(to), weight = prob_L4[i])
 
 #print(len(list(G.nodes())))
 edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
+
 color_map = []
 group_info = []
 for i in G.nodes():
+	#print(list(G.neighbors(i)))
 	for group_idx, nodes in dict_group.items():
 		if i in nodes:
 			group_info.append((i,group_idx))
@@ -65,13 +63,6 @@ for i, j in G.edges():
 #		print(i, j, prob)
 	check_list.append([group_i, group_j, prob])
 
-group_list = []
-for i in range(len(dat)):
-	node_i = to_L4[i]
-	group_i = group_info[node_i]
-	if (group_i not in group_list):
-		group_list.append(group_i)
-
 big_node = []
 step = 0
 for arr in check_list:
@@ -86,6 +77,7 @@ for arr in check_list:
 
 check_true = 0
 count_idx = 0
+
 '''
 for arr in check_list:
 	count_idx += 1
@@ -105,54 +97,40 @@ for arr in check_list:
 			#	print(arr)
 			#	print(arr_big)
 	if (count == check):
-		#print(count)
-		check_true += 1
-
-#print(check_true == count_idx)
+		print(count)
 '''
-mapping_color = {}
-new_idx = 1
-for num in color_map:
-	if num not in mapping_color:
-		mapping_color[num] = new_idx
-		new_idx += 1
-
 G.clear()
 
 G = nx.DiGraph()
 
-group_arr = group_list[0:group_cut]
-
-pair_list = []
-node_list = []
+print(len(list(dict_group)))
+to_list = []
 for i in range(len(dat)):
-	fr = int(fr_L4[i])
-	to = int(to_L4[i])
-	node_i = fr
-	node_j = to
-	for g in group_arr:
-		if (group_info[int(fr)] == int(g)): node_i = int(num + 1 + g)
-		if (group_info[int(to)] == int(g)): node_j = int(num + 1 + g)
-	arr = [node_i, node_j]
-	if (node_i not in node_list): node_list.append(node_i)
-	if (node_j not in node_list): node_list.append(node_j)
-	if (arr not in pair_list):
-		pair_list.append(arr)
-		G.add_edge(int(node_i),int(node_j), weight = prob_L4[i])
-
-print(node_list)
-'''
-for i in range(len(big_node)):
-	fr = big_node[i][0]
-	to = big_node[i][1]
-	prob = big_node[i][2]
-	if (fr!=to): G.add_edge(int(fr),int(to), weight = prob)
-'''
-
-edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
-edge_weights_label = ["{}".format(G[u][v]['weight']) for u, v in G.edges()]
-curved_edges = [edge for edge in G.edges() if reversed(edge) in G.edges()]
-straight_edges = list(set(G.edges()) - set(curved_edges))
+	fr = fr_L4[i]
+	to = to_L4[i]
+	for g_idx in range(group_step):
+		if (fr in list(dict_group[g_idx])):
+			if (fr not in to_list): to_list.append(fr)
+			corrected_node = num + 1 + g_idx
+			for g_to_idx in range(group_step):
+				corrected_to_node = num + 1 + g_to_idx
+				if (to in list(dict_group[g_to_idx])):
+					G.add_edge(int(corrected_node), int(corrected_to_node), weight = prob_L4[i])
+				else:
+					G.add_edge(int(corrected_node), int(to), weight = prob_L4[i])
+		else:
+			for g_to_idx in range(group_step):
+				if (to in list(dict_group[g_to_idx])):
+					corrected_to_node = num + 1 + g_to_idx
+					G.add_edge(int(fr), int(corrected_to_node), weight = prob_L4[i])
+				else:
+					G.add_edge(int(fr), int(to), weight = prob_L4[i])
+					
+	#fr = big_node[i][0]
+	#to = big_node[i][1]
+	#prob = big_node[i][2]
+	#if (fr!=to): G.add_edge(int(fr),int(to), weight = prob)
+#straight_edges = list(set(G.edges()) - set(curved_edges))
 
 #degrees = [20*G.degree[node] for node in G.nodes()]
 #print(len(degrees))
@@ -181,28 +159,9 @@ edge_labels = {(u, v): "{}/{}".format(int(N*N*d['weight']),N*N) for u, v, d in G
 
 check_arr = []
 check_neigh = []
-
-for i in G.nodes():
-	prob_list = []
-	node_i = i
-	check_arr.append(i)
-	print("q{}".format(i), " == ", "(", end="")
-	for j in G.neighbors(i):
-		if (j not in check_neigh):
-			check_neigh.append(j)
-		w_ij = G.get_edge_data(i, j)['weight']
-		prob_list.append(w_ij)
-		print("({}/{})".format(int(w_ij*N*N), int(N*N)), "*q{}".format(j), "+", end="")
-	print("({}/{})".format(int((1-sum(prob_list))*N*N), int(N*N)), "*q{}".format(i), ") && ")
-
-print("{", end="")
-for i in (set(check_arr).union(set(check_neigh))):
-	print("q{}".format(i), "," ,end="")	
-
-
+print(len(list(G.nodes())))
 '''
-for arr in big_node:
-	i = arr[0]
+for i in G.nodes():
 	prob_list = []
 	if (i not in check_arr):
 		check_arr.append(i)
@@ -219,8 +178,15 @@ for i in (set(check_arr).union(set(check_neigh))):
 	print("q{}".format(i), "," ,end="")	
 print("}")
 '''
+'''
+for i in G.nodes():
+	idx = 0
+	for j in G.neighbors(i):
+		idx += 1
+	if (idx == 0):
+		print(i)
+
+'''
 #nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size = 10)
-print(G.nodes())
 #nx.draw_networkx_edge_labels(G, pos=pos,font_size = 7, edge_labels=edge_weights_label, font_color='black')
-#plt.show()
-print(len(list(G.nodes())))
+plt.show()

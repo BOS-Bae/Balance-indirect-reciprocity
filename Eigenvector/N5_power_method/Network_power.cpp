@@ -6,7 +6,7 @@
 #include <array>
 #include <algorithm>
 
-constexpr int N = 5;
+constexpr int N = 4;
 
 // The reason for using 'usigned long long' : 2^(N*N) exceeds the maximum of 'int', when N=6.
 void idx_to_mat(unsigned long long idx, int mat[][N]);
@@ -178,7 +178,8 @@ void power_method(double err, int max_iter, int rule_num, int flip_idx) {
 	char result[100];
   sprintf(result, "./network_flip/N%dL%d_flip%d.dat", N, rule_num, flip_idx);
   opening.open(result);
-	std::vector<unsigned long long> flip_list_N5 = {846865, 838737, 822289, 838657};
+	//std::vector<unsigned long long> flip_list_N5 = {846865, 838737, 822289, 838657};
+	std::vector<unsigned long long> flip_list_N5 = {2057, 2441};
   unsigned long long flip_elem = flip_list_N5[flip_idx];
 	
 	std::vector<unsigned long long> s_i = {};
