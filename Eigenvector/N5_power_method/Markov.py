@@ -139,8 +139,6 @@ for i in range(len(dat)):
 	if (arr not in pair_list):
 		pair_list.append(arr)
 		G.add_edge(int(node_i),int(node_j), weight = prob_L4[i])
-
-print(node_list)
 '''
 for i in range(len(big_node)):
 	fr = big_node[i][0]
@@ -181,7 +179,7 @@ edge_labels = {(u, v): "{}/{}".format(int(N*N*d['weight']),N*N) for u, v, d in G
 
 check_arr = []
 check_neigh = []
-
+'''
 for i in G.nodes():
 	prob_list = []
 	node_i = i
@@ -198,7 +196,14 @@ for i in G.nodes():
 print("{", end="")
 for i in (set(check_arr).union(set(check_neigh))):
 	print("q{}".format(i), "," ,end="")	
+print("}")
 
+for i in G.nodes():
+	idx = 0
+	for j in G.neighbors(i):
+		idx += 1
+	if (idx == 0): print(i)
+'''
 
 '''
 for arr in big_node:
@@ -219,8 +224,8 @@ for i in (set(check_arr).union(set(check_neigh))):
 	print("q{}".format(i), "," ,end="")	
 print("}")
 '''
+print(group_list)
+print(len(list(G.nodes())))
 #nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size = 10)
-print(G.nodes())
 #nx.draw_networkx_edge_labels(G, pos=pos,font_size = 7, edge_labels=edge_weights_label, font_color='black')
 #plt.show()
-print(len(list(G.nodes())))
