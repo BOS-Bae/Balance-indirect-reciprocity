@@ -131,8 +131,12 @@ for i in range(len(dat)):
 	node_i = fr
 	node_j = to
 	for g in group_arr:
-		if (group_info[int(fr)] == int(g)): node_i = int(num + 1 + g)
-		if (group_info[int(to)] == int(g)): node_j = int(num + 1 + g)
+		if (group_info[int(fr)] == int(g)): 
+			print(fr, g)
+			node_i = int(num + 1 + g)
+		if (group_info[int(to)] == int(g)): 
+			print(to, g)
+			node_j = int(num + 1 + g)
 	arr = [node_i, node_j]
 	if (node_i not in node_list): node_list.append(node_i)
 	if (node_j not in node_list): node_list.append(node_j)
@@ -179,7 +183,7 @@ edge_labels = {(u, v): "{}/{}".format(int(N*N*d['weight']),N*N) for u, v, d in G
 
 check_arr = []
 check_neigh = []
-'''
+
 for i in G.nodes():
 	prob_list = []
 	node_i = i
@@ -190,8 +194,8 @@ for i in G.nodes():
 			check_neigh.append(j)
 		w_ij = G.get_edge_data(i, j)['weight']
 		prob_list.append(w_ij)
-		print("({}/{})".format(int(w_ij*N*N), int(N*N)), "*q{}".format(j), "+", end="")
-	print("({}/{})".format(int((1-sum(prob_list))*N*N), int(N*N)), "*q{}".format(i), ") && ")
+		print("({}/{})".format(int(w_ij*float(N*N)), int(N*N)), "*q{}".format(j), "+", end="")
+	print("({}/{})".format(int((1-sum(prob_list))*float(N*N)), int(N*N)), "*q{}".format(i), ") && ")
 
 print("{", end="")
 for i in (set(check_arr).union(set(check_neigh))):
@@ -203,7 +207,6 @@ for i in G.nodes():
 	for j in G.neighbors(i):
 		idx += 1
 	if (idx == 0): print(i)
-'''
 
 '''
 for arr in big_node:
@@ -217,15 +220,16 @@ for arr in big_node:
 				check_neigh.append(j)
 			w_ij = G.get_edge_data(i, j)['weight']
 			prob_list.append(w_ij)
-			print("({}/{})".format(int(w_ij*N*N), int(N*N)), "*q{}".format(j), "+", end="")
-		print("({}/{})".format(int((1-sum(prob_list))*N*N), int(N*N)), "*q{}".format(i), ") && ")
+			print("({}/{})".format(int(w_ij*(float(N*N)), int(N*N)), "*q{}".format(j), "+", end=""))
+		print("({}/{})".format(int((1-sum(prob_list))*float(N*N)), int(N*N)), "*q{}".format(i), ") && ")
 print("{", end="")
 for i in (set(check_arr).union(set(check_neigh))):
 	print("q{}".format(i), "," ,end="")	
 print("}")
 '''
-print(group_list)
-print(len(list(G.nodes())))
+#print(group_list)
+#print(len(list(G.nodes())))
+
 #nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size = 10)
 #nx.draw_networkx_edge_labels(G, pos=pos,font_size = 7, edge_labels=edge_weights_label, font_color='black')
 #plt.show()
