@@ -5,7 +5,7 @@ import sys
 
 problem = [9594, 9604]
 
-if (len(sys.argv) < 3):
+if (len(sys.argv) < 4):
 	print("python3 Markov.py N rule_idx flip_idx group_cut")
 	exit(1)
 
@@ -132,10 +132,10 @@ for i in range(len(dat)):
 	node_j = to
 	for g in group_arr:
 		if (group_info[int(fr)] == int(g)): 
-			print(fr, g)
+#     print(fr, g)
 			node_i = int(num + 1 + g)
 		if (group_info[int(to)] == int(g)): 
-			print(to, g)
+#			print(to, g)
 			node_j = int(num + 1 + g)
 	arr = [node_i, node_j]
 	if (node_i not in node_list): node_list.append(node_i)
@@ -194,8 +194,8 @@ for i in G.nodes():
 			check_neigh.append(j)
 		w_ij = G.get_edge_data(i, j)['weight']
 		prob_list.append(w_ij)
-		print("({}/{})".format(int(w_ij*float(N*N)), int(N*N)), "*q{}".format(j), "+", end="")
-	print("({}/{})".format(int((1-sum(prob_list))*float(N*N)), int(N*N)), "*q{}".format(i), ") && ")
+		print("({}/{})".format(int(np.round(float(w_ij)*N*N,0)), int(N*N)), "*q{}".format(j), "+", end="")
+	print("({}/{})".format(int(np.round((1-sum(prob_list))*N*N,0)), int(N*N)), "*q{}".format(i), ") && ")
 
 print("{", end="")
 for i in (set(check_arr).union(set(check_neigh))):
