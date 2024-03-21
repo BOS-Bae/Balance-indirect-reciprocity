@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for ((i=4; i<100; i++))
+for ((i=100; i<200; i++))
 do
-	./RandomWalk $i 3000 >> RW_L4.dat
+	./RandomWalk $i 5000 >> RW_L4.dat
 done

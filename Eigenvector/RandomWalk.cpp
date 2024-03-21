@@ -1,4 +1,5 @@
 #include <random>
+#include <cmath>
 #include <iostream>
 
 double mu(int N, int j){
@@ -101,6 +102,20 @@ double avg_t(int n_run, int t_check[], int n_check[]){
 	return avg;
 }
 
+double std_err(int n_run, int t_check[], int n_check[], double avg){
+	double std_err = 0;
+	double count = 0;
+	for (int n = 0; n < n_run; n++){
+		if (n_check[n] == 1){
+			count += 1;
+			std_err += pow(((double)t_check[n] - avg),2);
+		}
+	}
+	std_err /= (double)n_run;
+	std_err = sqrt(std_err/(double)(n_run-1));
+	return std_err;
+}
+
 int main(int argc, char* argv[]) {
 	if(argc<3){
    		printf("./RandomWalk N n_run \n");
@@ -117,7 +132,8 @@ int main(int argc, char* argv[]) {
 	//std::cout << P_minus(10,0) << " " << P_minus(8,0) << " " << P_minus(6,0) << " " << P_minus(4,0) << "\n";
 	//std::cout << P_plus(10,0) << " " << P_plus(8,0) << " " << P_plus(6,0) << " " << P_plus(4,0) << "\n";
 	double val = avg_t(n_run, t_check, n_check);
-	std::cout << N << " " << val << "\n";
+	double err_val = std_err(n_run, t_check, n_check,val);
+	std::cout << N << " " << val << " " << err_val << "\n";
 
 	return 0;
 }
