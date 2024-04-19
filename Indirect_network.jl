@@ -139,27 +139,6 @@ function NeighborList(Network_mat,N,d,r)
     return α_arr
 end
 
-function K_result(O_matrix, α, d, r, K)
-
-    val = ((K*O_matrix[α,r] * O_matrix[d,r]
-    + (1-K)*(-O_matrix[α,r] + O_matrix[d,r] + O_matrix[d,r]*O_matrix[α,d]
-    - O_matrix[α,r]*O_matrix[α,d] +1 + O_matrix[α,d] 
-    - O_matrix[d,r]*O_matrix[α,r]*O_matrix[α,d])))
-
-    return val
-end
-
-function K_rule(O_matrix, neigh_arr, d, r, K)
-    for k in 1:length(neigh_arr)
-        α = neigh_arr[k]
-        # K = 0, K = 1/4
-        O_matrix[α,d] = ((K*O_matrix[α,r] * O_matrix[d,r]
-        + (1-K)*(-O_matrix[α,r] + O_matrix[d,r] + O_matrix[d,r]*O_matrix[α,d]
-        - O_matrix[α,r]*O_matrix[α,d] +1 + O_matrix[α,d] 
-        - O_matrix[d,r]*O_matrix[α,r]*O_matrix[α,d])))
-    end
-end
-
 # 'L6_rule_dr_all' is a function for parallel update.
 function L6_rule_dr_all(O_matrix, New_matrix, neigh_arr, d, r)
     for k in 1:length(neigh_arr)
@@ -371,20 +350,6 @@ function LTD_rule(O_matrix, neigh_arr, d, r, p)
         end
     end     
 end
-
-function K_update(rule, O_matrix, e_matrix, N, τ_tmp, K)
-    
-    d = rand(1:N)
-    r = rand(1:N)
-    
-    if (e_matrix[d,r] == 1)
-        τ_tmp += 1
-        NList = NeighborList(e_matrix,N,d,r)
-        rule(O_matrix, NList, d, r, K)
-    end
-    return τ_tmp
-end
-
 
 function d_r_pair_update(rule, O_matrix, e_matrix, N, d, r)
     
