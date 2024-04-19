@@ -59,7 +59,7 @@ int L4(vector<vector<int>> Mat, int o, int d, int r){
 int main(int argc, char *argv[]) {
 	if (argc < 4){
 		cout << "./ABM_L4 N a n_sample t_interval \n";
-		cout << "init_setting = 0: - -> +, = 1 : + -> - \n";
+		cout << "1st : paradise / 2nd : a:N-a / 3rd : toward 1:N-1 / 4th : otherwise \n";
 		exit(1);
 	}
 
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 				factor = (double)(a*(N-a))/(double)(N*(N-1));
 			}
 			//print_mat(Mat, N);
-			
+			// 1st : paradise / 2nd : a:N-a / 3rd : toward 1:N-1 / 4th : otherwise			
 			int t = 0;
 			while (true){
 				t += 1;	
@@ -127,8 +127,8 @@ int main(int argc, char *argv[]) {
 					if (balance(Mat, N)) {
 						if (cluster_diff(Mat, N) == original_diff) absorption[1] += factor;
 						else if (fabs(cluster_diff(Mat, N)) == 1.0) absorption[0] += factor;
-						else if (fabs(cluster_diff(Mat,N)) > fabs(original_diff)) absorption[3] += factor;
-						else absorption_i[2] += factor;
+						else if (fabs(cluster_diff(Mat,N)) > fabs(original_diff)) absorption[2] += factor;
+						else absorption_i[3] += factor;
 						val_check = 1;
 					}
 				}
