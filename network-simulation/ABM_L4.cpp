@@ -29,7 +29,7 @@ bool balance(vector<vector<int>> Mat, int N){
 	for (int i=0; i<N; i++){
 		for (int j=0; j<N; j++){
 			for (int k=0; k<N; k++){
-				check +=1 ;
+				check +=1;
 				if (Mat[i][j]*Mat[i][k]*Mat[j][k] == 1) bal += 1;
 			}
 		}
@@ -46,6 +46,14 @@ void print_mat(vector<vector<int>> Mat, int N){
 		}
 		cout << "\n";
 	}
+	cout << "\n";
+}
+
+int L6(vector<vector<int>> Mat, int o, int d, int r){
+	int val = 0;
+	val = Mat[o][r]*Mat[d][r];
+	
+	return val;
 }
 
 int L4(vector<vector<int>> Mat, int o, int d, int r){
@@ -76,6 +84,9 @@ int main(int argc, char *argv[]) {
 
 	for (int init_setting=0; init_setting<4; init_setting++){
 		vector<double> absorb_i(4, 0.0);
+		//for (int i=0; i<4; i++) cout << absorb_i[i] << " ";
+		//cout << "\n";
+
 		for (int s=0; s<n_sample; s++){
 			vector<vector<int>> Mat = {};
 			// initialization :
@@ -93,7 +104,9 @@ int main(int argc, char *argv[]) {
 				}
 				Mat.push_back(vec);
 			}
-			//if (s==0 && init_setting ==0) print_mat(Mat, N);
+
+			//print_mat(Mat, N);
+
 			double original_diff = cluster_diff(Mat, N);
 			double factor = 0.0;
 			if (init_setting == 0) {
@@ -122,6 +135,7 @@ int main(int argc, char *argv[]) {
 				int r = dist(gen);
 				vector<int> update_od = {};
 				for (int o=0; o<N; o++) update_od.push_back(L4(Mat, o, d, r));
+				//for (int o=0; o<N; o++) update_od.push_back(L6(Mat, o, d, r));
 				for (int o=0; o<N; o++) Mat[o][d] = update_od[o];
 				if (t % t_delta == 0){
 					if (balance(Mat, N)) {
@@ -129,6 +143,10 @@ int main(int argc, char *argv[]) {
 						else if (fabs(cluster_diff(Mat, N)) == 1.0) absorb_i[0] += factor;
 						else if (fabs(cluster_diff(Mat,N)) > fabs(original_diff)) absorb_i[2] += factor;
 						else if (fabs(cluster_diff(Mat,N)) < fabs(original_diff)) absorb_i[3] += factor;
+						
+						//print_mat(Mat, N);
+						//cout << "\n";
+						
 						val_check = 1;
 					}
 				}
@@ -138,7 +156,7 @@ int main(int argc, char *argv[]) {
 		for (int j=0; j<4; j++) absorb[j] += absorb_i[j];
 	}
 	for (int j=0; j<4; j++) absorb[j] /= (double)n_sample;
-	cout << a << ":" << N-a << " ; " << absorb[0] << "  " << absorb[1] << "  " << absorb[2] 
+	cout << "[" << a << ":" << N-a << "]" << " ; " << absorb[0] << "  " << absorb[1] << "  " << absorb[2] 
 			<< "  " << absorb[3] << "\n"; //" "<< (absorb[0] + absorb[1] + absorb[2] + absorb[3]) << "\n";
 	return 0;
 }
