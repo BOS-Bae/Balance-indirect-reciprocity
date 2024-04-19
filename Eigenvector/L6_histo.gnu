@@ -20,7 +20,7 @@ set size 0.95,0.92
 set origin 0.05,0.05
 
 set xrange [min:max]
-set label "(a)" at 0.8,5 font "Helvetica, 35"
+set label "(a)" at 0.8,10000 font "Helvetica, 35"
 p "N4L6e-4t_histo.dat" u (hist($1,width)):(1.0) smooth freq w boxes lc rgb "black" t ""
 
 pause mouse key

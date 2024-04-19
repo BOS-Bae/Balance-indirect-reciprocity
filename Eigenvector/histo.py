@@ -22,6 +22,8 @@ elif (t==10) : val =0.05
 elif (t==20) : val =0.05
 elif (t>=30) : val =0.1
 
+val = 0.01
+
 print("L6 sum : ", np.sum(L6_elements), "\n")
 print("L4 sum : ", np.sum(L4_elements) ,"\n")
 L6_elements /= np.sum(L6_elements)
@@ -29,15 +31,15 @@ L4_elements /= np.sum(L4_elements)
 
 num = np.power(2,N*N)
 
-#print("L6 :")
-#for i in range(num):
-#    if (L6_elements[i] > val):
-#        print(i)
-#
-#print("\nL4 :")
-#for i in range(num):
-#    if (L4_elements[i] > val):
-#        print(i)
+print("L6 :")
+for i in range(num):
+    if (L6_elements[i] > val):
+        print(L6_elements[i])
+
+print("\nL4 :")
+for i in range(num):
+    if (L4_elements[i] > val):
+        print(L4_elements[i])
 
 plt.hist(L6_elements, bins=15,color="blue")
 plt.yscale('log')
