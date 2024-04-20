@@ -1,4 +1,4 @@
-# The price of Stern Judging
+# Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs
 
 This are simulation codes which generate numerical results of the paper : 'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs'.
 
