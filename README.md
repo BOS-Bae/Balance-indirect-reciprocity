@@ -1,6 +1,6 @@
 # The price of Stern Judging
 
-This are simulation codes which generate numerical results of the paper : 'The price of Stern Judging'.
+This are simulation codes which generate numerical results of the paper : 'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs'.
 
 The description of each directory is below.
 
