@@ -1,18 +1,18 @@
 # Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs
 
-This are simulation codes which generate numerical results of the paper : 'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs'.
+These are simulation codes which generate numerical results of the paper : 'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs'.
 
-The description of each directory is below.
+## Eigenvector
 
-## network-simulation
+* eig_nr.jl : code for diagonalization of transition matrix, where there is no self-loop.
 
-There are codes for agent-based simulation of Stern Judging rule and L4 rule.
+* L6_eig.cpp : code (Stern Judigng rule) to conduct power-method including self-loop.
 
-<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L6_fixation.png" width="400" height="250"/>
+* L4_eig.cpp :  code (L4 rule) to conduct power-method including self-loop from $t=0$.
 
-<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L4_fixation.png" width="400" height="250"/>
+* L6_eig_r.cpp / L4_eig_r.cpp : codes to conduct power-method including self-loop from $t=t_0 \ne 0$.
 
-Available functions for the codes are in 'Indirect_network.jl'
+* L6_M.cpp / L4_M.cpp : codes to conduct power-method including self-loop and get each probability from one balanced state to other ones.
 
 ## Ising
 
@@ -35,18 +35,18 @@ We conducted the finite size scaling for the Baxter-Wu model, and checked that o
 
 Available functions for the codes are in 'MonteCarlo.jl' within same directory.
 
+$$\\$$
+The description of each directory in 'Agent_based_model' is below.
 
-## Eigenvector
+## network-simulation
 
-* eig_nr.jl : code for diagonalization of transition matrix, where there is no self-loop.
+There are codes for agent-based simulation of Stern Judging rule and L4 rule.
 
-* L6_eig.cpp : code (Stern Judigng rule) to conduct power-method including self-loop.
+<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L6_fixation.png" width="400" height="250"/>
 
-* L4_eig.cpp :  code (L4 rule) to conduct power-method including self-loop from $t=0$.
+<img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/L4_fixation.png" width="400" height="250"/>
 
-* L6_eig_r.cpp / L4_eig_r.cpp : codes to conduct power-method including self-loop from $t=t_0 \ne 0$.
-
-* L6_M.cpp / L4_M.cpp : codes to conduct power-method including self-loop and get each probability from one balanced state to other ones.
+Available functions for the codes are in 'Indirect_network.jl'
 
 ## LTD, Heat_bath_Heider
 
