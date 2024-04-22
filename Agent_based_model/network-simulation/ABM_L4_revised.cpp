@@ -11,14 +11,15 @@ using std::random_device;
 using std::mt19937;
 using std::vector;
 
-int cluster_diff(vector<vector<int>> Mat, int N){
+double cluster_diff(vector<vector<int>> Mat, int N){
 	int	cluster_size = 0;
 	for (int i=0; i<N; i++){
 		if (Mat[0][i] == 1) cluster_size += 1;
 	}
 	int diff = N-2*cluster_size;
+	double diff_fraction = (double)diff/(double)N;
 
-	return diff;
+	return diff_fraction;
 }
 
 bool balance(vector<vector<int>> Mat, int N){
@@ -65,9 +66,8 @@ int L4(vector<vector<int>> Mat, int o, int d, int r){
 }
 
 int main(int argc, char *argv[]) {
-	if ((argc < 4) || atoi(argv[1]) % 2 != 0){
+	if (argc < 4){
 		cout << "./ABM_L4 N a n_sample t_interval \n";
-		cout << "N must be set to be even number in this code. \n";
 		cout << "1st : paradise / 2nd : a:N-a / 3rd : toward 1:N-1 / 4th : toward N/2:N/2 \n";
 		exit(1);
 	}
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 
 			//print_mat(Mat, N);
 
-			int original_diff = cluster_diff(Mat, N);
+			double original_diff = cluster_diff(Mat, N);
 			double factor = 0.0;
 			if (init_setting == 0) {
 				Mat[0][1] *= -1;
@@ -142,9 +142,9 @@ int main(int argc, char *argv[]) {
 				if (t % t_delta == 0){
 					if (balance(Mat, N)) {
 						if (cluster_diff(Mat, N) == original_diff) absorb_i[1] += factor;
-						else if (abs(cluster_diff(Mat, N)) == N) absorb_i[0] += factor;
-						else if (abs(cluster_diff(Mat,N)) == (abs(original_diff)+2)) absorb_i[2] += factor;
-						else if (abs(cluster_diff(Mat,N)) == (abs(original_diff)-2)) absorb_i[3] += factor;
+						else if (fabs(cluster_diff(Mat, N)) == 1.0) absorb_i[0] += factor;
+						else if (fabs(cluster_diff(Mat,N)) > fabs(original_diff)) absorb_i[2] += factor;
+						else if (fabs(cluster_diff(Mat,N)) < fabs(original_diff)) absorb_i[3] += factor;
 						
 						//print_mat(Mat, N);
 						//cout << "\n";
@@ -157,21 +157,19 @@ int main(int argc, char *argv[]) {
 		}
 		total_absorb.push_back(absorb_i);
 	}
-	for (int j=0; j<4; j++){
-		for (int s=0; s<n_sample; s++) absorb[j] += total_absorb[s][j];
-		absorb[j] /= (double)n_sample;
-	}
+	for (int j=0; j<4; j++) absorb[j] += absorb_i[j] / (double)n_sample;
+
 	vector<double> std_err(4, 0.0);
 	for (int j=0; j<4; j++){
 		double val = 0.0;
 		double std_err_val = 0.0;
-		for (int s=0; s<n_sample; s++) val += pow((total_absorb[s][j] - absorb[j]),2);
+		for (int s=0; s<n_sample; s++) val += pow((total_absorb[s][j] - absorb[j]),2)
 		std_err_val = sqrt(val/(double)(n_sample*(n_sample-1)));
 		std_err[j] = std_err_val;
 	}
 	
 	cout << a << " "<< absorb[0] << "  " << absorb[1] << "  " << absorb[2] 
-			<< "  " << absorb[3] << "  " << std_err[0] << "  " << std_err[1]
-      << "  " << std_err[2] << "  " << std_err[3] << "\n"; //" "<< (absorb[0] + absorb[1] + absorb[2] + absorb[3]) << "\n";
+			<< "  " << absorb[3] << "  " << absorb[4] << "  " << absorb[5]
+      << "  " << absorb[6] << "  " << absorb[7] << "\n"; //" "<< (absorb[0] + absorb[1] + absorb[2] + absorb[3]) << "\n";
 	return 0;
 }
