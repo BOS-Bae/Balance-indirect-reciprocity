@@ -35,7 +35,9 @@ We conducted the finite size scaling for the Baxter-Wu model, and checked that o
 
 Available functions for the codes are in 'MonteCarlo.jl' within same directory.
 
-$\\$
+$$
+\\
+$$
 The description of each directory in 'Agent_based_model' is below.
 
 ## network-simulation
