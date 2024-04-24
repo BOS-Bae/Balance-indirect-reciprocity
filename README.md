@@ -4,7 +4,7 @@ These are simulation codes which generate numerical results of the paper : 'Exac
 
 ## Eigenvector
 
-* eig_nr.jl : code for diagonalization of transition matrix, where there is no self-loop.
+* eig_nr.jl : code for diagonalization of the transition matrix, where there is no self-loop.
 
 * L6_eig.cpp : code (Stern Judigng rule) to conduct power-method including self-loop.
 
