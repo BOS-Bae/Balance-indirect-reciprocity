@@ -1,15 +1,17 @@
 # Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs
 
-These are simulation codes which generate numerical results of the paper : 'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs' (Minwoo Bae, Takashi Shimada, Seung Ki Baek).
+These are simulation codes which generate numerical results of the paper :
+
+'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs' (Minwoo Bae, Takashi Shimada, Seung Ki Baek).
 
 
 arXiv link : https://arxiv.org/abs/2404.15664
 
-## Eigenvector
+## Eigenvector (C++)
 
 The codes for conducting power-method to obtain stationary probability distribution and probability flow.
 
-## Ising
+## Ising (Julia)
 
 The codes for Monte Carlo simulation of Ising model with three-spin interaction on various lattice structures.
 
@@ -30,7 +32,7 @@ I conducted the finite size scaling for the Baxter-Wu model, and checked that ou
 
 The description of each directory in 'Agent_based_model' is below.
 
-## network-simulation
+## network-simulation (C++, Julia)
 
 There are codes for agent-based simulation of Stern Judging rule and L4 rule.
 
@@ -40,7 +42,7 @@ There are codes for agent-based simulation of Stern Judging rule and L4 rule.
 
 Available functions for the codes are in 'Indirect_network.jl'
 
-## LTD, Heat_bath_Heider
+## LTD, Heat_bath_Heider (Julia)
 
 There are codes for reproducing the results of papers regarding our subjects.
 
