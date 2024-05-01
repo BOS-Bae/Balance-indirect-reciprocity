@@ -5,7 +5,7 @@ These are simulation codes which generate numerical results of the paper :
 'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs' (Minwoo Bae, Takashi Shimada, Seung Ki Baek).
 
 
-arXiv link : https://arxiv.org/abs/2404.15664
+**arXiv link** : https://arxiv.org/abs/2404.15664
 
 ## Eigenvector (C++)
 
@@ -30,7 +30,7 @@ I conducted the finite size scaling for the Baxter-Wu model, and checked that ou
 <img src="https://github.com/BOS-Bae/Balance-indirect-reciprocity/blob/main/fig/Baxter_Wu.png" width="400" height="250"/>
   
 
-The description of each directory in 'Agent_based_model' is below.
+The description of each directory in **'Agent_based_model'** is below.
 
 ## network-simulation (C++, Julia)
 
