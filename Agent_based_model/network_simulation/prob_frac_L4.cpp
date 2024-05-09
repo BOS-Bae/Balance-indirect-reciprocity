@@ -86,13 +86,14 @@ double average_opinion(vector<vector<int>> Mat, int N){
 
 int main(int argc, char *argv[]) {
 	if (argc < 3){
-		cout << "./small_frac_L4 N n_sample num_small \n";
+		cout << "./prob_frac_L4 N n_sample q \n";
+		cout << "q is the probability for agent to adopt L4 rule. \n";
 		exit(1);
 	}
 
 	int N = atoi(argv[1]);
 	int n_sample = atoi(argv[2]);
-	int num_small = atoi(argv[3]);
+	double q = atoi(argv[3]);
 	
 	random_device rd;
 	mt19937 gen(rd());
@@ -122,8 +123,10 @@ int main(int argc, char *argv[]) {
 				int r = dist(gen);
 				vector<int> update_od = {};
 				for (int o=0; o<N; o++) {
-					if (o < num_small) update_od.push_back(L4(Mat, o, d, r));
-					else update_od.push_back(L6(Mat, o, d, r));
+					int L_rule = L_t(q, dist_f(gen));
+					if (L_rule == 4) update_od.push_back(L4(Mat, o, d, r));
+					else if (L_rule == 6) update_od.push_back(L6(Mat, o, d, r));
+					else cout << "error!" << "\n";
 				}
 				for (int o=0; o<N; o++) Mat[o][d] = update_od[o];
 					if (balance(Mat, N)) {
@@ -140,6 +143,6 @@ int main(int argc, char *argv[]) {
 	for (int s=0; s<n_sample; s++) val += pow((total_val[s] - avg_val),2);
 	std_err_val = sqrt(val/(double)(n_sample*(n_sample-1)));
 	
-	cout << N << " " << num_small << " " << avg_val << " " << std_err_val << "\n";
+	cout << N << " " << q << " " << avg_val << " " << std_err_val << "\n";
 	return 0;
 }
