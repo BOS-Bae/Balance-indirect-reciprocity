@@ -93,15 +93,17 @@ int main(int argc, char *argv[]) {
 
 	int N = atoi(argv[1]);
 	int n_sample = atoi(argv[2]);
-	double q = atoi(argv[3]);
+	double q = atof(argv[3]);
 	
 	random_device rd;
 	mt19937 gen(rd());
 	uniform_int_distribution<> dist(0, N-1);
 	uniform_real_distribution<> dist_f(0, 1);
 
-	vector<double> total_val(n_sample, 0.0);
-	double avg_val = 0;
+	vector<double> total_op(n_sample, 0.0);
+	double avg_op = 0;
+	vector<double> total_p(n_sample, 0.0);
+	double avg_p = 0;
 	for (int s=0; s<n_sample; s++){
 			vector<vector<int>> Mat = {};
 			
@@ -130,19 +132,34 @@ int main(int argc, char *argv[]) {
 				}
 				for (int o=0; o<N; o++) Mat[o][d] = update_od[o];
 					if (balance(Mat, N)) {
-						total_val[s] = average_opinion(Mat,N);
+						total_op[s] = average_opinion(Mat,N);
+						if (average_opinion(Mat,N) == 1) total_p[s] = 1;
 						break;
 					}
 			}
 	}
-	for (int s = 0; s<n_sample; s++) avg_val += total_val[s];
-	avg_val /= (double)n_sample;
+	for (int s = 0; s<n_sample; s++) {
+		avg_op += total_op[s];
+		avg_p += total_p[s];
+	}
+	avg_op /= (double)n_sample;
+	avg_p /= (double)n_sample;
 
-	double val = 0.0;
-	double std_err_val = 0.0;
-	for (int s=0; s<n_sample; s++) val += pow((total_val[s] - avg_val),2);
-	std_err_val = sqrt(val/(double)(n_sample*(n_sample-1)));
+	double val_op = 0.0;
+	double val_p = 0.0;
+	double std_err_op = 0.0;
+	double std_err_p = 0.0;
+
+	for (int s=0; s<n_sample; s++) {
+		val_op += pow((total_op[s] - avg_op),2);
+	}
+	std_err_op = sqrt(val_op/(double)(n_sample*(n_sample-1)));
 	
-	cout << N << " " << q << " " << avg_val << " " << std_err_val << "\n";
+	for (int s=0; s<n_sample; s++) {
+		val_p += pow((total_p[s] - avg_p),2);
+	}
+	std_err_p = sqrt(val_p/(double)(n_sample*(n_sample-1)));
+	
+	cout << N << " " << q << " " << avg_op << " " << std_err_op << " " << avg_p << " " << std_err_p << "\n";
 	return 0;
 }

@@ -1,8 +1,8 @@
 set terminal pdf
-set output "L4_paradise_N30.pdf"
+set output "L4_frac_N30.pdf"
 
 f(x) = a*(x**b)
-fit f(x) "frac_L4_L6.dat" u ($2/$1):3 via a,b
+fit f(x) "frac_L4_N30.dat" u ($2/$1):3 via a,b
 
 set xlabel font "Helvetica,25" 
 set xtics font "Helvetica,20"
@@ -20,7 +20,7 @@ set style line 1 lt 1 lw 2 ps 2 linecolor rgb "black"
 
 set style data points
 p "frac_L4_N30.dat" u ($2/$1):3:4 lc rgb "red" pt 2 ps 0.5 w yerrorbars t "", \
-	f(x) t "0.96x^{1.6}" dt 2 lw 3 lc rgb "blue", \
+	f(x) t "0.97x^{1.5}" dt 2 lw 3 lc rgb "blue", \
 	'' u ($2/$1):3 w lp lw 2 lc rgb "red" t "<o>", \
 	'' u ($2/$1):5:6 lc rgb "green" pt 2 ps 0.5 w yerrorbars t "", \
 	'' u ($2/$1):5 w lp lw 2 lc rgb "green" t "P(<o>=1)"
