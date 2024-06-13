@@ -1,60 +1,34 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
+import sys 
 
-if (len(sys.argv) < 3):
-    print("usage : N err iter")
+if (len(sys.argv) < 2):
+    print("python3 histo.py N t")
     exit(1)
 
-f_s = 20
+f_s = 12
 N = int(sys.argv[1])
-err = float(sys.argv[2])
-t = int(sys.argv[3])
-L6_elements = np.loadtxt("./dat/N{}L6_e{}t{}".format(N,err,t))
-L4_elements = np.loadtxt("./dat/N{}L4_e{}t{}".format(N,err,t))
+err = 0.0001
+t = int(sys.argv[2])
 
-val = 0
-if (t==1): val = 0.000173
-elif (t==3): val = 0.002
-elif (t==5) : val = 0.005
-#elif (t==10) : val =0.02
-elif (t==10) : val =0.05
-elif (t==20) : val =0.05
-elif (t>=30) : val =0.1
+L7_elements = np.loadtxt("./N{}L7_e{}t{}.dat".format(N,int(np.log10(err)),t))
 
-val = 0.01
+print("L7 sum : ", np.sum(L7_elements), "\n")
+L7_elements /= np.sum(L7_elements)
 
-print("L6 sum : ", np.sum(L6_elements), "\n")
-print("L4 sum : ", np.sum(L4_elements) ,"\n")
-L6_elements /= np.sum(L6_elements)
-L4_elements /= np.sum(L4_elements)
+num = np.power(2, N*N)
 
-num = np.power(2,N*N)
-
-print("L6 :")
+print("L7 :")
 for i in range(num):
-    if (L6_elements[i] > val):
-        print(L6_elements[i])
+    if (L7_elements[i] > 0.005):
+        print(i, "    ", L7_elements[i])
 
-print("\nL4 :")
-for i in range(num):
-    if (L4_elements[i] > val):
-        print(L4_elements[i])
-
-plt.hist(L6_elements, bins=15,color="blue")
+plt.hist(L7_elements, bins=20, label='L7, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
+plt.legend(fontsize=f_s)
 plt.yscale('log')
 plt.yticks(fontsize=f_s)
 plt.xticks(fontsize=f_s)
 plt.xlim(0,1.0)
+plt.savefig('./L7_eigen.pdf', format='pdf')
+
 plt.show()
-
-#plt.savefig('./L6_eigen.eps', format='eps')
-
-plt.hist(L4_elements, bins=70, color="blue")
-plt.yscale('log')
-plt.yticks(fontsize=f_s)
-plt.xticks(fontsize=f_s)
-plt.xlim(0,1.0)
-plt.show()
-
-#plt.savefig('./L4_eigen.eps', format='eps')
