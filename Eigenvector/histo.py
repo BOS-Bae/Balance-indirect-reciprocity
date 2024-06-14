@@ -20,10 +20,11 @@ num = np.power(2, N*N)
 
 print("L7 :")
 for i in range(num):
-    if (L7_elements[i] > 0.005):
+    if (L7_elements[i] > 0.003):
         print(i, "    ", L7_elements[i])
+print(0, "  ", L7_elements[0])
 
-plt.hist(L7_elements, bins=20, label='L7, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
+plt.hist(L7_elements, bins=50, label='L7, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend(fontsize=f_s)
 plt.yscale('log')
 plt.yticks(fontsize=f_s)
