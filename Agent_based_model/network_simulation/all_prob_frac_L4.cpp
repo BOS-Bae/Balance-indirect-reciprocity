@@ -124,12 +124,14 @@ int main(int argc, char *argv[]) {
 				int d = dist(gen);
 				int r = dist(gen);
 				vector<int> update_od = {};
+				int L_rule = L_t(q, dist_f(gen));
 				for (int o=0; o<N; o++) {
-					int L_rule = L_t(q, dist_f(gen));
+					//cout << L_rule << "\n";
 					if (L_rule == 4) update_od.push_back(L4(Mat, o, d, r));
 					else if (L_rule == 6) update_od.push_back(L6(Mat, o, d, r));
 					else cout << "error!" << "\n";
 				}
+				//cout << "\n";
 				for (int o=0; o<N; o++) Mat[o][d] = update_od[o];
 					if (balance(Mat, N)) {
 						total_op[s] = average_opinion(Mat,N);
