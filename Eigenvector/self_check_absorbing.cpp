@@ -37,9 +37,14 @@ void check_absorbing(int rule_num, int arr[]);
 */
 int main(int argc, char *argv[]) {
 	int rule_num = atoi(argv[1]);
-  const size_t num_mat = 1ull << (N * N);
+  const size_t num_mat = 1ull << (N * (N-1));
 	int arr[num_mat] = {0};
 	check_absorbing(rule_num, arr);
+	//int mat[N][N] = {0,};
+	//idx_to_mat(37, mat);
+	//int res = mat_to_idx(mat);
+	//
+	//std::cout << res << "\n";
 	int check = 0;
 	for (int i=0; i < num_mat; i++) {
 		if (arr[i] == 1) {
@@ -100,10 +105,13 @@ void balanced_idx(std::vector<unsigned long long> &bal_list) {
 void idx_to_mat(unsigned long long idx, int mat[][N]) {
 	int idx_tmp = idx;
   for (int i = 0; i < N; i++) {
+		mat[i][i] = 1;
     for (int j = 0; j < N; j++) {
-    	int M_ij = idx_tmp & 1;  // [TODO] check this line
-    	mat[i][j] = 2 * M_ij - 1;
-			idx_tmp = idx_tmp >> 1;
+			if (i!=j){
+				int M_ij = idx_tmp & 1;  // [TODO] check this line
+    		mat[i][j] = 2 * M_ij - 1;
+				idx_tmp = idx_tmp >> 1;
+			}
     }
   }
 }
@@ -158,16 +166,18 @@ unsigned long long mat_to_idx(int mat[][N]) {
   idx = binary_num = 0;
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++) {
-    	int element = ((int) (mat[i][j] + 1) / 2);
-    	idx += element * (int) pow(2, binary_num);
-    	binary_num += 1;
+			if (i != j) {
+				int element = ((int) (mat[i][j] + 1) / 2);
+    		idx += element * (int) pow(2, binary_num);
+    		binary_num += 1;
+			}
     }
   }
   return idx;
 }
 
 void check_absorbing(int rule_num, int arr[]){
-  const size_t num_matrix = 1ull << (N * N);
+  const size_t num_matrix = 1ull << (N * (N-1));
   for (unsigned long long i = 0; i < num_matrix; i++) {
 		int check = 0;
 		int count = 0;
@@ -224,7 +234,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
   double prob_mul;
   n_list_gen(n_num, n_list);
 
-  const size_t num_matrix = 1ull << (N * N);
+  const size_t num_matrix = 1ull << (N * (N-1));
   std::vector<double> r_i(num_matrix, 0);
   std::ofstream opening;
   if (init_vect_idx == 0) {
