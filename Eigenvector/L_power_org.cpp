@@ -21,6 +21,8 @@ void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 
 void L7_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 
+void L8_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+
 void n_list_gen(int n_num, int n_list[][N]);
 
 void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal_idx, int flip_idx);
@@ -36,7 +38,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
 */
 int main(int argc, char *argv[]) {
   int num_of_bal = (int) pow(2, N - 1);
-  if ((argc < 6) || (atoi(argv[3]) != 4 && atoi(argv[3]) != 6 && atoi(argv[3]) != 7)
+  if ((argc < 6) || (atoi(argv[3]) != 4 && atoi(argv[3]) != 6 && atoi(argv[3]) != 7 && atoi(argv[3]) != 8)
       || (atoi(argv[4]) > 2)) {
     printf("./L_power_org err iter rule_num init_vect_idx, bal_idx flip_idx \n");
     printf("rule_num : 4(L4_rule), 6(L6_rule) \n");
@@ -126,6 +128,18 @@ void L7_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
 		else
 			val = mat_f[o][r];
 	}
+	else if (mat_f[d][r] == -1)	{
+		if (mat_f[o][d] == 1)
+			val = -mat_f[o][r];
+		else
+			val = -1;
+	}
+  mat_f[o][d] = idx_err == 0 ? val : -val;
+}
+
+void L8_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
+	int val = mat_f[o][d];
+	if (mat_f[d][r] == 1) val = mat_f[o][r];
 	else if (mat_f[d][r] == -1)	{
 		if (mat_f[o][d] == 1)
 			val = -mat_f[o][r];
@@ -245,6 +259,9 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
                   break;
 								case 7 :
 									L7_rule(mat_f, l, x, y, idx_n);
+									break;
+								case 8 :
+									L8_rule(mat_f, l, x, y, idx_n);
 									break;
               }
               prob_mul *= array[idx_n];
