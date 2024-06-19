@@ -21,6 +21,8 @@ void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 
 void L7_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 
+void L8_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+
 void n_list_gen(int n_num, int n_list[][N]);
 
 void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal_idx, int flip_idx);
@@ -119,6 +121,18 @@ void n_list_gen(int n_num, int n_list[][N]) {
   }
 }
 
+void L8_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
+	int val = mat_f[o][d];
+	if (mat_f[d][r] == 1) val = mat_f[o][r];
+	else if (mat_f[d][r] == -1)	{
+		if (mat_f[o][d] == 1)
+			val = -mat_f[o][r];
+		else
+			val = -1;
+	}
+  mat_f[o][d] = idx_err == 0 ? val : -val;
+}
+
 void L7_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
 	int val = mat_f[o][d];
 	if (mat_f[d][r] == 1) {
@@ -188,6 +202,9 @@ void check_absorbing(int rule_num, int arr[]){
               break;
 						case 7 :
 							L7_rule(mat_f, o, d, r, 0);
+							break;
+						case 8 :
+							L8_rule(mat_f, o, d, r, 0);
 							break;
           }
 					count += 1;
@@ -280,6 +297,9 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
                   break;
 								case 7 :
 									L7_rule(mat_f, l, x, y, idx_n);
+									break;
+								case 8 :
+									L8_rule(mat_f, l, x, y, idx_n);
 									break;
               }
               prob_mul *= array[idx_n];
