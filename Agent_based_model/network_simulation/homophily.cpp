@@ -164,6 +164,7 @@ double ABM_complete(int rule_num, vector<vector<int>> &mat_i, vector<int> &prope
 				}
 				//print_mat(mat_i);
 				//cout << "\n";
+				res /= (double)cluster_1.size();
 				break;
 		}
 	}
@@ -202,7 +203,7 @@ int main(int argc, char *argv[]) {
 		init_property(property, N);
 		vector<vector<int>> mat_i;
 
-		double res = fabs(ABM_complete(rule_num, mat_i, property, N, p, mode_h)) / (double)N;
+		double res = fabs(ABM_complete(rule_num, mat_i, property, N, p, mode_h));
 		result_arr.push_back(res);
 		res_avg += res;
 		//if (check == subset_list.size()) print_mat(mat_i, N);
