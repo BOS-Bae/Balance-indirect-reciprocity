@@ -132,12 +132,12 @@ double ABM_complete(int rule_num, vector<vector<int>> &mat_i, vector<int> &prope
           case 6 :
             update_od.push_back(L6_rule(mat_i, o, d, r, 0));
             break;
-					case 7 :
-            update_od.push_back(L7_rule(mat_i, o, d, r, 0));
-						break;
-					case 8 :
-            update_od.push_back(L8_rule(mat_i, o, d, r, 0));
-						break;
+					//case 7 :
+          //  update_od.push_back(L7_rule(mat_i, o, d, r, 0));
+					//	break;
+					//case 8 :
+          //  update_od.push_back(L8_rule(mat_i, o, d, r, 0));
+					//	break;
 				}
 		}
 		for (int o=0; o<N; o++) {
@@ -153,7 +153,7 @@ double ABM_complete(int rule_num, vector<vector<int>> &mat_i, vector<int> &prope
 		//print_mat(mat_i);
 		
 		res = 0;
-		if (check_absorbing(rule_num, mat_i, N)) {
+		if (check_absorbing(rule_num, mat_i, N)) { // NOTE : only for either L4 or L6
 				vector<int> cluster_1;
 				for (int i=0; i<N; i++) {
 					if (mat_i[0][i] == 1) cluster_1.push_back(i); 
@@ -171,11 +171,23 @@ double ABM_complete(int rule_num, vector<vector<int>> &mat_i, vector<int> &prope
 	return res;
 }
 
-void init_property(vector<int> &property, int N) {
+double cluster_difference(vector<vector<int>> &mat, int N) {
+	double c_diff;
+	int c_1_size = 0;
+	for (int i=0; i<N; i++) {
+		if (mat[0][i] == 1) c_1_size += 1;
+	}
+	int c_diff_int = (c_1_size - (N - c_1_size));
+	c_diff = (double)(c_diff_int) / (double)N;
+	
+	return c_diff;
+}
+
+void init_property(vector<int> &property, double f0, int N) {
 	random_device rd;
 	mt19937 gen(rd());
 	uniform_real_distribution<> dist_u(0, 1);
-	double prop_bias = 0.5;
+	double prop_bias = f0;
 	for (int i=0; i<N; i++) {
 		int state_i = dist_u(gen) < prop_bias ? 1 : -1;
 		property.push_back(state_i);
@@ -183,9 +195,9 @@ void init_property(vector<int> &property, int N) {
 }
 
 int main(int argc, char *argv[]) {
-	if (argc < 4) {
-		cout << "./homophily N p_h rule_num n_sample mode_h\n";
-		cout << "mode_h : 0(homohilic) / 1(heteropobic) \n";
+	if (argc < 6) {
+		cout << "./homophily N p_h rule_num n_sample mode_h f0\n";
+		cout << "mode_h : 0(homohilic) / 1(heterophobic) \n";
 		exit(1);
 	}
 
@@ -194,29 +206,44 @@ int main(int argc, char *argv[]) {
 	int rule_num = atoi(argv[3]);
 	int n_sample = atoi(argv[4]);
 	int mode_h = atoi(argv[5]);
+	double f0 = atof(argv[6]);
 
 	vector<double> result_arr;
+	vector<double> c_diff_arr;
 
 	double res_avg = 0;
+	double c_diff_avg = 0;
 	for (int n_s=0; n_s < n_sample; n_s++){
 		vector<int> property;
-		init_property(property, N);
+		init_property(property, f0, N);
 		vector<vector<int>> mat_i;
 
 		double res = fabs(ABM_complete(rule_num, mat_i, property, N, p, mode_h));
+		double c_diff = fabs(cluster_difference(mat_i, N));
 		result_arr.push_back(res);
+		c_diff_arr.push_back(c_diff);
 		res_avg += res;
+		c_diff_avg += c_diff;
 		//if (check == subset_list.size()) print_mat(mat_i, N);
 	}
 	res_avg /= (double)n_sample;
+	c_diff_avg /= (double)n_sample;
 	
 	double std = 0;
+	double std_c = 0;
 	double std_err;
+	double std_err_c;
 	for (int n_s=0; n_s < n_sample; n_s++){
 		std += pow((result_arr[n_s] - res_avg),2);
 	}
 	std_err = sqrt(std / (double)(n_sample*(n_sample - 1)));
 	
-	cout << p << " " << res_avg << " " << std_err << "\n";
+	for (int n_s=0; n_s < n_sample; n_s++){
+		std_c += pow((c_diff_arr[n_s] - c_diff_avg),2);
+	}
+	std_err_c = sqrt(std_c / (double)(n_sample*(n_sample - 1)));
+
+	cout << p << " " << res_avg << " " << std_err << " " << c_diff_avg << " " << std_err_c << "\n";
+
 	return 0;
 }
