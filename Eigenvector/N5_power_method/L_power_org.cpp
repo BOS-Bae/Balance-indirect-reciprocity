@@ -6,7 +6,7 @@
 #include <array>
 #include <algorithm>
 
-constexpr int N = 3;
+constexpr int N = 4;
 
 // The reason for using 'usigned long long' : 2^(N*N) exceeds the maximum of 'int', when N=6.
 void idx_to_mat(unsigned long long idx, int mat[][N]);
@@ -17,9 +17,9 @@ unsigned long long mat_to_idx(int mat[][N]);
 
 void balanced_idx(std::vector<unsigned long long> &bal_list);
 
-void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+int L4_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 
-void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
+int L6_rule(int mat_f[][N], int o, int d, int r, int idx_err);
 
 void n_list_gen(int n_num, int n_list[][N]);
 
@@ -50,7 +50,6 @@ int main(int argc, char *argv[]) {
   int init_vect_idx = atoi(argv[4]);
   int bal_idx = atoi(argv[5]);
   int flip_idx = atoi(argv[6]);
-  const size_t num_mat = 1ull << (N * (N-1));
 	
 	//int mat[N][N] = {0,};
 	//for (int i = 0; i < num_mat; i++){
@@ -121,21 +120,24 @@ void n_list_gen(int n_num, int n_list[][N]) {
   }
 }
 
-void L4_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
+int L4_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
   // mat_f should be empty matrix whose size is N by N.
   int val = mat_f[o][d];
   if (mat_f[d][r] == 1) {
-    if (mat_f[o][d] == -1)
-      val = mat_f[o][r];
-  } else
-    val = -mat_f[o][r];
-
-  mat_f[o][d] = idx_err == 0 ? val : -val;
+    if (mat_f[o][d] == -1) val = mat_f[o][r];
+  } 
+	else val = -mat_f[o][r];
+	
+	int updated_val = idx_err == 0 ? val : -val;
+	return updated_val;
 }
 
-void L6_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
+int L6_rule(int mat_f[][N], int o, int d, int r, int idx_err) {
   // mat_f should be empty matrix whose size is N by N.
-  mat_f[o][d] = (idx_err == 0 ? mat_f[o][r] * mat_f[d][r] : -mat_f[o][r] * mat_f[d][r]);
+  int val = (idx_err == 0 ? mat_f[o][r] * mat_f[d][r] : -mat_f[o][r] * mat_f[d][r]);
+	
+	int updated_val = idx_err == 0 ? val : -val;
+	return updated_val;
 }
 
 void idx_to_mat(unsigned long long idx, int mat[][N]) {
@@ -143,11 +145,9 @@ void idx_to_mat(unsigned long long idx, int mat[][N]) {
   for (int i = 0; i < N; i++) {
 		mat[i][i] = 1;
     for (int j = 0; j < N; j++) {
-			if (i!=j){
-      	int M_ij = idx_tmp & 1;  // [TODO] check this line
-      	mat[i][j] = 2 * M_ij - 1;
-				idx_tmp = idx_tmp >> 1;
-			}
+      int M_ij = idx_tmp & 1;  // [TODO] check this line
+      mat[i][j] = 2 * M_ij - 1;
+			idx_tmp = idx_tmp >> 1;
     }
   }
 }
@@ -157,11 +157,9 @@ unsigned long long mat_to_idx(int mat[][N]) {
   idx = binary_num = 0;
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++) {
-			if (i!=j){
-      	int element = ((int) (mat[i][j] + 1) / 2);
-      	idx += element * (int) pow(2, binary_num);
-      	binary_num += 1;
-			}
+    	int element = ((int) (mat[i][j] + 1) / 2);
+    	idx += element * (int) pow(2, binary_num);
+    	binary_num += 1;
     }
   }
   return idx;
@@ -191,7 +189,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
   double prob_mul;
   n_list_gen(n_num, n_list);
 
-  const size_t num_matrix = 1ull << (N * (N-1));
+  const size_t num_matrix = 1ull << (N * N);
   std::vector<double> r_i(num_matrix, 0);
   std::ofstream opening;
   if (init_vect_idx == 0) {
@@ -221,10 +219,6 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     unsigned long long flip_elem = flip_list_N5[flip_idx];
     r_i[flip_elem] = 1;
   }
-  else {
-    throw std::runtime_error("Invalid init_vect_idx");
-  }
-
 
   // measure elapsed time
 
@@ -236,26 +230,27 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
       idx_to_mat(i, mat_i);
       for (int x = 0; x < N; x++) {
         for (int y = 0; y < N; y++) {
-					if (x!=y){
-						for (int m = 0; m < n_num; m++) {
-          	  std::copy(&mat_i[0][0], &mat_i[0][0] + N * N, &mat_f[0][0]);
-          	  prob_mul = 1.0;
-          	  for (int l = 0; l < N; l++) {
-          	    int idx_n = n_list[m][l];
-          	    switch (rule_num) {
-          	      case 4 :
-          	        L4_rule(mat_f, l, x, y, idx_n);
-          	        break;
-          	      case 6 :
-          	        L6_rule(mat_f, l, x, y, idx_n);
-          	        break;
-          	    }
-          	    prob_mul *= array[idx_n];
-          	  }
-          	  int idx_f = mat_to_idx(mat_f);
-          	  r_f[idx_f] += prob_mul * (1 / (double) (N * (N-1))) * r_i[i];
-          	}
-					}
+					for (int m = 0; m < n_num; m++) {
+            std::copy(&mat_i[0][0], &mat_i[0][0] + N * N, &mat_f[0][0]);
+            prob_mul = 1.0;
+						std::vector<int> updated_od = {};
+            for (int l = 0; l < N; l++) {
+              int idx_n = n_list[m][l];
+              switch (rule_num) {
+                case 4 :
+                  updated_od.push_back(L4_rule(mat_f, l, x, y, idx_n));
+                  break;
+                case 6 :
+                  updated_od.push_back(L6_rule(mat_f, l, x, y, idx_n));
+                  break;
+              }
+              prob_mul *= array[idx_n];
+            }
+						for (int l = 0; l < N; l++) mat_f[l][x]	= updated_od[l];
+
+            int idx_f = mat_to_idx(mat_f);
+            r_f[idx_f] += prob_mul * (1 / (double) (N * N)) * r_i[i];
+          }
         }
       }
     }
@@ -285,6 +280,5 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
       opening << "\n";
     }
   }
-
   opening.close();
 }
