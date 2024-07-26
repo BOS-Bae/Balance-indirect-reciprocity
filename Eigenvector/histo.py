@@ -2,54 +2,56 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys 
 
-if (len(sys.argv) < 2):
-    print("python3 histo.py N t")
+if (len(sys.argv) < 3):
+    print("python3 histo.py N t err")
     exit(1)
 
 f_s = 12
 N = int(sys.argv[1])
-err = 0.0001
 t = int(sys.argv[2])
+err = float(sys.argv[3])
+#L4_elements = np.loadtxt("./N{}L4_e-2147483648t{}.dat".format(N,t))
+#L6_elements = np.loadtxt("./N{}L6_e-2147483648t{}.dat".format(N,t))
 
-L7_elements = np.loadtxt("./N{}L7_e{}t{}.dat".format(N,int(np.log10(err)),t))
-L8_elements = np.loadtxt("./N{}L8_e{}t{}.dat".format(N,int(np.log10(err)),t))
+#L4_elements = np.loadtxt("./N{}L4_e{}t{}.dat".format(N,int(np.log10(err)),t))
+L6_elements = np.loadtxt("./N{}L6_e{}t{}.dat".format(N,int(np.log10(err)),t))
 
-print("L7 sum : ", np.sum(L7_elements), "\n")
-L7_elements /= np.sum(L7_elements)
+#print("L4 sum : ", np.sum(L4_elements), "\n")
+#L4_elements /= np.sum(L4_elements)
 
-print("L8 sum : ", np.sum(L8_elements), "\n")
-L8_elements /= np.sum(L8_elements)
+print("L6 sum : ", np.sum(L6_elements), "\n")
+L6_elements /= np.sum(L6_elements)
 
 num = np.power(2, N*N)
 
-print("L7 :")
+#print("L4 :")
+#for i in range(num):
+#    if (L4_elements[i] > 0.003):
+#        print(i, "    ", L4_elements[i])
+#print("")
+print("L6 :")
 for i in range(num):
-    if (L7_elements[i] > 0.003):
-        print(i, "    ", L7_elements[i])
-print("")
-print("L8 :")
-for i in range(num):
-    if (L8_elements[i] > 0.003):
-        print(i, "    ", L8_elements[i])
-print(0, "  ", L7_elements[0])
-print(0, "  ", L8_elements[0])
+    if (L6_elements[i] > 0.003):
+        print(i, "    ", L6_elements[i])
+#print(0, "  ", L4_elements[0])
+#print(0, "  ", L6_elements[0])
 
-plt.hist(L7_elements, bins=30, label='L7, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
+#plt.hist(L4_elements, bins=30, label='L4, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
+#plt.legend(fontsize=f_s)
+#plt.yscale('log')
+#plt.yticks(fontsize=f_s)
+#plt.xticks(fontsize=f_s)
+#plt.xlim(0,1.0)
+#plt.savefig('./L4_eigen.pdf', format='pdf')
+#
+#plt.show()
+
+plt.hist(L6_elements, bins=30, label='L6, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
 plt.legend(fontsize=f_s)
 plt.yscale('log')
 plt.yticks(fontsize=f_s)
 plt.xticks(fontsize=f_s)
 plt.xlim(0,1.0)
-plt.savefig('./L7_eigen.pdf', format='pdf')
-
-plt.show()
-
-plt.hist(L8_elements, bins=30, label='L8, N={}, err={}, {} multiplication'.format(N,err,t),color="blue")
-plt.legend(fontsize=f_s)
-plt.yscale('log')
-plt.yticks(fontsize=f_s)
-plt.xticks(fontsize=f_s)
-plt.xlim(0,1.0)
-plt.savefig('./L8_eigen.pdf', format='pdf')
+plt.savefig('./L6_eigen.pdf', format='pdf')
 
 plt.show()

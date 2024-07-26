@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include <cstdlib>
 #include <fstream>
 #include <cmath>
@@ -7,7 +8,6 @@
 #include <algorithm>
 
 constexpr int N = 4;
-
 // The reason for using 'usigned long long' : 2^(N*N) exceeds the maximum of 'int', when N=6.
 void idx_to_mat(unsigned long long idx, int mat[][N]);
 
@@ -163,6 +163,9 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     init_vect_idx = 1 : 2^(N-1) elements in dat file (only balanced states)
     init_vect_idx = 2 : 2^(N-1) elements in dat file (only balanced states)
   */
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<> dist_u(0, 1);
   constexpr int n_num = 1 << N;
   double array[2];
   array[0] = (1.0 - err);
@@ -184,9 +187,16 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     char result[100];
     sprintf(result, "./dr_N%dL%d_e%dt%d.dat", N, rule_num, (int) log10(err), iter);
     opening.open(result);
-    for (unsigned long long i = 0; i < num_matrix; i++) {
-      r_i[i] = 1 / (double) num_matrix;
-    }
+		double summ = 0;
+		r_i[65535] = 1;
+    //for (unsigned long long i = 0; i < num_matrix; i++) {
+    //  //r_i[i] = 1 / (double) num_matrix;
+		//	double elem = dist_u(gen);
+		//	r_i[i] = elem;
+		//	summ += elem;
+    //}
+    //for (unsigned long long i = 0; i < num_matrix; i++) r_i[i] /= summ;
+		
   }
   else if (init_vect_idx == 1) {
     char result[100];
@@ -208,9 +218,7 @@ void power_method(double err, int iter, int rule_num, int init_vect_idx, int bal
     throw std::runtime_error("Invalid init_vect_idx");
   }
 
-
-  // measure elapsed time
-
+  // measure elapsed 
   for (int t = 0; t < iter; t++) {
     std::vector<double> r_f(num_matrix, 0.0);
     for (unsigned long long i = 0; i < num_matrix; i++) {
