@@ -174,6 +174,8 @@ void ABM_complete(int rule_num, vector<vector<int>> &mat_i, vector<double> &f_s,
 	int t = 0;
 	int count = 0;
 	int check_bool = 0;
+	
+	int segregation_count = 0;
 
 	while (true){
 		t += 1;	
@@ -187,7 +189,6 @@ void ABM_complete(int rule_num, vector<vector<int>> &mat_i, vector<double> &f_s,
 				//int idx_err = 0;
 				int idx_assess = (check_bool == 1 && dist_u(gen) < assess_err) ? 1 : 0;
 				//if (check_bool == 1 && dist_u(gen) < assess_err) idx_err = 1;
-
         switch (rule_num) {
           case 4 :
             update_od.push_back(L4_rule(mat_i, o, d, r, idx_act, idx_assess));
@@ -206,11 +207,17 @@ void ABM_complete(int rule_num, vector<vector<int>> &mat_i, vector<double> &f_s,
 			mat_to_subset(mat_i, subsets, N);
 		  int idx_bal =	subset_to_idx(subsets, N);
 			f_s[idx_bal] += 1;
+			if (idx_bal != 0) {
+				cout << "count : " << count << "\n";
+				segregation_count += 1;
+			}
 			count += 1;
 			check_bool = 1;
 		}
 
 		if (t == MCS) {
+			cout << "seg_count : " << segregation_count << "\n";
+			cout << "seg_frag : " << (double)segregation_count / (double)count << "\n";
 			for (int i=0; i<n_bal; i++) f_s[i] /= (double)count;
 			break;
 		}
@@ -235,6 +242,12 @@ int main(int argc, char *argv[]) {
 	int n_bal = (int)pow(2, N-1);
 	vector<double> f_s(n_bal_tot, 0);
 	vector<double> f_result(n_bal, 0);
+	
+ 	//vector<vector<int>> mat_tes(4, vector<int>(4, 1));
+ 	//vector<vector<int>> subset_tes;
+	//mat_to_subset(mat_tes, subset_tes, 4);
+	//int idx_tes = subset_to_idx(subset_tes, 4);
+	//cout << idx_tes << "\n";
 
 	ABM_complete(rule_num, mat_i, f_s, N, MCS, assess_error, action_error);
 
