@@ -5,6 +5,7 @@ These are simulation codes which generate numerical results of the paper :
 'Exact Cluster Dynamics of Indirect Reciprocity in Complete Graphs' (Minwoo Bae, Takashi Shimada, Seung Ki Baek).
 
 **PRE(Letter)** : https://journals.aps.org/pre/abstract/10.1103/PhysRevE.110.L052301
+
 **arXiv link** : https://arxiv.org/abs/2404.15664
 
 ## Eigenvector (C++)
